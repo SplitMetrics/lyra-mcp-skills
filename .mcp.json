@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "lyra": {
+      "type": "http",
+      "url": "https://mcp-lyra.splitmetrics.com"
+    }
+  }
+}

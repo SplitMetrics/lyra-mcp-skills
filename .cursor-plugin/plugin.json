@@ -1,0 +1,11 @@
+{
+  "name": "lyra",
+  "description": "Generate images, videos, voiceovers and music with Lyra from Cursor. Bundles the Lyra MCP server with workflow skills.",
+  "author": {
+    "name": "SplitMetrics"
+  },
+  "homepage": "https://splitmetrics.com",
+  "repository": "https://github.com/SplitMetrics/lyra-mcp-skills",
+  "keywords": ["lyra", "muse", "image-generation", "video-generation", "mcp"],
+  "mcpServers": "./.mcp.json"
+}
