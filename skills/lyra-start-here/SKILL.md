@@ -6,7 +6,7 @@ description: Entry point for the Lyra (Muse) MCP server. Use when the user wants
 # Lyra — start here
 
 The Lyra MCP server (`https://mcp-lyra.splitmetrics.com`) builds and runs **workflows**: graphs of
-nodes (image, video, audio, text, upload) joined by edges, in the workspace the user last selected
+nodes (image, video, audio, text) joined by edges, in the workspace the user last selected
 in Lyra. The tools give raw capability; these skills hold the order of calls, model choices and
 known failures.
 
@@ -53,9 +53,12 @@ A template built and tested by Lyra's creative producers beats a workflow built 
 - Reuse a workflow when the user names one (`list_workflows` with `search`). Otherwise
   `create_workflow` with a title that describes the job, so the user can find it in Lyra.
 
-## Uploading the user's own files
+## The user's own files are not supported yet
 
-See `reference/uploads.md`.
+Do not call the `create_upload_image_node`, `create_upload_video_node`, `create_upload_audio_node` or
+`create_upload_documents_node` tools, and don't build workflows that depend on upload nodes. If the user wants to use
+their own photo, video, audio or document, tell them this isn't supported through the MCP yet. Offer to
+generate the asset instead, or let them do that part in Lyra themselves.
 
 ## What this skill does not do
 

@@ -9,7 +9,7 @@ Both adaptations take a **connected source image** and produce one output per ta
 
 ## Steps
 
-1. **Source.** An image node already in the workflow (`get_workflow`), a newly generated one (run it first), or the user's file through `create_upload_image_node`. If the node has several results, ask which one to use.
+1. **Source.** An image node already in the workflow (`get_workflow`) or a newly generated one (run it first). If the node has several results, ask which one to use.
 2. **Model.** `list_node_configs` → `image.preferred_models_by_action.image_resize` / `image_translation` (currently `google/nano-banana-2`).
 3. **Node.**
    - Resize: `create_image_resize_node` with `aspect_ratios`, e.g. `["1:1", "4:5", "16:9"]`.

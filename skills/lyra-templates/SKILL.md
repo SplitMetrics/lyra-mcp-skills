@@ -16,22 +16,20 @@ subject and assets without breaking it.
    - Use `favourites_only: true` when the user says "my templates" or "the ones I starred".
    - Show 2–4 matches with their title, a one-line description and the `video_preview_url`, which the
      user opens while signed in to Lyra. Let the user pick, or recommend one and say why.
+   - Prefer templates without upload nodes (`upload_image`, `upload_video`, `upload_audio`, `upload_documents`
+     actions in `get_template`). Upload nodes aren't supported through the MCP yet, see below.
 2. **Read it before copying.** Call `get_template`, then tell the user in plain words what it makes, for example
-   "a 3-scene 9:16 video: hook image → animated clip → voiceover, ~15 s". Then sort its nodes into three groups:
+   "a 3-scene 9:16 video: hook image → animated clip → voiceover, ~15 s". Then sort its nodes into two groups:
    - **Subject slots:** prompts that name the example product, app, character or setting. These are what you rewrite.
    - **Craft:** camera, lighting, pacing, style, hook wording, transitions. Keep these.
-   - **Upload nodes:** they come out empty, so the user's own media goes there (screenshots, logo, product photo, face).
    If `reference/<template>.md` exists for this template, read it. The producer's notes there override your
    judgement about what is safe to change.
 3. **Gather what's missing.** Ask for the product or app name, what it does, the audience, the tone,
-   the CTA, and the files each upload node needs. Ask only for what the template's slots actually use.
+   and the CTA. Ask only for what the template's slots actually use.
 4. **Copy.** Call `use_template` with a title like `<Template> – <Product>`. It returns the new workflow and its node uuids.
    Use those uuids from here on, not the template's.
 5. **Adapt.** For each subject slot, call `update_node` with only the settings that change, usually `prompt`
-   and sometimes `label`. Follow `reference/adapting-prompts.md`. Then fill the upload nodes:
-   `create_upload_*_node` for the user's files, then `connect_nodes` each one to where the template's empty upload
-   fed (check the edges in `get_workflow`). You can also ask the user to drop the files onto the empty
-   upload nodes in Lyra.
+   and sometimes `label`. Follow `reference/adapting-prompts.md`.
 6. **Check.** Call `get_workflow` and fix every node whose `is_valid` is false. Show the user the rewritten prompts side by side
    with the originals. One look here costs less than a wasted video run.
 7. **Confirm and run.** State the number of runs (generation nodes × `count`), the models, the estimated time and
@@ -41,6 +39,10 @@ subject and assets without breaking it.
 8. **Deliver.** Give the final result `url`s and the workflow title, so the user can find it in Lyra.
 
 ## Gotchas
+
+- **Upload nodes are not supported yet.** Don't call the `create_upload_*_node` tools. If the chosen template has upload
+  nodes, they come out of `use_template` empty. Tell the user before copying: they'll need to add their files on those
+  nodes in Lyra and run the nodes that depend on them there. Run only the nodes that don't depend on an upload.
 
 - **Don't use `update_node` on a template's own nodes.** Template uuids only work with `get_template`. Edit the
   nodes of the workflow `use_template` returned.

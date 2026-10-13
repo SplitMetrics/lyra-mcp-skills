@@ -11,7 +11,6 @@ producer who built it. The `lyra-templates` skill reads it before adapting that 
 **Safe to change:** the product in scene 2's prompt, the voiceover script (keep ≤ 35 words), the end card text.
 **Do not change:** the knitted/wool material words, the warm window light, the slow push-in, the 3-scene order.
 **Best for:** <app categories / audiences>.  **Avoid for:** <where it flops>.
-**Uploads:** app icon (PNG, square) into "Logo"; one app screenshot into "Screen".
 **Known issues:** <e.g. Kling sometimes adds extra fingers to the doll — regenerate scene 1 before animating>.
 ```
 

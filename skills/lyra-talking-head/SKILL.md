@@ -10,7 +10,7 @@ A talking head is three nodes: **face image + voiceover audio → talking head v
 ## Steps
 
 1. **Workflow.** Reuse one or `create_workflow`.
-2. **Face.** `create_image_generation_node` showing a portrait: front-facing, mouth closed or neutral, face clearly lit, head and shoulders, at the video's aspect ratio. You can also upload the user's photo with `create_upload_image_node`. Run it and have the user pick a result.
+2. **Face.** `create_image_generation_node` showing a portrait: front-facing, mouth closed or neutral, face clearly lit, head and shoulders, at the video's aspect ratio. Run it and have the user pick a result.
 3. **Script.** Use the user's text as is. If they only have a topic, draft the script and confirm it with them. At a natural pace, ~2.5 words is about 1 second.
 4. **Voice.** `list_voices` (use `search` for gender, accent or style). Offer 2–3 voices with their names, or use the one the user named.
 5. **Voiceover node.** `create_audio_voiceover_generation_node` with `prompt` = the script, `model_name` from `list_node_configs` (audio, `audio_voiceover_generation`; currently `elevenlabs/v3`), `voice` = voice uuid, and `language_code` if the script isn't English.

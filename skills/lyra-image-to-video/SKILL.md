@@ -1,6 +1,6 @@
 ---
 name: lyra-image-to-video
-description: Animate an image into a video in Lyra, using a generated or uploaded image as the first frame, last frame, or reference. Use when the user asks to "animate", "bring to life", "make a video from this image", "start the video on this frame", or wants a transition between two images.
+description: Animate an image into a video in Lyra, using a generated image as the first frame, last frame, or reference. Use when the user asks to "animate", "bring to life", "make a video from this image", "start the video on this frame", or wants a transition between two images.
 ---
 
 # lyra-image-to-video
@@ -10,7 +10,6 @@ description: Animate an image into a video in Lyra, using a generated or uploade
 1. **Workflow.** Reuse one or `create_workflow`.
 2. **Get the image node.**
    - Generate it: `create_image_generation_node` with the video's aspect ratio (see Gotchas), then `run_node` → `get_run_results` until `completed`.
-   - Or the user's file: `create_upload_image_node` (see `lyra-start-here/reference/uploads.md`).
    - Or an existing node: `get_workflow` → its uuid.
 3. **Pick the result.** If the image node made several images, show them and ask which to use, *before* connecting. The user selects it in Lyra.
 4. **Video node.** `list_node_configs` → a video model whose parameters include the input you need (table below). `create_video_generation_node` with a prompt that describes **motion only**: what moves and how the camera moves. The image already defines the look.
