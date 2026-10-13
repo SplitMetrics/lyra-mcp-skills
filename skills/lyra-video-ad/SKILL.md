@@ -11,7 +11,8 @@ The shape is: **scenes → keyframe image per scene → video clip per scene (fi
 
 1. **Brief.** Collect the product, audience, tone, length (default 15 s), aspect ratio (default 9:16) and call to action.
 2. **Script.** Write 3–5 scenes. For each one write the on-screen visual, the motion and the duration. Add the voiceover line if there is one. Keep the scene durations within the video model's duration options and make them add up to the target length. Show the script and get it approved before you create any node.
-   - If the user wants Lyra to write it, create a text node with `create_text_node` and `action: video_script` (and a text model), then run it. Use `text_split` to split the script into scene parts.
+   - Write the script yourself. To keep it on the canvas next to the scenes, add it with `create_user_text_node`.
+     That node holds text you wrote and runs no model.
 3. **Consistency.** Pick one image model, one video model and one style phrase (lighting, palette, lens) that every scene prompt shares. The scenes only vary in subject and action. Mixing models across scenes makes the ad look like separate clips.
 4. **Cost.** Count the runs: N images + N clips + voiceover + music. The composer is free. State the counts, the models, the estimated time (clips run in parallel, so ~3–6 min) and the workspace credits. Get a yes.
 

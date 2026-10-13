@@ -46,13 +46,14 @@ subject and assets without breaking it.
   nodes of the workflow `use_template` returned.
 - **If `use_template` reports that the copy was made but reading it failed,** don't call it again.
   That would make a second copy. Open the named workflow with `get_workflow`.
-- **The copy has no brand kit.** Brand kits are not carried over. If the user has one, say that it isn't applied.
+- **The copy has no brand kit.** Brand kits are not carried over. If the user has one, pick it with `list_brand_kits`
+  and apply it with `assign_brand_kit` before running.
 - **Talking-head and voiceover formats:** after copying, check in `get_workflow` that the video nodes still
   have their audio/voiceover inputs connected, because copying a template may drop them. Reconnect with `connect_nodes`
   (no `role`) before running.
 - **Keep the model unless there's a reason to change it.** The producer picked it for this format. Switch it only when the user asks
   or the node is invalid, and then use only values from `list_node_configs`.
-- **Text nodes with `user_text`** hold copy that is shown or spoken (hooks, captions, scripts). Rewrite them for the
+- **Text nodes with `action: user_text`** hold copy that is shown or spoken (hooks, captions, scripts). Rewrite them for the
   product. Keep their length and rhythm, because a hook that runs 2× longer breaks the timing.
 - **Drafts:** templates the producer hasn't published don't appear for regular users. If the user names
   a template you can't find, it may still be a draft.
