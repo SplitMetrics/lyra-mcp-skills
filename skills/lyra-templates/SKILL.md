@@ -55,5 +55,5 @@ subject and assets without breaking it.
   or the node is invalid, and then use only values from `list_node_configs`.
 - **Text nodes with `action: user_text`** hold copy that is shown or spoken (hooks, captions, scripts). Rewrite them for the
   product. Keep their length and rhythm, because a hook that runs 2× longer breaks the timing.
-- **Drafts:** templates the producer hasn't published don't appear for regular users. If the user names
-  a template you can't find, it may still be a draft.
+- **Drafts:** templates the producer hasn't published never show up through the MCP, not even for admins. If the
+  user names a template you can't find, it may still be a draft. They can see it in Lyra, but you can't use it until it's published.
