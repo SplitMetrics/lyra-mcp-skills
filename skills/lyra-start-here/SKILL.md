@@ -14,11 +14,13 @@ known failures.
 
 | User wants… | Load |
 |---|---|
+| A proven format adapted to their app: "a UGC video", "a hook", "like the knitted doll one", "a template" | `lyra-templates` ★ |
 | One or a few images or videos from a prompt | `lyra-generate` |
 | An image animated into a video (first/last frame, reference) | `lyra-image-to-video` |
 | A person or character speaking a script (lip-sync) | `lyra-talking-head` |
 | An existing image in other aspect ratios or languages | `lyra-adapt-image` |
 | A multi-scene video ad: script → clips → voiceover/music → one composed video | `lyra-video-ad` |
+| To change a prompt or setting on an existing node | `update_node` (keep the other settings) |
 | To look at or rerun an existing workflow | `list_workflows` → `get_workflow`, then the skill that matches its nodes |
 
 ## Rules for every Lyra workflow
@@ -39,6 +41,9 @@ known failures.
 6. **Result links are signed by Lyra cookies.** Give the user the `url`s. They open in a browser where
    the user is signed in to Lyra. Do not fetch or embed them.
 7. **Do not delete what the user did not ask to delete.** `delete_node` cannot be undone.
+
+★ When the user wants an ad or social creative and hasn't designed a workflow, check `list_templates` first.
+A template built and tested by Lyra's creative producers beats a workflow built from scratch.
 
 ## Workspace and workflow
 

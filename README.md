@@ -35,6 +35,7 @@ claude mcp add --transport http lyra-qa-muse-1 https://qa-muse-1-mcp-lyra.dev.in
 | Skill | Use for |
 |---|---|
 | `lyra-start-here` | Routing plus the rules every workflow follows (credits, run order, polling) |
+| `lyra-templates` | Lyra's producer-built templates (Hook, Talking Head, UGC…), copied and adapted to the user's product |
 | `lyra-generate` | Images or videos from a prompt, single or batch |
 | `lyra-image-to-video` | Animating an image as first frame, last frame or reference |
 | `lyra-talking-head` | Face + voiceover → lip-sync video, and standalone voiceover or music |
@@ -51,6 +52,10 @@ skills/<name>/SKILL.md            # one folder per workflow; long docs in refere
 ```
 
 ## Contributing
+
+**Producer notes for templates** go in `skills/lyra-templates/reference/<template-slug>.md`, in the format
+described in [that folder's README](skills/lyra-templates/reference/README.md). This is where the creative
+producer's knowledge lives: why a template works, what is safe to change, and known failures.
 
 - The `description` frontmatter decides when the agent loads a skill. Write it as "Use when…" and
   include the phrases users actually say.

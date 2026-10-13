@@ -1,7 +1,7 @@
 {
   "name": "lyra-mcp-skills",
   "description": "Workflows for the Lyra (Muse) MCP server: image and video generation, image-to-video, talking heads, resizing and translation, and composed video ads, bundled with the Lyra MCP server so one install sets up both.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "SplitMetrics",
     "url": "https://splitmetrics.com"
