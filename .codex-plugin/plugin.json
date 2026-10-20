@@ -1,0 +1,28 @@
+{
+  "name": "lyra-mcp-skills",
+  "version": "0.3.0",
+  "description": "Workflows for the Lyra (Muse) MCP server: templates, image and video generation, image-to-video, talking heads, resizing and translation, and composed video ads.",
+  "author": {
+    "name": "SplitMetrics",
+    "url": "https://splitmetrics.com"
+  },
+  "homepage": "https://github.com/SplitMetrics/lyra-mcp-skills",
+  "repository": "https://github.com/SplitMetrics/lyra-mcp-skills",
+  "keywords": ["lyra", "muse", "image-generation", "video-generation", "voiceover", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Lyra",
+    "shortDescription": "Generate ad images and videos with Lyra workflows",
+    "longDescription": "Connects the Lyra MCP server and adds skills for Lyra's producer-built templates (Hook, Talking Head, UGC), image and video generation, image-to-video, lip-synced talking heads, resizing and translation, and multi-scene video ads. Generation spends your Lyra workspace's credits; the skills confirm before every run.",
+    "developerName": "SplitMetrics",
+    "category": "Design",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://splitmetrics.com",
+    "defaultPrompt": [
+      "Make a UGC video ad for my app from a Lyra template",
+      "Generate a 9:16 image in Lyra and animate it into a video",
+      "Show my Lyra workflows"
+    ]
+  }
+}
