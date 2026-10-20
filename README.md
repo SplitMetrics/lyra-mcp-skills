@@ -1,22 +1,44 @@
 # lyra-mcp-skills
 
-Claude Code plugin marketplace for **Lyra (Muse)**. One install connects the Lyra MCP server
+Plugin for **Lyra (Muse)**, for Claude Code and Codex. One install connects the Lyra MCP server
 (`https://mcp-lyra.splitmetrics.com`) and adds skills that tell the agent how to use it: which
 calls to make in which order, which models to pick, and known failures. The tool docstrings
 in [muse-mcp-server](https://github.com/SplitMetrics/muse-mcp-server) cover single tools. These
 skills cover whole workflows.
 
+You need a Lyra account. The first time a Lyra tool runs, your client asks you to sign in to Lyra.
+Generation spends your Lyra workspace's credits, and the skills confirm with you before every run.
+
 ## Install
+
+### Claude Code
 
 ```bash
 claude plugin marketplace add SplitMetrics/lyra-mcp-skills
 claude plugin install lyra-mcp-skills@lyra
 ```
 
-Start a new session after installing. Update with `claude plugin marketplace update lyra`.
+Start a new session. To sign in to Lyra right away, run `/mcp` and pick `lyra`.
+Update with `claude plugin marketplace update lyra`.
 
-The repo is private, so `marketplace add` uses your own GitHub credentials. It works for
-SplitMetrics employees with access to the repo.
+### Codex
+
+```bash
+codex plugin marketplace add SplitMetrics/lyra-mcp-skills
+codex plugin add lyra-mcp-skills@lyra
+codex mcp login lyra
+```
+
+Restart Codex. The skills show up as `lyra-mcp-skills:lyra-*`. The plugin also appears under **Plugins** in
+the Codex app, where you can enable it instead of running `codex plugin add`.
+Update with `codex plugin marketplace upgrade lyra`.
+
+If you added Lyra by hand before (a `[mcp_servers.…]` entry with the same URL in `~/.codex/config.toml`),
+remove that entry, so Codex doesn't connect to the same server twice.
+
+### Cursor
+
+`.cursor-plugin/plugin.json` registers the same MCP server for Cursor.
 
 ### QA environments
 
@@ -26,9 +48,9 @@ The plugin points at prod. For QA (VPN only), add the server next to it:
 claude mcp add --transport http lyra-qa-muse-1 https://qa-muse-1-mcp-lyra.dev.int.splitmetrics.com
 ```
 
-### Cursor / Codex
-
-`.cursor-plugin/plugin.json` and `.codex/config.toml` register the same MCP server for those clients.
+```bash
+codex mcp add lyra-qa-muse-1 --url https://qa-muse-1-mcp-lyra.dev.int.splitmetrics.com
+```
 
 ## Skills
 
@@ -45,8 +67,9 @@ claude mcp add --transport http lyra-qa-muse-1 https://qa-muse-1-mcp-lyra.dev.in
 ## Layout
 
 ```
-.claude-plugin/marketplace.json   # marketplace "lyra"
-.claude-plugin/plugin.json        # plugin "lyra-mcp-skills", mcpServers → .mcp.json
+.claude-plugin/marketplace.json   # marketplace "lyra" (Claude Code and Codex both read it)
+.claude-plugin/plugin.json        # Claude Code plugin "lyra-mcp-skills", mcpServers → .mcp.json
+.codex-plugin/plugin.json         # Codex plugin manifest: same skills and server, plus its app listing
 .mcp.json                         # Lyra MCP server
 skills/<name>/SKILL.md            # one folder per workflow; long docs in reference/*.md
 ```
@@ -63,4 +86,5 @@ producer's knowledge lives: why a template works, what is safe to change, and kn
   failures. Do not restate tool schemas.
 - Model names change. Every skill points at `list_node_configs` as the source of truth. Update the
   model tables when Lyra's preferred models change.
-- On each release, bump `version` in both `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`.
+- On each release, bump `version` in `.claude-plugin/marketplace.json`, `.claude-plugin/plugin.json` and
+  `.codex-plugin/plugin.json`.

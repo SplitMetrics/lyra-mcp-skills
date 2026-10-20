@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Workflows for the Lyra (Muse) MCP server: image, video, voiceover and music generation on Lyra workflows.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "lyra-mcp-skills",
       "source": "./",
       "description": "Image/video generation, image-to-video, talking heads, resizing/translation and video ads on Lyra, bundled with the Lyra MCP server.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "author": {
         "name": "SplitMetrics"
       },
