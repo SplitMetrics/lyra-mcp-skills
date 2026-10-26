@@ -54,15 +54,22 @@ codex mcp add lyra-qa-muse-1 --url https://qa-muse-1-mcp-lyra.dev.int.splitmetri
 
 ## Skills
 
+Core skills hold the shared rules; the others point to them.
+
 | Skill | Use for |
 |---|---|
-| `lyra-start-here` | Routing plus the rules every workflow follows (credits, run order, polling) |
-| `lyra-templates` | Lyra's producer-built templates (Hook, Talking Head, UGC…), copied and adapted to the user's product |
-| `lyra-generate` | Images or videos from a prompt, single or batch |
-| `lyra-image-to-video` | Animating an image as first frame, last frame or reference |
-| `lyra-talking-head` | Face + voiceover → lip-sync video, and standalone voiceover or music |
-| `lyra-adapt-image` | Resizing to other aspect ratios and translating on-image text |
-| `lyra-video-ad` | Multi-scene ad: script → keyframes → clips → voiceover/music → composer |
+| `lyra-static-image-generation` | **Core image skill.** Static ads and images end to end: concept, layout, on-image text, realism, models, references, de-slop |
+| `lyra-video-ad-generation` | **Core video skill.** Video ads end to end: brief, script, scenes, keyframes, clips, voiceover, music, assembly |
+| `lyra-ugc-video` | UGC-style ads: a realistic person talking to the camera (talking head, testimonial, storytime, street interview) |
+| `lyra-video-hooks` | Hook banks from the audience's pains, turned into finished videos for an A/B test |
+| `lyra-ui-motion-video` | App UI in motion, store-style end cards, and App Store / Google Play screenshot sets, with UI text kept exact |
+| `lyra-carousel` | 2–10 card carousels that tell one consistent story |
+| `lyra-copy-competitor-ad` | Remake a competitor's video ad for the user's app |
+| `lyra-copy-competitor-static` | Remake a competitor's static ad or carousel for the user's app |
+| `lyra-audience-variations` | The same video ad for another audience: person, wardrobe, setting, market, voice |
+| `lyra-ad-concept-multiplier` | New angles on a winning concept, as Lyra variations |
+| `lyra-image-resize` | An approved image recomposed for other ratios and placements |
+| `lyra-image-translation` | An approved image localized into other languages |
 
 ## Layout
 
@@ -71,14 +78,10 @@ codex mcp add lyra-qa-muse-1 --url https://qa-muse-1-mcp-lyra.dev.int.splitmetri
 .claude-plugin/plugin.json        # Claude Code plugin "lyra-mcp-skills", mcpServers → .mcp.json
 .codex-plugin/plugin.json         # Codex plugin manifest: same skills and server, plus its app listing
 .mcp.json                         # Lyra MCP server
-skills/<name>/SKILL.md            # one folder per workflow; long docs in reference/*.md
+skills/<name>/SKILL.md            # one folder per skill
 ```
 
 ## Contributing
-
-**Producer notes for templates** go in `skills/lyra-templates/reference/<template-slug>.md`, in the format
-described in [that folder's README](skills/lyra-templates/reference/README.md). This is where the creative
-producer's knowledge lives: why a template works, what is safe to change, and known failures.
 
 - The `description` frontmatter decides when the agent loads a skill. Write it as "Use when…" and
   include the phrases users actually say.
