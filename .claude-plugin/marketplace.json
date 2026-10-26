@@ -6,19 +6,26 @@
   },
   "metadata": {
     "description": "Workflows for the Lyra (Muse) MCP server: image, video, voiceover and music generation on Lyra workflows.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "lyra-mcp-skills",
       "source": "./",
-      "description": "Image/video generation, image-to-video, talking heads, resizing/translation and video ads on Lyra, bundled with the Lyra MCP server.",
-      "version": "0.3.0",
+      "description": "Mobile app ad creatives on the Lyra (Muse) MCP server: static images, carousels, video ads, UGC, hooks, UI motion and store screenshots, competitor remakes, audience variations, concept angles, resizing and translation, bundled with the Lyra MCP server.",
+      "version": "0.4.0",
       "author": {
         "name": "SplitMetrics"
       },
       "homepage": "https://github.com/SplitMetrics/lyra-mcp-skills",
-      "keywords": ["lyra", "muse", "image-generation", "video-generation", "voiceover", "mcp"]
+      "keywords": [
+        "lyra",
+        "muse",
+        "image-generation",
+        "video-generation",
+        "voiceover",
+        "mcp"
+      ]
     }
   ]
 }
