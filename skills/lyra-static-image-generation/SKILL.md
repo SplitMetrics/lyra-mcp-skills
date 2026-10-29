@@ -9,6 +9,8 @@ The main image skill for Lyra. It holds the core rules for every image: concept 
 
 Part 1 is shared by every Lyra skill (the same 8 steps as `lyra-video-ad-generation`, written for images). Part 2 is what's specific to static images. The Reference library at the end has the details (models, layout library, text, realism, styles, consistency, UI, errors, de-slop, Meta statics).
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **This is a way of thinking, not a script.** The rules are defaults and good practice; use judgment and say why in one line when you choose differently. Fixed: truth (no invented claims, reviews, numbers, UI or logos), the Brand Kit's facts, UI fidelity (the user's screenshots, exactly), Lyra's technical limits, and the user's explicit choices.
 
 ---
@@ -20,11 +22,11 @@ Part 1 is shared by every Lyra skill (the same 8 steps as `lyra-video-ad-generat
 A full creative always follows these steps, in order:
 1. **Context.** Collect the app context and task inputs; make sure you have everything before proposing anything.
 2. **Concept and plan.** A very short concept with its layout, plus a short plan of nodes, models and connections, based on "Best way to build it".
-3. **Approval.** The user approves or corrects concept and plan. Nothing is created before this.
+3. **Approval.** One message: concept, plan, open questions and the cost in credits; the user approves or corrects. Nothing is created before this; the yes also starts the run.
 4. **Build.** Create the workflow and nodes with the chosen models, write every prompt into the node's prompt field, upload and connect the assets. Nothing runs yet.
-5. **Review on canvas.** The user checks the built workflow and prompts and edits anything.
-6. **Run options.** Offer ways to run (drafts first, finals first, everything) with the credits each costs. The user picks one.
-7. **Run and report.** Run the picked option, report, offer the next run.
+5. **Pre-run check.** Right before every run, read the workflow back and restore anything lost (connections, settings); keep the user's own edits.
+6. **Credits and run.** The cost is part of the plan; after the one yes, build and run everything without asking again.
+7. **Run and report.** Run, report with the right links (workflow, video or image) and the real spend, offer the next step.
 8. **Verify quality.** Check with the user against the quality gates.
 
 ## Whose instructions win
@@ -68,58 +70,81 @@ Short: readable in under a minute.
 
 Stages: **1** = sources (uploads, persona, product or phone shot; fast) · **2** = the ad images · **3** = adaptations (other ratios, other languages, variants).
 
+**Cost:** the plan's total in credits, from Reference A → Credit prices (count and duration included), next to the balance: "≈ 181 credits · balance 47 424".
+
 ## Step 3. Approval
-Ask the user to approve or correct. On corrections, show only what changed and ask again. Don't create anything in Lyra before a clear yes.
+**One message, one question.** Everything the user has to decide goes into one message: the concept, the plan with models and quality, any question you still have, and the **cost in credits** with the balance (Step 6). It ends with one question that covers all of it, e.g. "Do the 3 concepts, Nano Banana Pro 2K and ≈ 181 credits (of your 47 424) work for you? After your yes I build the workflow and run everything." Never a separate question about money or about running.
+
+On corrections, show only what changed, with the new cost, and ask again. Don't create anything in Lyra before a clear yes. This yes also starts the run: after it, build and run everything without asking again (Step 6).
 
 ## Step 4. Build the workflow
-1. `create_workflow` (or `use_template`, or the user's own workflow), then `assign_brand_kit`.
+1. `create_workflow` (or `use_template`, or the user's own workflow, or a variation of an existing one: Variations below), then `assign_brand_kit`.
 2. Upload the assets the images need (`list_uploads` first, then `create_upload` + `attach_upload`, or `open_upload_widget`): logo, app icon, screenshots, product photos, style or layout references. Never generate a logo, icon, store badge or UI.
-3. Write every prompt (Part 2 → Prompt rules). The concept card goes into a user text node (`create_user_text_node`) as a note for the user. A text node does **not** affect generation: never claim it keeps the style or the person consistent. Consistency comes only from images connected as references, plus the anchors written into every prompt.
+3. Write every prompt (Part 2 → Prompt rules). The concept card goes into a user text node (`create_user_text_node`) as a note for the user, connected to nothing. A user text node feeds its text into any node it is connected to, so keep this one unconnected (a Note on the canvas can't be connected at all, but the tools can't create one). The text doesn't keep the style or the person consistent: consistency comes only from images connected as references, plus the anchors written into every prompt.
 4. Create every node from the plan with its prompt, its model, ratio and resolution from `list_node_configs`, and a label that says what it's for ("Ad C1: 2 am POV · 4:5", "Persona: Mia"), never "Image 1".
 5. **Connect the whole graph now** (`connect_nodes`): uploads and persona → every image that uses them (reference) · the approved ad → resize and translation nodes. References connect before anything is generated, so "run all" works.
-6. Lay out the canvas left to right, one Section (frame node) per stage: **Sources** (concept card, uploads) → **Persona / product** → **Ads** → **Sizes and languages**. An upload sits next to the node it feeds.
+6. Lay out the canvas by `lyra-workflow-layout` (STEP notes, sections in reading order, colors, check), one section per stage: **Sources** (concept card, uploads) → **Persona / product** → **Ads** → **Sizes and languages**. An upload sits next to the node it feeds.
 7. Check `is_valid` and `validation_error` on every node; fix with `update_node` using listed values.
 
-## Step 5. Review on canvas
-Tell the user the workflow is built and ready to check in Lyra; ask them to review it and say, or edit on the canvas, what to change. If they edited, `get_workflow` before running and use their prompts as they are now. Never overwrite their edits.
+## Variations, not new workflows
+A new version of something that already lives in a workflow goes into a **variation of that workflow** (Lyra's **Create variation**), never into a new workflow, unless the user asks for a new one.
+- **When:** a new version of a video (another story with the same characters, another angle, hook, person, setting, length or language, a remake of a failed take), more room for another round, splitting the work, or the user asks for several variations.
+- **How:** `create_variation` (it copies the whole canvas: nodes, connections and results) with a clear title ("D2 · Dan's turn") → `switch_variation` to it (the tools and runs work on the main variation; Lyra also renames the workflow after it) → `delete_node` the nodes this version doesn't need → update the prompts and add the new nodes → connect → pre-run check → run. Nodes kept as they are keep their results and cost nothing (characters, places, the end card clip). The variation keeps the canvas layout: update the section titles and labels that name what changed (`lyra-workflow-layout`).
+- Deleting inside a variation you just made for this version is part of the build and needs no extra ask. Never delete in the original variation or in one the user made.
+- **Report:** the workflow link, the name of the variation with the new version, and that the original is untouched in its own variation (to show it again: `switch_variation`, which renames the workflow back).
+- **Images:** new statics, sizes or languages can stay in the same variation as new nodes, one Section per set, unless the user asks for a separate workflow or the canvas gets crowded; then a variation, as for video.
+- **Open canvas:** before editing an existing workflow through the tools, ask the user to close its tab or switch away (an open canvas can write its old state over the tool edits), and tell them when it's safe to open it again.
 
-## Step 6. Run options and costs
-Offer 2–3 ways to run, each with its credits, so the user sees what a run will spend before it starts. Lyra shows an estimated credit cost per node (the number next to **Run**): read it for every node in the option and report per option. Never guess a price; if the price isn't available to you, ask the user to read it off the nodes.
+## Step 5. Pre-run check
+Right before **every** `run_node` (the first run, each next stage, reruns, follow-ups). The canvas changes between build and run: the user edits it, and an edit on the canvas can drop or overwrite connections. A run with a missing input spends credits for nothing, so never trust what you built a few minutes ago.
+1. `get_workflow` now, not from memory.
+2. Compare it with the plan: every planned edge (source → target) is there · every node that takes images has them as planned (`image_inputs_usage`: references or frames; a frame points to an existing result) · every node `is_valid`, no `validation_error` · no empty prompt · settings as planned (model, ratio, duration, resolution, count).
+3. Lost or changed by accident → restore it (`connect_nodes`, `update_node`) and say it in one line ("the link Character → Clip 1 was gone, reconnected"). Changed by the user on purpose (their prompt, model, a node they added) → keep it and use the workflow as it is now; never overwrite their edits. Not sure which → ask before running.
+4. Inputs ready: a node runs only when every node it takes from has a result. Never run a node with a missing input.
 
-| Option | Runs | Results | Credits | Time |
-|---|---|---|---|---|
-| **A. Finals first (recommended)** | persona (if any) + every ad on Nano Banana Pro, count 1 (2 for the hero) | N images | {x} | ~1 min |
-| B. Drafts first | every ad on Nano Banana 2, 1K, count 2–3, to pick directions; winners rerun on Pro | N×2–3 drafts | {x} | ~30 s |
-| C. Everything | ads → sizes → languages | full set | {x} total | ~3 min |
+After the build, tell the user once that the workflow is built and running and that they can edit any prompt on the canvas and rerun.
 
-Balance: {X} credits.
-- Recommend A for 1–4 concepts (Pro is the look we sell; drafts on another model don't predict Pro's realism or text). Recommend B when the user wants many directions or the budget is tight.
-- C has no pause to pick: resize and translation use the selected result of each ad. Keep count 1 when the user picks C.
-- If the full plan costs more than the balance, say so and offer a cheaper build (fewer concepts, lower count, 2K instead of 4K, drafts on Nano Banana 2).
-- A pick authorises that option only. Each next stage needs a new pick, shown with its credits.
+## Step 6. Credits and run
+**Where the prices are.** `get_workflow` returns `credits` on every node: the estimated credits of one run of it (null = free: uploads, Video Editor, notes, user text; a Section shows the sum of its nodes; null on a paid node means a setting is missing, e.g. no resolution on Nano Banana 2: set it). Before the build, estimate with Reference A → Credit prices; after the build, read the real numbers off the nodes.
+
+1. **In the plan (Steps 2–3):** the estimated total and the balance (`list_workspaces`), inside the one approval message.
+2. **After the build, before running:** add up `credits` of every node that will run. Within ~15% of the approved estimate and within the balance → run everything, stage by stage (sources → ads → sizes and languages, Step 7), with no question. More than ~15% over, or over the balance → one short message: the new total, why, and a cheaper option (fewer concepts, lower count, 2K instead of 4K, Nano Banana 2); run after the answer.
+3. **Reruns and follow-ups:** give the rerun's credits in the same message as the change ("Changed the headline; rerunning Ad C1 and its 9:16, 46 credits") and run, unless the user asked to check first.
+4. **After the run:** the real spend (balance before − after) and the new balance.
+5. A source image with count 2 (a character, a persona) feeds the next stage with its selected result; say in the report which one went on and that the user can switch (Step 7).
+6. The smaller skills' **Run options** sections give the run order and what each stage holds: run all of it in that order, without offering the options. A staged run (the look first, then the rest) only when the user asks for it, or when the plan is expensive and the look should be approved first: then say so in the approval message, with each stage's credits, and run the next stage on the user's yes to the look.
+7. No `credits` on the nodes at all (the field is gone): estimate with Reference A, say it's an estimate, and keep the same one-question flow.
 
 ## Step 7. Run and report
-1. `run_node` on every node of the picked option whose inputs are ready; keep each `run_uuid` and `variation_uuid`; call `get_run_results`; while `in_progress`, call it again. **Never call run_node on a running node** (second paid run).
-2. If a node made several results, ask the user to select one in Lyra before running resize, translation or anything built on it.
+1. `run_node` on every node whose inputs are ready stage by stage: sources → ads → sizes and languages. Pre-run check (Step 5) before each stage. Keep each `run_uuid` and `variation_uuid`; call `get_run_results`; while `in_progress`, call it again. **Never call run_node on a running node** (second paid run).
+2. **Picking a result.** A node with several results: when the user names one ("take the second", "the first one"), set it yourself on every node that uses it; don't send the user to tick it in Lyra. On a node with `image_inputs_usage` (video nodes): `update_node` with its whole `image_inputs_usage` from `get_workflow` and one field changed: references → `reference_result_image_uuids: [picked uuid]` (or the other results in `exclude_reference_result_image_uuids`); frames → `first_frame` / `last_frame` = `{"node_uuid": source node, "image_result_uuid": picked uuid}`. The results' uuids and their order (first, second…) come from `get_run_results` of the source node's run. Then `get_workflow` to check it held, and rerun what comes after it (pre-run check first). Only when the node has no such setting or the tool refuses: ask the user to tick it in Lyra and say why. Without a pick, the next stage uses Lyra's selected result; say which one went on.
 3. Run a stage only after its inputs have results.
 
+**Links in every report.** Never only file links. Two kinds of link, nothing else:
+- **Workflow:** `https://lyra.splitmetrics.com/workflows/{workflow_uuid}` (opens for anyone signed in to Lyra with access to the workspace; results in a variation: name the variation to open).
+- **Result:** the `url` from `get_run_results`, exactly as returned.
+- one video → the video link + the workflow link
+- several videos → the workflow link only
+- one image → the image link + the workflow link
+- several images → the workflow link only
+
 Report:
-> Calmly · statics · 3 concepts: stage 2 done. Open it in Lyra to review, edit any prompt and rerun. Workflow: {link}. Spent {x} credits · balance {X}. Next run: 9:16 and 1:1 for the ads you pick, about {x} credits.
+> Calmly · statics · 3 concepts: done. Workflow: https://lyra.splitmetrics.com/workflows/{uuid} (3 ads, 9:16 and 1:1 each). Spent {x} credits · balance {X}. Open it to edit any prompt and rerun.
 
 - Name failed nodes: label, what it was asked to do, why if known, the fix you suggest.
 - When every node has a result, offer 2–3 next steps (variants of the winner, other sizes, other languages, an animated version).
-- You can't open result links (they need a Lyra sign-in): don't describe or grade results; send the stage checklist (Part 2 → Quality gates) and ask what works and what doesn't. Refer to nodes by label, never by uuid.
+- After the final images, run `lyra-result-check` straight away, without asking (free): it opens every image in a browser, checks faces, hands, text and logo, and reports the problems with pictures and fixes. Never describe or grade a result you haven't seen; without a browser send the stage checklist (Part 2 → Quality gates) and ask what works and what doesn't. Refer to nodes by label, never by uuid.
 
 ## Step 8. Verify output quality
 Check final assets, not only job status: completeness (every concept, ratio, language) · message (one promise, hook, claims, offer, CTA match the brief) · text (every letter, every number, hierarchy, nothing extra) · visuals (realism or the chosen style, hands, faces, logo and UI exact) · layout (reads at phone size, safe zones, one focal point) · delivery (ratio, resolution, naming) · variations (intended difference visible) · reusability (prompts editable). Use Part 2 → Quality gates. Suggest fixes only for identified defects, within authorized scope and cost.
 
 ## Follow-ups
-- One change ("make her older", "bigger headline", "warmer light"): `update_node` on that node, show the new prompt, give the credits to rerun it and the nodes that depend on it, rerun after a yes.
+- One change ("make her older", "bigger headline", "warmer light"): `update_node` on that node, show the new prompt, pre-run check, rerun it and the nodes that depend on it (the rerun's credits in the same message, Step 6).
 - A new angle, persona, size or language: hand over to the matching skill.
-- Never delete or overwrite results the user may want; add a node or a variation. `delete_node` only when the user asks.
+- Never delete or overwrite results the user may want: a new version goes into a variation (Variations above). `delete_node` only inside a variation you just made for this version, or when the user asks.
 
 ## Runtime failures
-See Reference I. In short: validation_error → fix with listed values · run failed → name it, one retry with a changed prompt or model and its credits · in_progress → poll again · not enough credits → stop, show balance and cost, offer cheaper · model refused content → tell the user, don't rephrase around it · file without public link → ask for a link or upload in Lyra.
+See Reference I. In short: validation_error → fix with listed values · run failed → name it, one retry with a changed prompt or model and its credits · in_progress → poll again · not enough credits → stop, show the balance and what's missing, offer cheaper (Step 6) · model refused content → tell the user, don't rephrase around it · file without public link → ask for a link or upload in Lyra.
 
 ## Base prompt rules
 You write every prompt, and each lives in its node's prompt field, where the user reads, edits and reruns it. Write for the model and for the person.
@@ -134,9 +159,13 @@ You write every prompt, and each lives in its node's prompt field, where the use
 | Mistake | Prevention |
 |---|---|
 | Builds or runs before concept and plan are approved | Steps 1–3 first, always |
-| Runs without a picked option, or run_node on a running node | Step 6; poll get_run_results |
-| One total cost instead of a cost per run option | Step 6 table, every time |
-| Runs over the user's canvas edits | get_workflow before running |
+| Asks about the price or the run as a separate question | Cost goes into the one approval message; the yes starts the run (Steps 3, 6) |
+| run_node on a running node | Poll get_run_results |
+| Plan without a cost, or a run without reading the nodes' credits | Reference A → Credit prices in the plan; node `credits` before the run |
+| Runs with lost connections, or over the user's canvas edits | Step 5 pre-run check before every run |
+| Sends the user to tick a result in Lyra | Step 7: set the picked result yourself |
+| A new workflow for a new version of the same ad | Create variation of the same workflow, delete what this version doesn't need (Variations) |
+| Only file links, or no workflow link | Step 7 links |
 | Invents app features, UI, numbers or reviews | Only the app card; without screenshots keep the screen out of view |
 | Swaps the user's explicit choice for a default | Instruction order; mention the trade-off once |
 | Values the model doesn't list | Copy from list_node_configs |
@@ -162,7 +191,7 @@ Reads in half a second at phone size (one focal point, one promise, a short head
 **Required (ask if missing):** the app (brand kit or app card) · the idea or the angle, if the user has one · app screenshots, if the ad shows the app · the logo file, if the ad shows the logo.
 **Defaults (don't ask; state them in the plan):** Meta (Facebook / Instagram) · **4:5** master for Feed (9:16 when the user says Stories / Reels; 1:1 when asked) · other ratios as a follow-up, **recomposed, not cropped** · English · **photo-real** style unless the brand or the brief says otherwise · **Nano Banana Pro** for every final (`google/nano-banana-pro`) · **2K** (4K when the image carries small text, a UI screen to read, or a close-up face) · count 1 (2 for the hero or the persona when the user wants a choice) · one CTA · headline 2–8 words · text on ≤ ~20% of the canvas.
 **In the plan, always say which model and resolution you recommend and why, and ask whether the user prefers another.**
-**Recommended first run:** A. Finals first.
+**Run:** everything after the one yes, in stage order (Step 6).
 
 ## Image types: what we make
 
@@ -224,7 +253,7 @@ Unlike video, a static carries its text in the image, and Nano Banana Pro render
 - **Phone-real (UGC, native, most app ads):** "shot on a 24mm smartphone camera", deep focus with a sharp, readable background, the light that is really there (lamp, window, phone screen, car daylight), slight noise in low light, casual off-center framing, no grading. Portrait bokeh reads as a camera ad, not a phone.
 - **Camera-real (lifestyle, editorial, product, campaign):** a lens and its perspective (35mm environmental, 50mm natural, 85mm portrait, macro for detail), controlled depth of field with a reason, one main light with a named source, restrained grading, subtle grain.
 
-**The formula** (from the realism guide, in this order): scene and action → appearance and styling → location → composition → camera → light → materials → color and finish → mood → targeted exclusions.
+**The formula** (in this order): scene and action → appearance and styling → location → composition → camera → light → materials → color and finish → mood → targeted exclusions.
 
 **What makes it real (short):**
 - **Skin:** natural tone variation, fine pores, soft texture, natural creases, real asymmetry, live expression; makeup named separately (bare skin, sheer, editorial). Highlights on raised areas, shadows in hollows, no lacquer. Never "flawless", "perfect", "porcelain", "glowing".
@@ -291,7 +320,7 @@ The user's explicit choices override any row. Model choice: Reference A.
 
 > Static app ad, vertical 4:5, UGC phone-photo style. [Image1] is Mia: her face, curly hair in a loose bun, grey hoodie. [Image2] is the app screen. Mia, 21, lies on her side in a dark bedroom at 2 am, holding a modern smartphone toward the camera, screen facing us almost straight on, her thumb at the lower edge away from any text. The phone screen displays [Image2] exactly as supplied: preserve the layout, typography, icons, colors and every word and number; visible on screen: "Tonight's plan", "5 min", "Start". Shot on a 24mm phone camera, deep focus, warm bedside lamp from the right, cool phone light on her face, natural skin texture, visible pores, slight dark circles, rumpled grey duvet, a charger cable and a half-empty glass of water on the nightstand. Layout from top to bottom: top 22%, on the dark wall: headline "2 am. Brain won't stop." in a heavy white sans-serif, very large, left-aligned · middle: Mia and the phone · bottom 15%: a rounded button "Try it tonight" in violet #8B7CF6 with white text, centered. The only text in the image is the headline, the button and the phone screen. Avoid: beauty filter, studio lighting, extra text, logos, warped fingers.
 
-**Pattern: realistic portrait, no layout (Nano Banana Pro).** (adapted from the realism guide)
+**Pattern: realistic portrait, no layout (Nano Banana Pro).**
 
 > Photorealistic environmental portrait of an adult man in a simple off-white shirt, seated near a window in a lived-in apartment, a candid pause between moments, relaxed shoulders and a natural expression. Eye-level camera, medium close-up, 50mm lens perspective. Soft side daylight with a gentle shadow transition and subtle reflected fill from the room. Realistic skin texture, slight under-eye detail, individual hair strands, natural cotton weave and believable folds. Neutral warm-gray palette, understated documentary feel, authentic photographic tonality. Avoid beauty-filter skin, exaggerated bokeh and artificial symmetry.
 
@@ -327,7 +356,7 @@ The user's explicit choices override any row. Model choice: Reference A.
 | Transparent background asked on Pro | GPT Image 2 with `background: transparent` |
 
 ## Quality gates
-Claude can't see the results, so after each stage it sends the stage checklist and asks the user what they like and what they don't (Reference J has the full slop list):
+After each intermediate stage Claude sends the stage checklist (the final images are checked by `lyra-result-check`) and asks the user what they like and what they don't (Reference J has the full slop list):
 - **Stage 0 (concept, Claude checks before sending):** one promise and one focal point per ad? Layout map with zones and every text word for word? Text short (headline ≤ 8 words, ≤ 3 blocks)? Claims, numbers, offer traced to the Brand Kit? Real screens only, logo from the upload? Style and model stated with why? Safe zones for the ratio?
 - **Stage 1 (persona, product, phone shot):** looks like a real person photographed (skin, hair, hands)? Place lived-in? Screen identical to the screenshot, word by word? Style right?
 - **Stage 2 (ads):** at phone size (shrink it or look from a distance), does it read in half a second: what it is, for whom, what to do? Every letter and number right, nothing extra? Light, shadows and reflections coherent? Hands, fingers, phone natural? Logo exact and small? Text clear of faces and the screen, inside the safe zone? One CTA? On brand?
@@ -357,7 +386,7 @@ Statics fatigue fast at scale (often 7–14 days): plan refreshes. Read a test b
 
 Always call `list_node_configs` first: it is the live source of image models, ratios, resolutions and actions. **New models will be added**: when a new image model appears, offer it only for what its config and the user's tests show it does well, and keep Nano Banana Pro as the default for realism until the team says otherwise.
 
-**How to offer a model.** Recommend **Nano Banana Pro** for every final, and say plainly: "This is our best model for realistic people, text and UI; it costs more than the drafts, but it gives the best result." Give the price per node and per run option (Step 6). Always ask which model the user prefers before building.
+**How to offer a model.** Recommend **Nano Banana Pro** for every final, and say plainly: "This is our best model for realistic people, text and UI; it costs more than the drafts, but it gives the best result." Give the cost in the plan (Credit prices below). Always ask which model the user prefers before building.
 
 **Model cards (Lyra, Oct 2026)**
 - **★ Nano Banana Pro** (`google/nano-banana-pro`, Google's Gemini 3 Pro Image): **the default for finals and the most realistic frames.** Best in Lyra for photo-real people, skin, hands, rooms, product and phone shots, on-image text, real UI placed from a screenshot, and edits that keep everything else. Resolution 1K / **2K (default)** / 4K; ratios match_input_image, 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9. Takes many reference images (Google's guide: up to 14 in one prompt); keep the set small and give each a job. ~35–50 s per image.
@@ -374,7 +403,20 @@ Always call `list_node_configs` first: it is the live source of image models, ra
 
 **Cheaper ladder** (one step at a time, show the new price): Pro 4K → Pro 2K → Pro 1K → Nano Banana 2 2K → Nano Banana 2 1K → Nano Banana. Drafts first, finals later: test directions cheaply, rerun only the winners on Pro.
 
-**Price.** Lyra shows an estimated credit cost per node (number with the coin icon next to Run). Read it for every node that will run and warn the user before running, per node and per option. Never guess. After a run, report what it cost (credits before − after, `list_workspaces`).
+**Credit prices** (Lyra, Oct 2026; credits per run, rounded up; a node's `credits` in `get_workflow` is always the final word):
+
+| Node | Price |
+|---|---|
+| Nano Banana Pro 2K | 23 per image (1K and 4K not measured yet: read the node) |
+| Nano Banana 2 1K | 11 per image |
+| GPT Image 2 | 20 per image |
+| Ideogram 3.0 Turbo | 5 per image |
+| Image Resize (Nano Banana 2, 1K) | 11 per target ratio |
+| Image Translation (Nano Banana 2, 1K) | 11 per language |
+| Edit / change element | as one generation on that model |
+| AI text node · Text Split · user text, uploads, notes | 1 · 0 · 0 |
+
+Count multiplies the price; the ratio doesn't change it. Example: persona (count 2) 46 + 3 ads on Pro 2K 69 + 9:16 and 1:1 of each by Image Resize 66 ≈ **181 credits**. Models or settings not in the table: build, read the node, then tell the user.
 
 **Reference policy.** A technical maximum is not a target: every extra reference makes the result less predictable. Default references = the user's uploads (logo, screenshots, product photos) and the images you generated (persona, product shot). A style sample only when the user brings one or the series needs one look; then say its job ("[Image3] is a style reference only: copy its palette, light and grain; not its people, objects or text").
 
@@ -424,7 +466,7 @@ A reference, not a menu. Each format with its zones (top → bottom for vertical
 | Retro (Y2K, office-core, 90s print) | era-true materials, colors and type, a slight print or screen texture | real logos of the era's brands |
 | Minimal surrealism | one impossible idea, photo-real execution, calm composition | stacking several surreal ideas |
 
-## D. Realism toolkit (from the team's realism guide)
+## D. Realism toolkit
 
 **Principle:** frame first, beautiful words later. Before writing, decide: the main subject · the action and the exact moment · the place · camera and composition (shot size, height, distance, perspective, placement) · light (source, direction, softness, contrast, color temperature) · materials and textures · mood.
 
@@ -562,6 +604,3 @@ Full rules: `lyra-ui-motion-video` (UI fidelity, screens, store sets, end card).
 ## L. Brand Kit
 
 Every concept, text, prompt and palette is built on the Brand Kit: audience first, then product, value, tone, colors (hex), claims, forbidden claims (enforced absolutely), offer, must include / exclude. Source order: the chat → the kit connected to the workspace / workflow → ask (send it, or check and connect one of the workspace's kits). The user's chat request always wins; the kit fills everything they didn't say; mention a conflict in one line.
-
-## Sources behind this skill
-The team's realism guide (Visual guide: image generation and realism, RU) · Lyra node prompts: System Preamble, Creative Brief / Ad Brief, Pattern Import (Creative Analysis), Character Prompt (Character Brief), Prompt for Video Frame, Ad Variation · Lyra Mini Training (nine blocks, image models) · `lyra-video-ad-generation`, `lyra-ui-motion-video`, `lyra-copy-competitor-ad` (static standard, Reference L), `lyra-audience-variations`, `lyra-ugc-video`, `lyra-video-hooks` · Google Cloud, Ultimate prompting guide for Nano Banana (2026) · Superscale, static ads guide (2026) · Lyra `list_node_configs` (Oct 2026).

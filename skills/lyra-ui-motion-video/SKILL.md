@@ -7,6 +7,8 @@ description: App UI creatives in Lyra with every UI text kept exactly as in the 
 
 Mini skill for everything where **the app's interface is on screen**: UI motion video ads, UI moments inside other videos, the store-style end card, and App Store / Google Play screenshot sets. Its one job above all: **the UI the viewer sees is the UI the user sent**, with every word, number, icon and color the same.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **Our UI is almost always a mobile app.** Most Lyra users are mobile apps, so "UI" here means the app's own screens on a phone (iOS or Android), its icon, its logo and its store presence. Websites, dashboards and desktop software follow the same rules.
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice; use judgment and say why in one line when you choose differently. Fixed: **UI fidelity** (the rules in the next section), truth (no features, numbers, ratings or badges the app doesn't have), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
@@ -84,7 +86,7 @@ Put every element on the lowest rung it can live on:
 | The end card coming alive | **Seedance 2.0** | frame | 3 to 4 s |
 | Brand motion background behind layered UI | Seedance 2.0 | prompt only (no text) | 8 to 10 s |
 
-Never: an image as first/last frame on Seedance 2.5 (error) · frames and references mixed in one node · one long busy clip carrying the whole UI story · 720p (set **1080p**; Seedance 2.0 Fast and Mini can't, use them only for drafts).
+Never: an image as first/last frame on Seedance 2.5 (error) · frames and references mixed in one node · one long busy clip carrying the whole UI story · 1080p without the user choosing it (720p by default; Seedance 2.0 Fast and Mini can't do 1080p).
 
 **How much UI is "a lot".** Split when a clip would show more than one screen, more than one state change, a scroll through a list, or small text the viewer is supposed to read. Keep it in one clip when the UI is a single screen glimpsed for 1 to 3 s inside a bigger scene.
 
@@ -145,7 +147,7 @@ What practitioners and Lyra's own templates do to keep UI exact (2026):
    > Button "Start" pressed · screenshots 2 → 3 · first + last frame · seedance-2.0 · one tap · texts: "Start" → "Breathing", "5:00"
    > End card · end-card.png · frame, then layer · seedance-2.0 · icon bounce, button pulse · texts: "Calmly", "Sleep in 5 minutes", "Install"
    > Logo · logo.png · layer · none
-4. **Defaults (state, don't ask):** Reels / TikTok · 9:16 · **15 s** (6 to 20 s for social) · English · no person on camera unless the concept needs one · voiceover on, or music-led with captions added in the Video Editor · music on, instrumental · **Seedance 2.0 with frames, 1080p**, sound on · Nano Banana Pro for every design frame, 9:16, 2K · clips 4 to 6 s joined in the Video Editor · **store-style end card** 2 to 3 s at the end.
+4. **Defaults (state, don't ask):** Reels / TikTok · 9:16 · **15 s** (6 to 20 s for social) · English · no person on camera unless the concept needs one · voiceover on, or music-led with captions added in the Video Editor · music on, instrumental · **Seedance 2.0 with frames, 720p** (1080p on the user's choice), sound on · Nano Banana Pro for every design frame, 9:16, 2K · clips 4 to 6 s joined in the Video Editor · **store-style end card** 2 to 3 s at the end.
 
 **Recommended first run:** A. Design frames (every frame the clips start or end on, the phone shots and the end card; cheap, and they decide whether the UI is right).
 
@@ -176,7 +178,7 @@ A reference, not a menu. Combine and adapt.
 | **Person + phone moment** | a realistic person uses the phone, the screen is the hero for a moment | when a human reaction sells it | `lyra-ugc-video` for the person; the phone shot and UI insert by this file |
 | **Store-style end card** | the closing 2 to 3 s: icon, name, benefit line, rating, install button, store badge | **the end of almost every app ad** | see below |
 
-**Lyra templates that fit** (re-check `list_templates`; search by title): **Robotic Hand Showcase** · **Phone Screen Reveal** · **Global Billboard Swipe** · **Billboard App Reveal** · **Swipe Away the Chaos**. When adapting: set 1080p (some run at 720p), switch UI clips to Seedance 2.0 with frames, replace the template's uploads with the user's screenshots and logo, remove stacks like "8K, hyper-detailed", keep the fidelity lines.
+**Lyra templates that fit** (re-check `list_templates`; search by title): **Robotic Hand Showcase** · **Phone Screen Reveal** · **Global Billboard Swipe** · **Billboard App Reveal** · **Swipe Away the Chaos**. When adapting: keep 720p by default, 1080p on the user's choice (some run at 720p), switch UI clips to Seedance 2.0 with frames, replace the template's uploads with the user's screenshots and logo, remove stacks like "8K, hyper-detailed", keep the fidelity lines.
 
 ---
 
@@ -224,7 +226,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 | A screen that must be read word for word | the clip moves the phone; for the read moment, the exact screenshot laid over the screen area (phone still), or a 1.5 to 2 s hold of the design frame as an image clip | video_composer |
 | Headlines, offer, CTA, captions | Video Editor only (text tool, or a transparent PNG text card from the user's designer); never in a generation prompt | video_composer |
 | Animate an existing static ad or end card | the image as first frame on Seedance 2.0; the prompt says what moves when and what stays | seedance-2.0 |
-| Many variants, tight budget | design frames for all; clips on seedance-2.0-fast (720p) for tries; the winner rerun on seedance-2.0 at 1080p | seedance-2.0-fast |
+| Many variants, tight budget | design frames for all; clips on seedance-2.0-fast (720p) for tries; the winner rerun on seedance-2.0 (720p, or 1080p on the user's choice) | seedance-2.0-fast |
 | Store screenshot set | see "Store screenshot sets" below | nano-banana-pro |
 
 **Why several clips here, not the base skill's one clip.** UI needs exact frames per shot, one of the base skill's reasons to split (Step 2); say it in one line of the plan. **Connections (base Step 4):** connect the whole graph at build time. An uploaded screenshot can be a first or last frame right away; a generated design frame becomes a frame link right after it has a result (say this in the plan and make the link automatically before running the clip). Keep count 1 on design frames when the user picks option C.
@@ -236,6 +238,8 @@ The user's explicit choices override any row. Models and prices: base Reference 
 **Layout.** Section "Assets" (uploads + "Fidelity map") → Section "Design frames" (phone shots, end card) → Section "Clips" → Section "Audio" → Section "Final". Labels: "Frame: hero phone · Tonight's plan", "Clip 2: tap Start (A→B)", "End card: iOS", "Final: C1 · floating hero phone".
 
 ## Run options
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes, per option. **A. Design frames (recommended):** phone shots, design frames and end card, count 1 (2 for the hero frame if the user wants a choice) · **B. Clips** for the frames the user approved, with VO and music · **C. Everything** → the Video Editor. C only if the user accepts unchecked frames; the fidelity check is why A comes first.
 
@@ -322,14 +326,14 @@ Static images, not video: a set of store screenshots built around the app's real
 | No end card, or an end card with three CTAs | Store-style end card on every ad, one CTA |
 | Image Translation used on UI screenshots | Localized app screenshots; only captions are written per language |
 | Store screenshot with "Download now", "#1", badges (Google Play) | The store rules table |
-| Clips at 720p | Set 1080p on Seedance 2.0 |
+| 1080p without the user choosing it | 720p by default; 1080p on Seedance 2.0 when the user picks it |
 
 ## Quality gates (UI)
 
 - **Stage 0 (concept, Claude checks before sending):** screens, order and tap points confirmed with the user, and nothing planned beyond the screenshots received? Screenshot quality checked (better originals asked for, or improved and checked)? The "UI is hard" line said once? One product moment? Every element on the lowest rung it can live on? Seedance 2.0 with frames for every screen-led shot and insert, Seedance 2.5 for person-led clips with a UI check planned? A lot of UI split into short clips? No text in any video prompt except the "keep exactly" lines? Every editor text line written word for word? End card planned?
 - **Stage 1 (design frames, phone shots, end card):** every word, number and icon on the screen identical to the screenshot? Nothing added, nothing missing? Screen large and legible at phone size? End card texts spelled right, rating real or absent? Look on brand?
 - **Stage 2 (clips):** pause on the first, middle and last frame: does any letter, number or icon change? Only the planned elements move? Smooth, no flicker or warping? State changes match the after-screenshot? Ends held on the planned frame?
-- **Stage 3 (final):** first frame moving and readable? One product moment clear in one watch? Readable screens rest long enough? Editor text one line at a time, in the safe zone, the same words as the VO? End card 2 to 3 s with the right badge per platform? Music under VO, no clip music? 9:16, 1080p, planned length? Named with its code?
+- **Stage 3 (final):** first frame moving and readable? One product moment clear in one watch? Readable screens rest long enough? Editor text one line at a time, in the safe zone, the same words as the VO? End card 2 to 3 s with the right badge per platform? Music under VO, no clip music? 9:16, planned resolution (720p by default), planned length? Named with its code?
 - **Store sets:** every screen identical to its screenshot? Captions spelled right and within the store rules? Sizes exact for each store? First 3 slots carry the main value?
 
 ## Deliverable and naming

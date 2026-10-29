@@ -1,7 +1,7 @@
 {
   "name": "lyra-mcp-skills",
-  "version": "0.4.0",
-  "description": "Mobile app ad creatives on the Lyra (Muse) MCP server: static images, carousels, video ads, UGC, hooks, UI motion and store screenshots, competitor remakes, audience variations, concept angles, resizing and translation.",
+  "version": "0.5.0",
+  "description": "Mobile app ad creatives on the Lyra (Muse) MCP server: static images, carousels, video ads, UGC, hooks, short dramas, UI motion and store screenshots, competitor remakes, audience variations, concept angles, resizing and translation, plus Brand Kits, fixes, result checks and workflow reviews.",
   "author": {
     "name": "SplitMetrics",
     "url": "https://splitmetrics.com"
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "Lyra",
     "shortDescription": "Make mobile app ad creatives with Lyra",
-    "longDescription": "Connects the Lyra MCP server and adds skills for mobile app ad creatives: static images and carousels, video ads, UGC and hooks, UI motion and store screenshots, competitor remakes, audience variations and new angles on a winning concept, resizing and translation. Generation spends your Lyra workspace's credits; the skills confirm before every run.",
+    "longDescription": "Connects the Lyra MCP server and adds skills for mobile app ad creatives: static images and carousels, video ads, UGC, hooks and short dramas, UI motion and store screenshots, competitor remakes, audience variations and new angles on a winning concept, resizing and translation, plus Brand Kit setup, fixes, result checks and workflow reviews. Generation spends your Lyra workspace's credits; the skills confirm before every run.",
     "developerName": "SplitMetrics",
     "category": "Design",
     "capabilities": [

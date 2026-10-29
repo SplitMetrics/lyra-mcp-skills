@@ -7,6 +7,8 @@ description: Copy a competitor's video ad for a mobile app in Lyra. Analyses the
 
 Mini skill. Takes a video ad that works for someone else, finds out **why** it works, and rebuilds that mechanism for the user's app: their pain, their feature, their person, their words, their brand. Four jobs in order: **analyse** the reference (Step 1a) → **go to the Brand Kit** and take every fact from it (Step 1b) → **ask the user** how to retell the reference, with variations (Step 1c) → **rewrite** the script for the brand (Step 2) → **generate** the new video in Lyra.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **Statics have their own skill.** A static reference (one image, a carousel, several statics) or a static made from a competitor video's key frame → `lyra-copy-competitor-static` (static teardown by Reference L, layout map, new prompt, Nano Banana Pro build, variants). This file is for video.
 
 **The Brand Kit is never skipped.** Close remake or free adaptation, the new ad always gets its name, audience, pains, feature, person, words, claims, offer, colors and ending from the user's Brand Kit (and the user's words in this chat). The reference gives only the mechanism.
@@ -71,7 +73,7 @@ Both modes can run as an A/B test on one teardown: same app card, one remake, on
 2. **Why this ad.** Ask in the same message, one line each, all optional: what do you like in it (the hook, the format, the pacing, the humour)? How long has it been running, and is it a known winner? Whose ad is it (the competitor's app, so we keep their name out of everything)? The ad copy, if they have it (title, caption, body, description from Meta Ad Library): it helps the analysis fill gaps. The mode question comes later, in Step 1c, once Claude knows the reference and the Brand Kit.
 3. **The request.** What the user wants changed or kept ("same but for students", "in Portuguese", "30 s instead of 15", "our mascot instead of a person"). The user's request wins over the reference.
 
-**Defaults (state, don't ask):** mode recommended by Claude, user picks · same length, ratio and platform as the reference (9:16, Reels / TikTok if unclear) · English, or the language the user asks for · models as the base skill (Seedance 2.5 for people, Seedance 2.0 for stylized or UI-led, 1080p, sound on) · Nano Banana Pro for every image · no video reference connected to generation (see "Video reference" below) · an app ending (store-style end card or a phone moment with a real screenshot) offered in Step 1c · competitor's name only inside the "Reference teardown" note.
+**Defaults (state, don't ask):** mode recommended by Claude, user picks · same length, ratio and platform as the reference (9:16, Reels / TikTok if unclear) · English, or the language the user asks for · models as the base skill (Seedance 2.5 for people, Seedance 2.0 for stylized or UI-led, 720p by default (1080p on the user's choice), sound on) · Nano Banana Pro for every image · no video reference connected to generation (see "Video reference" below) · an app ending (store-style end card or a phone moment with a real screenshot) offered in Step 1c · competitor's name only inside the "Reference teardown" note.
 
 **Recommended first run:** A. Images first (character and keyframes), as in the base skill. The analysis itself runs before the plan.
 
@@ -353,7 +355,7 @@ Never use their footage as a frame, a layer, a B-roll or a motion source.
 | Transfer map (text) | one row per element: reference → ours → keep / translate / drop → why | their lines copied in as "ours" |
 | Script (text) | the new lines per beat with times and word counts; captions marked for post; the side by side table | their exact words, product name, slogan, claims |
 | Character image | our persona's card from the user's audience (UGC rules); the reference's framing and camera setup described in words | their actor's description ("like the girl in the ad"); a lookalike; their outfit or set |
-| Video clip | roles of references first ([Image1] is our character…), then the reference's shot plan **in words**: framing, camera setup, action per beat, "cut to" with lengths, our lines in quotes, sound line, end state | "as in the reference video", "same as the competitor"; their text, logos, colors; a video reference without its job stated |
+| Video clip | roles of references first ([Image1] is our character…), then the reference's shot plan **in words**: framing, camera setup, action per beat, "cut to" with lengths, our lines in quotes, sound line (when someone speaks: voices and scene sounds only, "no music, no background music, no soundtrack, no score", base Reference C), end state | "as in the reference video", "same as the competitor"; their text, logos, colors; a video reference without its job stated |
 | Music | genre, tempo and energy curve of the reference's track, described | their track, the song name, the artist name (error) |
 | VO | our words only, sized to the beat timing, ~1 s shorter than the video | their wording translated line by line |
 
@@ -362,6 +364,8 @@ Every prompt is self-contained (base rule): describe the shot itself, never "lik
 ---
 
 ## Run options (copy)
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes, per option. The analysis comes first and on its own: **Path 1** costs what the Creative Analysis node shows next to Run (say it before running) · **Path 2** costs no credits. Then: **A. Images (recommended):** character and keyframes · **B. Clips** for the picked images, with VO and music · **C. Everything** → Video Editor. Remake and adaptation together: the same options, multiplied by two.
 
@@ -424,7 +428,7 @@ Name every final with a code the media buyer can paste into Ads Manager: `B{batc
 - **Stage 0 (teardown, Brand Kit, map and script; Claude checks before sending):** the Brand Kit chosen and confirmed (asked when there was more than one)? Its sheet filled, gaps marked? Mode, variation and ending picked by the user, all told in the kit's terms? Layer 1 a valid JSON object by Reference K (exact names and enums, all required fields, `visual_summary` first, claims in the claim format, analysed on frames every 3 s across the whole video)? Every field of layer 2 filled or marked as a gap? The bet in one line? Every reference beat mapped (keep, translate, drop)? Pain and feature real for our app? Their claims dropped? Lines pass the rewrite test? Timing adds up (remake: each beat about ±0.5 s)? Word counts fit at a calm pace? Don't copy list written?
 - **Stage 1 (images):** our persona from our audience, clearly not their actor? Our palette and setting? The reference's framing and camera setup there? (Plus the base, UGC or UI stage 1 checks.)
 - **Stage 2 (clips):** beats in the reference's order and rhythm? The hook lands like theirs, in our words? If a video reference was used: no leak of their people, colors, text or logo? (Plus the format's stage 2 checks.)
-- **Stage 3 (final), side by side:** ask the user to watch both one after the other. Same mechanism, same energy in the first 3 s? Is it clear in one watch what **our** app does? Anything that still says "competitor" (a phrase, a look, a sound, a color)? Promise matches our store page? Captions, CTA, 9:16, 1080p, length, name with its code? AI label reminder given?
+- **Stage 3 (final), side by side:** ask the user to watch both one after the other. Same mechanism, same energy in the first 3 s? Is it clear in one watch what **our** app does? Anything that still says "competitor" (a phrase, a look, a sound, a color)? Promise matches our store page? Captions, CTA, 9:16, planned resolution, length, name with its code? AI label reminder given?
 
 ## After the test
 
@@ -537,9 +541,3 @@ Plus: **`color_palette`** 2 to 3 dominant hex colors, most dominant first · **`
 ## Reference L. Static ad creative analysis standard
 
 Moved to `lyra-copy-competitor-static` (Reference L there, the team's full static standard with field descriptions and the worked example).
-
----
-
-## Sources behind this skill
-
-`lyra-video-ad-generation`, `lyra-video-hooks`, `lyra-ugc-video`, `lyra-ui-motion-video` (this project) · Lyra Mini Training part 1, Creative Analysis chain (Upload Video → Creative Analysis → Video Script → Video Generation) · the team's video ad creative analysis standard (taxonomy and schema, Reference K; the static standard lives in `lyra-copy-competitor-static`) · Lyra Creative Brief node rule: "external references: keep only the idea (concept, structure, hook, format); never logos, brand visuals, colors, identity; rewrite text" · Lyra node configs (Oct 2026: `pattern_import` listed; no MCP tool creates it; Seedance video reference limits) · base Reference J on using long-running competitor ads as benchmarks. Guidance, not legal advice.

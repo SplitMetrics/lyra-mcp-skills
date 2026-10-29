@@ -7,6 +7,8 @@ description: Audience variations of a mobile app video ad in Lyra. The same ad, 
 
 Mini skill. Takes a video ad that works (a Lyra workflow, a finished video, or a concept about to be built) and makes versions of it for other parts of the app's audience by changing **what the viewer sees and hears**: the person, their clothes, the room, the car, the time of day, the market, the voice. The message, the angle, the script, the beats, the camera and the edit stay. One version = one Lyra **variation** of the original workflow.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **Why it works.** In app ads, the visible world is targeting. In the first second the viewer reads who this is about from the face, the clothes, the room and the things around the person, and decides "that's me" or scrolls. The same proven message in a world that looks like another segment's life can reach people the original never stopped. And because the message stays identical, each version is a clean test of one visible thing.
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different layer, bundle or build serves the audience better, do it and say why in one line. Only a few things are fixed: truth (no invented claims, reviews or numbers; an AI person is never a real customer), the Brand Kit's facts, casting ethics (no real people or lookalikes, no stereotypes, adults only as speakers), the product and its real UI, Lyra's technical limits, and the user's explicit choices.
@@ -96,9 +98,9 @@ Both can run in one round: the original as control + 1 to 2 clean variations + 1
    > V3 · students · A: setting only (a shared dorm room instead of her own bedroom) · a cheaper, louder room is closer to most students' nights
    > V4 · night-shift nurses (kit segment 2) · B: person, wardrobe (scrubs on the chair, mask marks), time (9 am, daylight through blinds), 4 words · nurses stop for someone who sleeps at the wrong time like them
    > V5 · Brazil, students · B: person, setting, market markers, voice and language (Brazilian Portuguese) · a local face, room and voice beat a dubbed import
-5. **Ask only what's needed**, in one message: which segments, markets or layers (with your recommendation) · mode A or B per version · how many (default 2 + the original as control) · language per version · screenshots, if a phone moment must be rebuilt and they aren't in the workflow · anything the brand doesn't want on screen (an age group, a car class, a look).
+5. **Intake quiz** (base Step 1 format: one message, multiple choice, options from the Brand Kit, the recommended option first): which segments, markets or layers (with your recommendation) · mode A or B per version · how many (default 2 + the original as control) · language per version · screenshots, if a phone moment must be rebuilt and they aren't in the workflow · anything the brand doesn't want on screen (an age group, a car class, a look).
 
-**Defaults (state, don't ask):** 2 versions + the original as control · **one variation per version**, copied from the original, which stays Main and untouched · mode A for tests, B for a new segment or market · cheapest informative layer first when the user has no preference (voice on a separate VO, a prop, wardrobe) · same length, ratio and platform as the original · real people: Seedance 2.5, references only, 1080p, sound on · Nano Banana Pro for every image, 9:16, 2K (4K for close selfies) · captions changed only where words changed · same music, end card, CTA and hook.
+**Defaults (state, don't ask):** 2 versions + the original as control · **one variation per version**, copied from the original, which stays Main and untouched · mode A for tests, B for a new segment or market · cheapest informative layer first when the user has no preference (voice on a separate VO, a prop, wardrobe) · same length, ratio and platform as the original · real people: Seedance 2.5, references only, the original's resolution (720p by default), sound on · Nano Banana Pro for every image, 9:16, 2K (4K for close selfies) · captions changed only where words changed · same music, end card, CTA and hook.
 
 **Recommended first run:** A. The changed images (portraits, wardrobe or world frames for every version; images are cheap, and they show whether the variation reads in one glance).
 
@@ -188,7 +190,7 @@ In Lyra every version of a finished creative is a **variation** of its workflow:
 2. `create_variation` with `copy_from_variation_uuid` = the original and `title` = code, what changed, segment, language: "V4 · Ana · nurses · EN", "V3 · dorm room · students · EN". The copy carries the original's results, so everything that doesn't change is already there and never reruns.
 3. `switch_variation` to it (Lyra renames the workflow after the main variation; tell the user which one is open), then `get_workflow`.
 4. Write the change in with `update_node`, only on the nodes that carry the changed layers (layer map below). Everything else stays word for word. Another segment or market with its own kit → `assign_brand_kit` on this variation (each variation has its own).
-5. Read the price on the nodes that will rerun and offer the run options. Unchanged nodes keep the copied results.
+5. Read the price on the nodes that will rerun and put it in the approval message (base Step 6: one question, then run everything). Unchanged nodes keep the copied results.
 6. Repeat from step 2 for the next version (always copy from the original, not from another version).
 7. When done, `switch_variation` back to the original if the user wants it shown first, and say which variation holds which version.
 
@@ -262,11 +264,13 @@ Check every swapped frame for **bleed** (traces of the old face, outfit, room or
 
 > UGC phone photo, same person in a different car. [Image1] is the original frame: keep the woman, her face, hair, outfit, pose, expression, the phone in the dashboard mount, the framing and the camera angle exactly. Change only the car: a ten-year-old compact hatchback, worn grey fabric seats, a child seat visible in the back, a water bottle and a parking receipt in the door pocket, a scuffed plastic dashboard; daylight through the side window as before. Generic car, no logos, no badges, no readable text or plates. Phone-camera look, deep focus, natural skin texture. No captions, no watermark.
 
-**Pattern: what changes in a clip prompt (Seedance 2.5).** Only the lines of the changed layers are replaced: the identity line ("[Image1] is Ana: her face, ponytail, navy t-shirt, and her bedroom in morning daylight"), the voice anchor ("Voice: woman, late 20s, warm low voice, neutral American accent, tired, unhurried") and the audited lines ("Nine a.m. and I still can't sleep."). Camera, action order, cuts, sound line, end state and the avoid line stay word for word.
+**Pattern: what changes in a clip prompt (Seedance 2.5).** Only the lines of the changed layers are replaced: the identity line ("[Image1] is Ana: her face, ponytail, navy t-shirt, and her bedroom in morning daylight"), the voice anchor ("Voice: woman, late 20s, warm low voice, neutral American accent, tired, unhurried") and the audited lines ("Nine a.m. and I still can't sleep."). Camera, action order, cuts, sound line, end state and the avoid line stay word for word. One fix is allowed: if someone speaks and the original's sound line lets music in, add "no music, no background music, no soundtrack, no score" (base Reference C); music stays the original's track in the Video Editor.
 
 ---
 
 ## Run options (audience variations)
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes, per option, multiplied by the number of versions. **A. Changed images (recommended):** portraits (count 2 per person), wardrobe or world frames · **B. Frame swaps and phone shots** for the picked images · **C. Clips and Video Editors** · or **D. Everything** at once (count 1; no pause to pick). Voice-only versions on a separate VO cost only the VO. When an image has several results, the user selects one in Lyra before the next stage (references pin to the selected result).
 
@@ -323,7 +327,7 @@ The original keeps its name as V1. Versions add `V{n}{Layer}{Segment}`, and the 
 - **Stage 0 (variation map and sheet; Claude checks before sending):** every version tied to a segment from the Brand Kit (or a confirmed hypothesis) and a one-line hypothesis? Mode and layers named per version, one layer in mode A? World cards complete, voice anchors included? Lock list written? Line audit done for mode B and new languages, only identity-bound words changed, word counts within about ±10%, same claims? One-story test passed? No personal-attribute callouts, no brands, casting respectful?
 - **Stage 1 (images):** the tested difference reads in one glance at thumbnail size? Everything else the same as the original (mode A)? The person and world read as the segment (mode B)? Portraits natural, imperfect, looking into the camera, no text? No bleed? Hands, phone and screen right (the screen identical to the screenshot)? No logos or readable text? Phone-real, not glossier than V1?
 - **Stage 2 (clips):** voice fits the face, age and market? Lip-sync right, app name pronounced right? Beats and timing match the original (about ±0.5 s)? Same camera behaviour? Person and world stable through the cuts? If [Video1] was used: no trace of the old person or place?
-- **Stage 3 (finals), side by side with the original:** only the intended differences visible? Captions match the new words? Same music, CTA and end card? 9:16, 1080p, planned length? Named with its V code? AI label reminder given?
+- **Stage 3 (finals), side by side with the original:** only the intended differences visible? Captions match the new words? Same music, CTA and end card? 9:16, the original's resolution, planned length? Named with its V code? AI label reminder given?
 
 ## After the test
 
@@ -331,9 +335,3 @@ The original keeps its name as V1. Versions add `V{n}{Layer}{Segment}`, and the 
 - Read: hook rate first (the visible world decides the first second), then hold rate, CTR, cost per trial and payers. Then the age, gender and country breakdowns in Ads Manager: did each version pull the segment it was made for? A version that wins its segment but loses overall is still a result: a segment ad.
 - The learning is the layer: person, wardrobe, setting, prop, time, market or voice. The next round pushes the winning layer further, combines winning layers into one audience version, or keeps the winning world and tests new hooks (`lyra-video-hooks`) or new angles (`lyra-ad-concept-multiplier`) in it. A winning person can become the campaign's recurring face.
 - Save to the project's creative repository: version, layers changed, segment, hypothesis, result.
-
----
-
-## Sources behind this skill
-
-`lyra-video-ad-generation` (consistency anchors: character, environment, style, product), `lyra-ugc-video`, `lyra-video-hooks`, `lyra-ui-motion-video`, `lyra-copy-competitor-ad` (this project) · Lyra Mini Training part 1: Character Brief (one idea, two characters, same background, tested together), Text Generation + Split Text for several UGC character descriptions from the Brand Kit's audience, Character Generation · Lyra's Character Generation node prompt (from Sasha, Oct 2026) · Lyra canvas: Create variation duplicates the whole space; the workflow menu has Save as a new workflow (Sasha, Oct 2026) · Lyra MCP tools (Oct 2026): `create_variation` copies nodes, edges and results; each variation has its own nodes, runs and brand kit; `switch_variation` makes one main and renames the workflow after it; no tool creates the Character Brief or Character Generation node or saves a variation as a new workflow · Meta personal attributes ad policy · casting-is-targeting practice in app UGC (sources in `lyra-ugc-video`). Guidance, not legal advice.

@@ -7,6 +7,8 @@ description: Carousel ads for mobile apps in Lyra, 2 to 10 cards that tell one c
 
 Image mini skill. Builds a carousel ad as **one story told in N cards**: a hook card that stops the scroll and makes people swipe, middle cards that each carry one idea, and a last card that closes with the CTA. Every card looks like it belongs to the same set (same person, same world, same palette, same type, same layout grid), and the text reads as one voice from card 1 to card N.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 The story is written once, as one **carousel script**, and Lyra's **Text Split** node cuts it into one part per card. Each part is a complete card prompt that feeds its card's image node. One script = one source of truth: the user edits the story in one place, reruns the split and the cards follow.
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text, realism, styles, models (Reference A), layout library (B), styles (C), realism toolkit (D), persona and consistency (E), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file only adds what is specific to carousels and to the split pipeline. If the two disagree, the user wins, then this file, then the base skill.
@@ -266,6 +268,8 @@ Stages for a carousel: **1** = sources (split, persona, uploads) · **2** = card
 
 ## Run options (carousel)
 
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
+
 As in the base skill, credits read from the nodes, per option:
 
 | Option | Runs | Results | Credits | Time |
@@ -383,7 +387,3 @@ Variants live next to the original in the same workflow (one row per version) or
 **Benchmarks (third-party, directional):** median swipe from card 1 to card 2 about 62%, card 5 reached by about 22% (adlibrary.com citing Klaviyo); viewers who reach card 3 convert several times more often; a steep drop after card 4; 3 to 5 cards recommended for installs (RocketShip HQ); carousels fatigue at a lower frequency than video, so plan card refreshes. On TikTok, photo carousels reported about 1.8x the engagement of videos but fewer shares (Stack Influence, Dec 2025).
 
 **Structures the sources agree on:** card 1 stands alone and teases · one idea per card · proof as a receipt (a screen, a result), not a testimonial · the last card adds no new info · continuity devices (counters, numbered steps, panoramas, a shared band) signal "more" · lock the order for stories · refresh by swapping the weakest card · vary one card at a time in tests.
-
-## Sources behind this skill
-
-`lyra-static-image-generation` (base), `lyra-copy-competitor-static` (carousel teardown, card list), `lyra-video-hooks` (card 1 as the hook), `lyra-ugc-video` (persona, place, one-story test), `lyra-ui-motion-video` (UI fidelity), `lyra-audience-variations`, `lyra-ad-concept-multiplier`, `lyra-video-ad-generation` (this project) · Lyra Text Split node system prompt (from Sasha, Oct 2026) and `list_node_configs` (`text_split`, `openai/gpt-5-structured`) · Lyra System Preamble (brand safety, forbidden claims) · adlibrary.com: Carousel ad examples 2026 and Carousel ads 2026 · RocketShip HQ: Carousel ads for mobile apps · AdManage: Meta carousel ad specs 2026 · Make App Ads: Instagram carousel ads for apps (July 2026) · sprites.ai Meta ad reads (Headway, Duolingo, Calm, BetterMe, Sept to Oct 2026) · Stack Influence: TikTok photo posts (Dec 2025). Third-party numbers are directional, not guarantees.

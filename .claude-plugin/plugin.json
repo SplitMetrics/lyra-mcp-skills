@@ -1,7 +1,7 @@
 {
   "name": "lyra-mcp-skills",
-  "description": "Mobile app ad creatives on the Lyra (Muse) MCP server: static images, carousels, video ads, UGC, hooks, UI motion and store screenshots, competitor remakes, audience variations, concept angles, resizing and translation, bundled with the Lyra MCP server so one install sets up both.",
-  "version": "0.4.0",
+  "description": "Mobile app ad creatives on the Lyra (Muse) MCP server: static images, carousels, video ads, UGC, hooks, short dramas, UI motion and store screenshots, competitor remakes, audience variations, concept angles, resizing and translation, plus Brand Kits, fixes, result checks and workflow reviews, bundled with the Lyra MCP server so one install sets up both.",
+  "version": "0.5.0",
   "author": {
     "name": "SplitMetrics",
     "url": "https://splitmetrics.com"
