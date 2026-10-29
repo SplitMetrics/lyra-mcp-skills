@@ -7,6 +7,8 @@ description: Hooks for mobile app video ads in Lyra, built from the Brand Kit an
 
 Mini skill. Finds the audience's pains in the Brand Kit, writes a bank of hook ideas, then turns the best 4 (3 to 6) into finished videos in Lyra.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different hook, order or combination serves the idea better, do it and say why in one line. Only a few things are fixed: truth (no invented claims, reviews or numbers), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
 
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to hooks. If the two disagree, the user wins, then this file, then the base skill.
@@ -58,7 +60,7 @@ Hooks are built on the **Brand Kit** and on the **real pains of the audience**. 
    - **Objections:** why they hesitate.
    - **Product truth:** real features, claims, offer, proof, tone of voice, must include / must exclude, forbidden claims.
 3. **If the pains are missing, vague or too generic**, don't block: write 3 to 5 **pain hypotheses** from the app card (each one line, in the audience's words) and ask the user to confirm, pick or correct them. Still propose hook ideas in the same message so work moves.
-4. **Ask only what's needed**, in one message, with the base skill's questions:
+4. **Intake quiz** (base Step 1: one message, multiple choice, options from the Brand Kit, the recommended option first, 4–8 questions; skip what the task or the kit already answers), with these questions plus the base quiz questions that apply:
    - Body already (mode A, hook multiplier) or not (mode B)? Where does the old hook end? Is it a validated winner? Its hook rate, hold rate, CTR if known.
    - Which pain or segment to lead with, if the kit has several (offer your recommendation).
    - Hook preference: visual, verbal, combined, or "you decide" (default: you decide and explain).
@@ -66,7 +68,7 @@ Hooks are built on the **Brand Kit** and on the **real pains of the audience**. 
    - How many hooks (default 4)? Tone, types or claims to avoid?
 5. **Propose ideas straight away.** Don't wait for perfect input: the first reply already carries the pain map (or hypotheses) and the first hook ideas.
 
-**Defaults (state, don't ask):** cold traffic · bank of 12 to 15 · N = 4 · 9:16 · Reels / TikTok · English · final 10 to 15 s in mode B, body length + hook in mode A · Seedance 2.5 for people, 2.0 for stylized or UI · 1080p · sound on · voiceover on in mode B.
+**Defaults (state, don't ask):** cold traffic · bank of 12 to 15 · N = 4 · 9:16 · Reels / TikTok · English · final 10 to 15 s in mode B, body length + hook in mode A · Seedance 2.5 for people, 2.0 for stylized or UI · 720p (1080p on the user's choice) · sound on · voiceover on in mode B.
 
 **Debug path from the numbers:**
 
@@ -93,7 +95,7 @@ Couldn't browse or found nothing → say so and work from the Brand Kit. Never i
 1. `list_templates` with tags ["Hook"] (add "UGC" or "Talking Head" for a person to camera).
 2. Offer up to 3 that fit the audience, tone and the hook ideas: title + one line why + preview link. The user may pick one, several or none.
 3. Picked → `get_template`, `use_template`, then adapt: rewrite the Video Script for the app card and the chosen pain with `update_node`, replace every placeholder ("[App Name]", "[main benefit]"), upload the logo, packshot or screenshots it needs.
-4. Templates are fast demos: some use Seedance 2.0 Fast at 720p, some draw UI or a "DOWNLOAD" button. Say once: Seedance 2.5 (people) or 2.0, 1080p, real screenshots (base Reference D). Follow the user's choice.
+4. Templates are fast demos: some use Seedance 2.0 Fast at 720p, some draw UI or a "DOWNLOAD" button. Say once: Seedance 2.5 (people) or 2.0, 720p by default, real screenshots (base Reference D). Follow the user's choice.
 
 Hook templates in Lyra (Oct 2026); always re-check `list_templates`:
 **Visual stop, object POV:** Knock, Blinds, Hook door, Camera is in a bag, Fridge Camera, Trunk POV, Empty Cup Hook, Library Shelf Hook, Morning Girl, Pogo Stick Fall.
@@ -228,7 +230,7 @@ Write the muted version first: the first frame plus text must work with sound of
 - **First frame:** the hook moment at frame 0, already moving. It is also the thumbnail, so it must read on its own.
 - **Spoken line** (verbal and combined hooks): aim for about **6 to 10 words**, said within ~3 s; count the words. Start on the key word; no "So", "Okay", "Hey guys". A longer line is fine only if it still lands by second 3.
 - **Text on screen:** 2 to 6 words, echoes the line (doesn't contradict it), on frame 1 in full, marked for post (added in the Video Editor, never in a prompt), inside the safe zone.
-- **Sound:** what is heard in the first second. Sound stays on at generation.
+- **Sound:** what is heard in the first second. Sound stays on at generation. When someone speaks in the clip: no music under the voice ("no music, no background music, no soundtrack, no score" in that clip's prompt, base Reference C). Clips without speech may keep their music hits.
 - **Visual beat** (combined hooks): 0.5 to 1 s, then the line starts on top of it or right after; both tell one idea.
 
 **Checks for every line:** one idea · simple (about a 5th grade reading level, no corporate or "AI" marketing words) · sounds natural said aloud · specific to this app, audience and moment (if it could sell a hundred apps, rewrite) · true (nothing outside the Brand Kit, app card or verified research) · different from the other hooks.
@@ -307,9 +309,11 @@ The user's explicit choices override any row. Models and prices: base Reference 
 
 ## Video Editor per hook
 
-One `video_composer` per hook, in playback order: hook clip → body clip(s) → end card, then VO and music. Everything except the hook is identical across variants: same body trims, same music (starting at 0 so the hit lands on every hook), same body VO and CTA, same end card. Keep the hook's own sound or line; lower the body clip's sound if it clashes. Hook text and captions are added in the editor UI: tell the user what to add and where. If the hook opens a loop or promises a list, check the body delivers it.
+One `video_composer` per hook, in playback order: hook clip → body clip(s) → end card, then VO and music. Everything except the hook is identical across variants: same body trims, same music (starting at 0 so the hit lands on every hook), same body VO and CTA, same end card. Keep the hook's own sound or line; lower the body clip's sound if it clashes. Hook text and captions are added in the editor UI: tell the user what to add and where. Captions, if the user wants them (asked in the approval message), follow the base rule (`lyra-video-editor` → Captions: size 80, at 75% of the height, under the face); the hook text on frame 1 is a headline, placed in the safe zone. If the hook opens a loop or promises a list, check the body delivers it.
 
 ## Run options for hooks
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes and multiplied by N; the hook bank costs nothing. **A. Hook images (recommended):** all N keyframes and characters · **B. Hook clips** for the frames the user picked · **C. Everything** → N Video Editors.
 
@@ -335,6 +339,7 @@ No third-party brands, games, channels, landmarks used as brands, or famous peop
 
 | Mistake | Prevention |
 |---|---|
+| A hook clip where someone speaks comes with music under the voice | No-music sound line in every clip with speech; our music in the Video Editor |
 | Hooks written without reading the Brand Kit | Pain map first; every hook tied to a real pain or desire |
 | Waiting for perfect input before proposing anything | Pain hypotheses + first ideas in the first reply |
 | Visual beat and line say two different things | One idea per hook across all layers |
@@ -377,9 +382,3 @@ Hooks are hypotheses. Tell the user how to read the test in one short block:
 - Judge winners by CPA / ROAS (cost per install, trials, payers), not hook rate alone.
 
 Then offer: save winning and losing hooks (hypothesis, kind, pain, line, visual, hook rate) to a **hook repository** doc in the project; the next round from the unused bank; the winning hook on other ads of the same angle; Better on the winner; other sizes or languages (matching skills). A winner lives about 2 to 6 weeks: start the next round before it fatigues.
-
----
-
-## Sources behind this skill
-
-GBP and More, Better, New creative frameworks · creative testing and data reporting practice · a direct response hook-writing manual (awareness levels, voice of customer, hook categories) · Lyra's own Creative Brief and Video Script nodes and Hook templates · 2026 articles on hooks: Greenfrog Labs (Apr), Vmobify (May), Vidovo (Jun), Kineclip (Jul), AppsFlyer State of Creative Optimization 2026 (data to Q2 2026), RocketShip HQ (updated Sep), UGC Copilot (Oct), Lightreel (Oct); on catchy and brainrot formats: Opus (Apr), ContentGrip (May), Ortheon (Jul), Starrd monthly AI video trends (Jun to Oct), Influencers Time on chat-thread ads (Oct), McGraw Hill on AI slop backlash (May), Fast Company on brand brainrot (Jan). Their numbers are mostly vendor data: guidance, not law.

@@ -60,8 +60,12 @@ Core skills hold the shared rules; the others point to them.
 |---|---|
 | `lyra-static-image-generation` | **Core image skill.** Static ads and images end to end: concept, layout, on-image text, realism, models, references, de-slop |
 | `lyra-video-ad-generation` | **Core video skill.** Video ads end to end: brief, script, scenes, keyframes, clips, voiceover, music, assembly |
+| `lyra-brand-kit` | **Core brand skill.** Build the app's Brand Kit from what the user sends, fill it into Lyra, and the rules every skill follows to read it |
+| `lyra-workflow-layout` | Canvas layout for every workflow Claude builds or changes: sections in run order, STEP notes, the team's color code |
+| `lyra-video-editor` | Assembly stage of every video: mix, end card, text, captions, pacing, SFX, render check, 59/30/15 s cutdowns |
 | `lyra-ugc-video` | UGC-style ads: a realistic person talking to the camera (talking head, testimonial, storytime, street interview) |
 | `lyra-video-hooks` | Hook banks from the audience's pains, turned into finished videos for an A/B test |
+| `lyra-short-drama` | 60–120 s mini-series story ads, animated or realistic, where the app is the turning point |
 | `lyra-ui-motion-video` | App UI in motion, store-style end cards, and App Store / Google Play screenshot sets, with UI text kept exact |
 | `lyra-carousel` | 2–10 card carousels that tell one consistent story |
 | `lyra-copy-competitor-ad` | Remake a competitor's video ad for the user's app |
@@ -70,6 +74,9 @@ Core skills hold the shared rules; the others point to them.
 | `lyra-ad-concept-multiplier` | New angles on a winning concept, as Lyra variations |
 | `lyra-image-resize` | An approved image recomposed for other ratios and placements |
 | `lyra-image-translation` | An approved image localized into other languages |
+| `lyra-fix` | Fix one part of a finished video or image ad without rebuilding it |
+| `lyra-result-check` | Check a finished video or image by looking at it (frames, faces, hands, text, sound), after every final render |
+| `lyra-workflow-review` | Explain any workflow in plain words, find what's broken, price a rerun, and fix it on request |
 
 ## Layout
 

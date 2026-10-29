@@ -7,6 +7,8 @@ description: Translate and localize the text on finished app ad images in Lyra (
 
 Image helper skill. Takes an image that is already approved (a static ad, carousel cards, an end card, a store screenshot set) and makes it speak another language: the same ad, the same design, the same promise, with every word written for the new market and checked letter by letter. One output per language, labelled and named so the media buyer can upload them as one multi-language ad.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **Translation is copywriting first, rendering second.** The hard part is not getting letters onto the image, it's having the right words: a headline that sounds native, fits the zone, keeps the hook and says nothing the Brand Kit doesn't allow. So the words are written and approved **before** any credits are spent, in a Localization sheet, and only then rendered. A node that translates on its own is a tool, never the author.
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, on-image text rules, realism, models (Reference A), layout library (B), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to languages and markets. If the two disagree, the user wins, then this file, then the base skill.
@@ -75,7 +77,7 @@ From `list_node_configs` and the MCP tools; re-check at the start of every build
 - **Language codes** (exact, case-sensitive; only these): `ar` Arabic · `be` Belarusian · `bn` Bengali · `zh-CN` Chinese (Simplified) · `zh-TW` Chinese (Traditional) · `cs` Czech · `da` Danish · `nl` Dutch · `en` English · `tl` Filipino (Tagalog) · `fi` Finnish · `fr` French · `de` German · `el` Greek · `he` Hebrew · `hi` Hindi · `hu` Hungarian · `id` Indonesian · `it` Italian · `ja` Japanese · `ko` Korean · `ms` Malay · `mr` Marathi · `no` Norwegian · `fa` Persian (Farsi) · `pl` Polish · `pt` Portuguese · `pa` Punjabi · `ro` Romanian · `ru` Russian · `es` Spanish · `sw` Swahili · `sv` Swedish · `ta` Tamil · `te` Telugu · `th` Thai · `tr` Turkish · `uk` Ukrainian · `ur` Urdu · `vi` Vietnamese.
 - **No regional variants**: one `pt`, one `es`, one `fr`, one `en`. Brazil vs Portugal, Mexico vs Spain, Canada vs France, US vs UK spelling → Route B with the exact words.
 - **The source must have a result.** If the image node made several, the user selects one in Lyra first; the translation uses the selected result. If the source is regenerated later, the translations are stale: rerun them.
-- **What the node does: its system prompt** (Lyra Admin → System prompts → `image_translation`, from Sasha, Oct 2026), in short:
+- **What the node does: its system prompt** (Lyra's `image_translation` system prompt), in short:
   - **Translates only communication text:** hooks, headlines, value propositions, CTA, offer text, captions and short messaging overlays.
   - **Never translates brand elements:** logos, brand names, product names and identity slogans, unless explicitly instructed.
   - **Ignores non-communication text:** environment text (street signs, packaging, decor), decorative text.
@@ -120,7 +122,7 @@ The concept the user approves. A user text node "Localization sheet" (a note for
 
 **5. The ad copy outside the image**, per language: primary text (~125 characters before "more" on Instagram), headline field (~27 to 40 characters), CTA button (Meta's own localized buttons).
 
-**6. The plan table** (base Step 2) and the run options with credits.
+**6. The plan table** (base Step 2) and the credits, in the one approval question (base Step 6).
 
 ### Writing the copy
 
@@ -188,6 +190,8 @@ Stages for translation: **1** = the pilot language and Route A (fast) · **2** =
 **Canvas.** Section "Languages" to the right of the approved ads: the Localization sheet note first, then one row per source image, its language outputs left to right in the order of the sheet. Labels with the code: "C1 · de · 4:5", "Translate C1 · it, nl, pl", "C2 · ja · 4:5 (rebuild, UI ja)". The approved English images are never edited or overwritten.
 
 ## Run options (translation)
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes, per option:
 
@@ -293,9 +297,3 @@ Pass = every point that applies holds for every language. Fix only the failing l
 ## After the test
 
 Read each language by its own market's numbers (cost per install, trial, payer; enough results per market before calling it), not against the English average: markets have different CPMs and conversion. A language that underperforms is a hypothesis: the words (try a second transcreation of the hook), the market (the picture may need a local version: `lyra-audience-variations`), or the offer. Save the Localization sheet and the glossary to the project: the next ad in that market starts from the approved terms, formality and tone.
-
----
-
-## Sources behind this skill
-
-`lyra-static-image-generation` (base: on-image text, Reference G UI, Reference H sizes and languages), `lyra-ui-motion-video` (UI fidelity, store sets: localized screenshots, never Image Translation on UI), `lyra-carousel`, `lyra-audience-variations` (market markers, mode B), `lyra-video-hooks` (line checks), `lyra-copy-competitor-static`, `lyra-video-ad-generation` (VO in other languages) (this project) · Lyra `list_node_configs` (Oct 2026: `image_translation`, preferred model `google/nano-banana-2`, 40 language codes) and the `create_image_translation_node` tool · Lyra's Image Translation node system prompt (`image_translation`, from Sasha, Oct 2026: communication text only, brand elements and environment text kept, UI only on explicit instruction, layout preserved, natural adaptation) · Lyra System Preamble (brand safety, forbidden claims) · Meta Marketing API docs, Multi-Language Ads (developers.facebook.com/docs/marketing-api/multi-language-ads) · Jon Loomer on Meta's Translate Text feature · localization design guides on text expansion and RTL (Salesforce Lightning Design System localization guidelines, SimpleLocalize, Linguise, Kwintessential). Expansion numbers are directional, not rules.

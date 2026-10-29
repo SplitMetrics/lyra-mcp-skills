@@ -7,12 +7,13 @@ description: Adapt a finished app ad image in Lyra to other aspect ratios and ad
 
 Image helper skill. Takes an image that is already approved (a static ad, carousel cards, an end card, a phone shot) and makes it fit another frame: the same ad, the same elements, the same words, the same look, **recomposed** for the new ratio and the placement's safe zones. One output per ratio, labelled and named so the media buyer can upload them as one ad with an asset per placement.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **Resize is recomposition, not cropping.** A crop throws away part of the ad; a stretch distorts it; a centered copy on a bigger canvas wastes the frame. A good resize decides again where each element lives in the new frame, so the hero stays the hero, the headline stays readable and the CTA stays clear of the platform's buttons. So the layout for every ratio is planned **before** any credits are spent, in a Resize sheet, and only then rendered.
 
 **Adaptation, not improvement.** The goal is the same image in a new frame, not a better one. Nothing is added, nothing is dropped, nothing is "fixed": no new text, no sharper skin, no higher contrast, no cleaner UI. That is the Image Resize node's own rule (below), and this skill holds every route to it.
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text rules, realism, models (Reference A), layout library (B), edits and recompose (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to ratios and placements. If the two disagree, the user wins, then this file, then the base skill.
-
 
 **Other skills for their parts.**
 - Other **languages** → `lyra-image-translation`. Order: **languages first, sizes second** (each approved language is resized; fewer runs, and a text that grew in translation is placed once per ratio).
@@ -69,7 +70,7 @@ From `list_node_configs` and the MCP tools; re-check at the start of every build
 - **Whether the resize node shows resolution and an instruction field** is checked after creating it (`get_workflow`). When it shows resolution, set **2K** (4K when the image carries small text or a screen to read). When it has a prompt field that `update_node` can fill, the instruction from the Resize sheet goes there (pattern below). Write in the project notes what the first build shows, so the next build skips the check. No field reachable → Route A runs on the node's own rules, and anything that needs exact placement goes through Route B.
 - **The source must have a result.** If the image node made several, the user selects one in Lyra first; the resize uses the selected result. If the source is regenerated later, the resized images are stale: rerun them.
 - **The node re-renders the whole image generatively.** It extends and recomposes; it does not crop pixels. So the person, the screen, the logo and every letter are redrawn and must be checked again in every ratio. For pixel-exact assets (a legal-approved pack shot, a logo lockup, a store screenshot), say so and use Route D.
-- **What the node does: its system prompt** (Lyra Admin → System prompts → `Image resize`, from Sasha, Oct 2026), in short:
+- **What the node does: its system prompt** (Lyra's `Image resize` system prompt), in short:
   1. **Preserve all visual elements:** product, headline, CTA, logo, offer badge, background, people; nothing dropped, cropped out or omitted.
   2. **Reorganize the layout for the new ratio:** wide → tall stacks the elements vertically, moves text from the sides to the top or bottom and gives the product more vertical space; tall → wide spreads the elements horizontally so text doesn't crowd the product.
   3. **Respect platform safe zones:** 9:16 Stories and Reels: top 15% and bottom 20% are UI overlay zones, all critical content (headline, product, CTA) in the center 65% · 4:5 Feed: the full frame is generally safe · 1:1 Feed: center-weighted, balanced on all sides · 1.91:1 link ads: little vertical space, the product and headline first, the CTA visible.
@@ -196,7 +197,7 @@ The concept the user approves. A user text node "Resize sheet" (a note for the u
 
 **4. The fit check:** every text keeps its size feel; a line break may move (written in the sheet: "2 am. / Brain won't stop." → one line in 16:9); words never change. A block that can't fit at a readable size in a ratio → re-plan the zone, or ask the user (Extreme strips), never shrink it below readable. Changing the words is not a resize: it's a variant or a translation, and needs the user's yes.
 
-**5. The plan table** (base Step 2) and the run options with credits.
+**5. The plan table** (base Step 2) and the credits, in the one approval question (base Step 6).
 
 ---
 
@@ -238,6 +239,8 @@ Stages for resizing: **1** = the pilot ratio · **2** = the other ratios · **3*
 **Canvas.** Section "Sizes" to the right of the approved ads: the Resize sheet note first, then one row per source image, its ratios left to right in the order of the sheet. Labels with the ratio and placement: "C1 · 9:16 · Stories + Reels", "Resize C1 · 1:1", "C1 · 16:9 for 1.91:1". The approved images are never edited or overwritten.
 
 ## Run options (resize)
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes, per option:
 
@@ -344,9 +347,3 @@ Pass = every point that applies holds for every ratio. Fix only the failing rati
 ## After the test
 
 Read each placement by its own numbers (cost per result for the goal: install, trial, payer; enough results before calling it). A size that underperforms is a hypothesis: the frame (the hero too small in 9:16, the CTA too low), or the format itself (a recomposed 4:5 is not a native Stories ad; a winning static may need a 9:16-first concept, a UGC video or a carousel there). Save the Resize sheet's plans to the project: the next ad with the same layout resizes from the approved plans.
-
----
-
-## Sources behind this skill
-
-`lyra-static-image-generation` (base: Reference F recompose, Reference H sizes and languages, Reference K Meta statics), `lyra-image-translation` (helper structure, languages before sizes), `lyra-ui-motion-video` (UI fidelity, store sets), `lyra-carousel`, `lyra-copy-competitor-static` (measuring zones from pixels), `lyra-audience-variations`, `lyra-video-ad-generation`, `lyra-video-hooks`, `lyra-ugc-video`, `lyra-copy-competitor-ad` (this project) · Lyra's Image Resize node system prompt (`Image resize`, from Sasha, Oct 2026: preserve all elements, reorganize for the ratio, safe zones, hierarchy, style and colors, typography, breathing room, no enhancement) · Lyra `list_node_configs` (Oct 2026: `image_resize`, preferred model `google/nano-banana-2`, its ratio list incl. 1:4, 1:8, 4:1, 8:1; Nano Banana Pro without the extreme ratios) and the `create_image_resize_node` tool · Lyra System Preamble (brand safety, forbidden claims) · Billo, Meta ads safe zones 2026 (unified 9:16: top 14%, bottom 20 to 35%, sides 6%; Stories-only 14% / 14%) · AppLaunchFlow, mobile app ad sizes 2026 (Google App campaigns 1:1 1200×1200, 1.91:1 1200×628, 4:5 1200×1500; recompose per placement, don't crop one canvas) · Relevant Audience on TikTok ad specs (safe zone from TikTok's overlay files). Numbers are directional; platform specs change.

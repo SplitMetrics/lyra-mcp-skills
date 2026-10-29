@@ -7,6 +7,8 @@ description: UGC style video ads for mobile apps in Lyra, a realistic person tal
 
 This skill makes UGC style video ads for mobile apps; their goal is installs, trials and subscriptions. It casts a believable person from the Brand Kit's audience, puts them where the pain actually happens, gives them a voice that fits, and writes what they say from the audience's real problem. Then builds and runs the video in Lyra.
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 **App ads first.** Every decision in this skill serves one goal: the right person installs the app and keeps using it. UGC here is not brand content, a creator portfolio or product UGC for a physical item; it is a performance ad for an app, judged by installs, trials and payers. When a general UGC habit (unboxing, "shop now", a product held up to the camera, an aesthetic mood film) doesn't move an app install, drop it or translate it into its app version (see "UGC for app ads").
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different person, place, format or order serves the idea better, do it and say why in one line. Only a few things are fixed: truth (no invented claims, reviews or numbers; an AI person is never a real customer), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
@@ -17,7 +19,7 @@ This skill makes UGC style video ads for mobile apps; their goal is installs, tr
 
 **Everything comes from the Brand Kit.** The person, the pain, the speech, the feature, the offer, the tone and the look of every UGC video are built from the app's Brand Kit, never from imagination. Source order (base Reference I): the user's words in this chat → the Brand Kit given in the chat → the Brand Kit connected to the workspace or workflow (`list_brand_kits`; one kit → "Make this for {kit name}?", several → ask which) → none: ask once to send it or to connect one of the workspace's kits. The user's request always wins; the Brand Kit fills everything they didn't say; a conflict is named in one line. Missing facts are asked for or written as hypotheses to confirm, never invented. See "What UGC takes from the Brand Kit" in Step 1.
 
-**Model.** UGC and real people talking: **always Seedance 2.5**, references only, 1080p, sound on. Never Kling or Veo for UGC; if the user wants cheaper, say faces and speech will lose quality and let them decide (base Reference A).
+**Model.** UGC and real people talking: **always Seedance 2.5**, references only, 720p by default (1080p on the user's choice), sound on. Never Kling or Veo for UGC; if the user wants cheaper, say faces and speech will lose quality and let them decide (base Reference A).
 
 ---
 
@@ -135,7 +137,7 @@ An app is invisible software on a phone. Product UGC sells something you can hol
 
 2. **The pain moment.** For the pain you lead with, write one line: who, where, when, what they do, what they feel. Example: "Student, 21, in bed at 2 am, scrolling, can't switch off, annoyed at herself." This line picks the place and the format.
 3. **Customer words.** Store page, reviews, comments, support messages (hooks skill Step 1a). Short phrases only. They feed the speech, never as a copied review.
-4. **Ask only what's needed**, in one message, with the base skill's questions:
+4. **Intake quiz** (base Step 1: one message, multiple choice, options from the Brand Kit, the recommended option first, 4–8 questions; skip what the task or the kit already answers), with these questions plus the base quiz questions that apply:
    - Which pain or segment to lead with (offer your recommendation).
    - Format, or "you decide" (default: you decide from the pain moment, see the format library).
    - Persona preferences: age, gender, look, market; one persona or two for an A/B test.
@@ -147,7 +149,7 @@ An app is invisible software on a phone. Product UGC sells something you can hol
    - Is AI-generated content allowed for this brand, and does the client have a disclosure rule.
    - How many videos (default 1 concept; 2 personas if they want a test).
 
-**Defaults (state, don't ask):** cold traffic · Reels / TikTok · 9:16 · **15 s** (10 to 30) · English · one persona · native speech in the clip (no separate voiceover) · no music for talking head formats, light instrumental music for vlog and POV · captions on all speech (added in the Video Editor) · phone screen hidden unless there are screenshots · Seedance 2.5, 1080p, sound on, duration adaptive · Nano Banana Pro for every image, 9:16, 2K (4K for close-up selfies), character count 2 · CTA spoken + caption, logo end card optional.
+**Defaults (state, don't ask):** cold traffic · Reels / TikTok · 9:16 · **15 s** (10 to 30) · English · one persona · native speech in the clip (no separate voiceover) · no music for talking head formats, light instrumental music for vlog and POV (always its own node in the Video Editor, never inside the clip) · captions: ask the user in the approval message (if yes: all speech, added in the Video Editor; size 80, at 75% of the height, under the face: `lyra-video-editor` → Captions) · phone screen hidden unless there are screenshots · Seedance 2.5, 720p (1080p on the user's choice), sound on, duration adaptive · Nano Banana Pro for every image, 9:16, 2K (4K for close-up selfies), character count 2 · CTA spoken + caption, logo end card optional.
 
 **Recommended first run:** A. Character images (the person decides the whole video; images are cheap).
 
@@ -351,7 +353,7 @@ A reference, not a menu. Pick from the pain moment; combine and adapt.
 
 **Lyra UGC templates.** `list_templates` with tags ["UGC", "Talking Head"]; offer up to 3 that fit (title + one line why + preview link); always re-check the list. Picked → `get_template`, `use_template`, then adapt as in `lyra-video-hooks` Step 1b, plus for UGC:
 
-- The video model becomes **Seedance 2.5**, references only, 1080p, sound on (several templates use Kling 3.0 or Seedance 2.0 at other settings); say it once and follow the user's choice.
+- The video model becomes **Seedance 2.5**, references only, 720p by default (1080p on the user's choice), sound on (several templates use Kling 3.0 or Seedance 2.0 at other settings); say it once and follow the user's choice.
 - Rewrite the script node with this skill's speech (problem first, the persona's words), replace every "[App Name]" and "[main benefit]".
 - Replace the template's persona with a character card from the audience; remove "flawless skin", "Vogue editorial", "4K" style tags (UGC is phone-real).
 - Remove on-screen text, stickers and "link in bio" from prompts; captions go in the Video Editor.
@@ -382,13 +384,15 @@ The user's explicit choices override any row. Models and prices: base Reference 
 
 **Clip plan.** UGC lives on jump cuts: they hide small drift, keep the rhythm and look native. Write them in the script (where the cut is, what changes: framing slightly closer, a new sentence). A new stimulus every 2 to 4 s (a cut, a B-roll, a gesture). Seedance's minimum is 4 s: short beats are trimmed in the Video Editor.
 
-**Music.** Talking head, storytime, honest review, ASMR: usually no music, the room tone carries it. Vlog, POV, routine: light instrumental (lo-fi, soft pop beat), barely under the live voice (Lyra's UGC templates sit at about 0.05 to 0.1 track volume under in-camera speech; up to about 0.25 only under a clean studio voiceover), length = video + ~5 s, instrumental only (base Reference C).
+**Music.** **Never inside the clip:** every UGC clip prompt says "Only her live in-camera speech and the room's natural sounds; no music, no background music, no soundtrack, no score", because music baked under the live voice can't be removed (base Reference C). Talking head, storytime, honest review, ASMR: usually no music at all, the room tone carries it. Vlog, POV, routine: light instrumental (lo-fi, soft pop beat), barely under the live voice (Lyra's UGC templates sit at about 0.05 to 0.1 track volume under in-camera speech; up to about 0.25 only under a clean studio voiceover), length = video + ~5 s, instrumental only (base Reference C).
 
-**Video Editor.** One `video_composer` per final: hook clip (if separate) → main clip(s) → B-roll and UI inserts on a layer above → optional packshot or end card (logo, 1 to 1.5 s, or none: many UGC ads end on the person). Captions for all speech, word by word, large, in one place inside the safe zone: the editor makes them from the speech (caption track), the user checks the words and the app name and places them; tell the user what to check. Keep the clip's own sound (it is the voice); mute only clashing B-roll sound.
+**Video Editor.** One `video_composer` per final: hook clip (if separate) → main clip(s) → B-roll and UI inserts on a layer above → optional packshot or end card (logo, 1 to 1.5 s, or none: many UGC ads end on the person). Captions only if the user said yes (asked in the approval message): all speech, word by word, in one place, by the base rule (`lyra-video-editor` → Captions): size 80, at 75% of the height (y = 1440 on 1080×1920), never over the face. The editor makes them from the speech (caption track): set the size and position yourself once the track exists; the user checks the words and the app name; tell the user what to check. Keep the clip's own sound (it is the voice); mute only clashing B-roll sound.
 
 **Layout.** Section "Script" (UGC script, character card), Section per persona (character image, keyframes, clips), Section "Final" (Video Editor). Labels: "Character: Mia", "Mia: bed 2 am (clip)", "B-roll: phone on duvet", "Final: P1 Mia · storytime sleep".
 
 ## Run options for UGC
+
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
 As in the base skill, credits read from the nodes, per option. **A. Character images (recommended):** every persona image (count 2) and keyframes · **B. Clips** for the persona the user picked · **C. Everything** → the Video Editor. When a character image has several results, the user selects one in Lyra before the clips (references pin to the selected result).
 
@@ -401,13 +405,13 @@ As in the base skill, credits read from the nodes, per option. **A. Character im
 | UGC script (text node) | character card (with voice anchor), pain moment, place, format, spine with the lines per clip, word count per clip, cuts, B-roll, captions marked for post, CTA | ad copy; claims not in the Brand Kit |
 | Character image | "UGC phone photo" → the character card word for word → in the place, mid-moment (the expression of the pain) → phone framing ("shot on a 24mm smartphone front camera", selfie at arm's length, off-center, candid) → motivated light → deep depth of field, sharp background → 2 to 3 lived-in details → "natural skin texture, visible pores, subtle asymmetry, flyaway hair, no beauty filter, no makeup airbrushing, casual, unpolished" → exclusions | "flawless", "perfect skin", "Vogue", "editorial", "luxury", "8K", "HDR", studio light, portrait bokeh, minimalist or empty background; text; logos; a visible phone screen without a screenshot |
 | Keyframe (second place, two people) | the same card word for word, the new place, who is where, the moment it starts | re-inventing the person; different light logic |
-| Video clip with speech | roles first ("[Image1] is Mia: face, hair, hoodie, her bedroom at night") → format and camera ("UGC selfie video, phone front camera at arm's length, handheld micro-jitters") → "starts speaking from the very first second" → action before each line → the lines in quotes, tied to the speaker → natural pauses, no rushed speech → voice anchor and language → "only her live in-camera speech" → cuts as "cut to" → room sound → end state → short "Avoid" line | the full look re-described (the reference carries it; a short identity line is enough); stage directions inside quotes; more than one sentence per 3 to 5 s; on-screen text |
+| Video clip with speech | roles first ("[Image1] is Mia: face, hair, hoodie, her bedroom at night") → format and camera ("UGC selfie video, phone front camera at arm's length, handheld micro-jitters") → "starts speaking from the very first second" → action before each line → the lines in quotes, tied to the speaker → natural pauses, no rushed speech → voice anchor and language → "only her live in-camera speech" → cuts as "cut to" → room sound and action sounds, then "no music, no background music, no soundtrack, no score" → end state → short "Avoid" line | the full look re-described (the reference carries it; a short identity line is enough); stage directions inside quotes; more than one sentence per 3 to 5 s; on-screen text |
 | Dialogue clip | each line after "[Image1] (Mia) says:" or "[Image2] (Leo) says:", the listener's reaction without speaking ("Leo listens, only Mia's mouth moves") | two people talking over each other; lines without a speaker |
 | B-roll clip | one concrete action of hands or an object, same anchors, no speech, 4 to 5 s | faces (drift); a second person |
 
 **Pattern: video clip with speech (Seedance 2.5, references).**
 
-> [Image1] is Mia: her face, curly hair in a loose bun, grey hoodie, and her dark bedroom at night. UGC selfie video, shot on a 24mm phone front camera held at arm's length, handheld micro-jitters, deep focus, phone light on her face, warm lamp in the background. She starts speaking from the very first second. Mia lies on her side in bed, the phone slips and taps her nose, she winces, looks straight into the lens, tired but amused, and says: "Two a.m. and my brain won't shut up." She rolls onto her back, sighs, and says: "Tea, podcasts, counting sheep… nothing." Cut to: a little closer, she lifts the phone, and says: "Then I found Calmly. Five minutes, lights off, timer on." She smiles softly and says: "I was out before it ended. It's free. Try it tonight." Natural pauses between sentences, no rushed speech. Voice: young woman, early 20s, soft American accent, slightly husky, relaxed pace, a little sleepy. Only her live in-camera speech is heard, no voiceover. Quiet room tone, faint street noise, no music. Ends on her holding eye contact, a small smile. Avoid: text, captions, beauty filter, studio lighting, identity drift, warped hands, visible phone screen.
+> [Image1] is Mia: her face, curly hair in a loose bun, grey hoodie, and her dark bedroom at night. UGC selfie video, shot on a 24mm phone front camera held at arm's length, handheld micro-jitters, deep focus, phone light on her face, warm lamp in the background. She starts speaking from the very first second. Mia lies on her side in bed, the phone slips and taps her nose, she winces, looks straight into the lens, tired but amused, and says: "Two a.m. and my brain won't shut up." She rolls onto her back, sighs, and says: "Tea, podcasts, counting sheep… nothing." Cut to: a little closer, she lifts the phone, and says: "Then I found Calmly. Five minutes, lights off, timer on." She smiles softly and says: "I was out before it ended. It's free. Try it tonight." Natural pauses between sentences, no rushed speech. Voice: young woman, early 20s, soft American accent, slightly husky, relaxed pace, a little sleepy. Only her live in-camera speech is heard, no voiceover. Quiet room tone, faint street noise, no music, no background music, no soundtrack, no score. Ends on her holding eye contact, a small smile. Avoid: background music, text, captions, beauty filter, studio lighting, identity drift, warped hands, visible phone screen.
 
 (Hook H3 from the concept as the first beat: the phone tap is the physical interrupt, the line is the pain. 35 spoken words, about 14 s at a calm pace, in an adaptive clip that should land near 15 s; check the real length and trim only the silence after the last word. The app's real screen is shown, if at all, as a UI insert.)
 
@@ -464,10 +468,11 @@ Name every final with a code the media buyer can paste into Ads Manager: `B{batc
 | Too many words, rushed voice, broken lip-sync | Word budget, one short sentence per 3 to 5 s, clip minus 1 s |
 | Voice doesn't fit the face or changes between clips | Voice anchor word for word; one longer clip; fallback VO as audio reference |
 | The wrong person speaks in a dialogue | Lines tied to [ImageN]; listener still; one clip per line if needed |
-| Kling or Veo for UGC, 720p, sound off | Seedance 2.5, 1080p, sound on |
+| Kling or Veo for UGC, sound off | Seedance 2.5, sound on (720p by default, 1080p on the user's choice) |
 | First / last frame on Seedance 2.5 | References only |
 | Invented app screen in the person's hand | Screen hidden, or the user's screenshot as UI insert |
-| No captions | Captions for all speech in the Video Editor |
+| Captions added without asking, or forgotten after a yes | Ask in the approval message; if yes, captions for all speech in the Video Editor |
+| Seedance adds its own background music under the live voice | No-music sound line in every clip + "background music" in Avoid; our music only in the Video Editor; rerun a clip that still has music |
 | Music under a talking head drowning the voice | No music by default for talking formats; otherwise about 0.05 to 0.1 under live speech |
 | Template run as it came (Kling, "flawless", text in prompts) | Adapt per Format library |
 | Two personas differ in script or place too | Only the persona changes in an A/B |
@@ -479,14 +484,8 @@ Name every final with a code the media buyer can paste into Ads Manager: `B{batc
 - **Stage 1 (character images):** looks like a real person from this audience, not a model? Phone-real, not editorial? Place matches the pain moment? Expression fits? Hands and phone natural, screen hidden or right?
 - **Stage 2 (clips):** lip-sync matches the words? The app name pronounced right? Voice fits the face and stays the same across clips? Not rushed, natural pauses? Small real gestures, no overacting? Same face and outfit through the cuts? Camera feels like a phone, and it moves as the setup allows (handheld jitters, walking bob, static when propped)?
 - **Stage 3 (final), app ad check:** is it clear in one watch what the app does for this person? Does the app fit the scene naturally, not glued on? Does the promise match the store page and the real first session? Is the CTA an install or trial step with the real offer?
-- **Stage 3 (final):** pain recognisable in 1.5 to 3 s? Spine in order, CTA at the end, same words as the caption? Captions on all speech, in the safe zone? Music (if any) under the voice? 9:16, 1080p, planned length? Named with its code? AI label reminder given?
+- **Stage 3 (final):** pain recognisable in 1.5 to 3 s? Spine in order, CTA at the end, same words as the caption? Captions (if the user said yes) on all speech, size 80, at 75% of the height, not over the face? Music (if any) under the voice? 9:16, planned resolution (720p by default), planned length? Named with its code? AI label reminder given?
 
 ## After the test
 
 Read the test as in `lyra-video-hooks` (After the test): hook rate, hold rate, then the numbers that matter for apps: installs per 1,000 impressions, cost per trial, trial to paid, day-7 retention. UGC formats differ downstream: skits and method-first videos often get fewer but better clicks, so judge by trials and payers, not CTR alone. The persona, the pain and the format are each a hypothesis: say which one won. Then offer: a new persona on the winning script, the winning persona in a new format, new hooks on the winner (`lyra-video-hooks`, mode A), other sizes or languages.
-
----
-
-## Sources behind this skill
-
-`lyra-video-ad-generation` and `lyra-video-hooks` (this project) · Lyra's UGC and Talking Head templates and their prompts (Talking head with phone, Car Vlog, Interview, Skateboarding App Discovery Vlog, Life Transformation, Hidden Cam, Fridge Camera, Oct 2026) · Lyra node configs (Oct 2026) · RevenueCat "UGC ads for apps" (Dec 2025) · Mobihunter "UGC ads for mobile apps, 2026 data" (Apr 2026) · DansUGC on UGC for app installs (Apr 2026) · AppsFlyer State of Creative Optimization (tutorials and reviews vs testimonials) · The Social Outline "AI UGC disclosure rules in 2026" (Jul 2026) · Seedance 2.5 talking head and lip-sync guides (seedance.tv, fal.ai, 2026) · realistic AI phone footage guides (dxbuilder, myup, Creatify, 2026) · "The UGC Creator Playbook" (shared by Sasha, Oct 2026), adapted from product UGC to app ads. Their numbers are mostly vendor data: guidance, not law.

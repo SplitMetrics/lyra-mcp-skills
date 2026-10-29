@@ -7,6 +7,8 @@ description: Copy a competitor's static ad (one image, a carousel, several stati
 
 Image mini skill. Takes a static ad that works for someone else, finds out **why** it works, and rebuilds that mechanism as a new static for the user's app: their pain, their feature, their person, their words, their brand. Six jobs in order:
 
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+
 1. **Analyse** the reference (Step 1a): the team's static standard (Reference L) plus a production breakdown with the layout map.
 2. **Go to the Brand Kit** (Step 1b) and take every fact from it.
 3. **Ask the user** how to retell the reference: close remake, free adaptation, or both, with 2 to 3 variations (Step 1c).
@@ -349,6 +351,8 @@ Node 1 is connected to nothing; nodes 2 to 4 are notes for the user and feed not
 
 ## Run options (copy)
 
+**Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
+
 As in the base skill, credits read from the nodes, per option. The analysis comes first and on its own: **Path 2** costs no credits · **Path 1** costs what the Creative Analysis node shows next to Run (say it before running). Then: **A. Finals first (recommended):** every concept on Nano Banana Pro, count 2 · **B. Drafts first:** Nano Banana 2, 1K, count 2 to 3, winners rerun on Pro · **C. Everything:** ads → sizes → languages (count 1, no pause to pick). Remake and adaptation together: the same options, both concepts.
 
 ---
@@ -604,7 +608,7 @@ Plus: **`color_palette`** 2 to 3 dominant colors as hex codes, ordered most domi
 }
 ```
 
-### Example output (from the team's standard)
+### Example output
 
 ```json
 {
@@ -636,9 +640,3 @@ Plus: **`color_palette`** 2 to 3 dominant colors as hex codes, ordered most domi
 ```
 
 **How the copy of this ad goes** (worked through in Step 1c and Step 2): the chat mechanism (the user's self-blame question, the app's warm answer), the plan headline, the row and the plan button stay as a structure; the raccoon, the pink and green palette, every line and the fasting claim don't. The stats row is the one element that is "fake personalization" in their ad: ours keeps the slot only with the texts of a real screen (or a real personalised output, if the app has one), never invented personal numbers.
-
----
-
-## Sources behind this skill
-
-`lyra-static-image-generation` (base), `lyra-copy-competitor-ad` (the copy method, modes, transfer map), `lyra-ui-motion-video`, `lyra-audience-variations`, `lyra-ad-concept-multiplier`, `lyra-ugc-video`, `lyra-video-hooks` (this project) · the team's static ad creative analysis standard (Lyra's "Ad creative analysis (image)" system prompt, Reference L, from Sasha, Oct 2026) · Lyra's Pattern Import node (Creative Analysis: Creative Anatomy output) · Lyra Creative Brief rule: "external references: keep only the idea (concept, structure, hook, format); never logos, brand visuals, colors, identity; rewrite text" · Lyra Ad Variation node (one controlled variable, held-constant list) · Lyra System Preamble (brand safety, forbidden claims) · base Reference K on statics in Meta. Guidance, not legal advice.
