@@ -196,7 +196,7 @@ An edit problem found here (black tail, wrong caption place, a keyword over a fa
 
 Base link rules: one video → the video link + the workflow link; several (cutdowns, languages) → the workflow link and the label of each Video Editor.
 
-> Calmly · "2 am" · final 15 s: done. Video: {url} · Workflow: https://lyra.splitmetrics.com/workflows/{uuid}. Edit: 6 picture changes, punch-ins at 1.5 and 6 s, keywords "2 am" and "1 minute", captions (no box, the spoken word in the brand's teal) at 75%, end card 2 s. Editor renders are free. (The full check from `lyra-result-check` follows in the same report.)
+> Calmly · "2 am" · final 15 s: done. Video: {url} · Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid}. Edit: 6 picture changes, punch-ins at 1.5 and 6 s, keywords "2 am" and "1 minute", captions (no box, the spoken word in the brand's teal) at 75%, end card 2 s. Editor renders are free. (The full check from `lyra-result-check` follows in the same report.)
 
 ---
 

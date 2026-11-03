@@ -34,7 +34,7 @@ A review **reads**. It does not change the workflow.
 
 ## Step 1. Find and read the workflow
 
-1. **Which workflow.** A link `lyra.splitmetrics.com/workflows/{uuid}` → the uuid. A name → `list_workflows` with `search`; several matches → list them (title, last updated) and ask which. Nothing given → the most recently updated one, named in the first line so the user can correct it.
+1. **Which workflow.** A link `app.lyra.splitmetrics.com/workflows/{uuid}` (or the older `lyra.splitmetrics.com/workflows/{uuid}`) → the uuid. A name → `list_workflows` with `search`; several matches → list them (title, last updated) and ask which. Nothing given → the most recently updated one, named in the first line so the user can correct it.
 2. **Which variation.** `get_workflow` reads the main variation. If the user is asking about another one (`list_variations`), `switch_variation` only with their yes, because it changes which version Lyra shows and runs and renames the workflow after it; otherwise review the main one and name it.
 3. **Read it now, not from memory:** `get_workflow` (nodes, `data`, `is_valid`, `validation_error`, `credits`, `estimated_generation_time`, edges, the Video Editor's `video_rendering_composition`), `list_workspaces` (credits), `list_node_configs` (models and allowed settings), and the Brand Kit if one is assigned (`brand_kit_uuid`; `null` = no kit, say so). There is no tool to read one kit by its uuid: find it in `list_brand_kits` (page through) by `uuid`.
    - **Which balance.** Lyra works in the workspace the user last selected, and `list_workspaces` doesn't mark which one that is (and can fail: "Could not load workspaces"). With a browser, read it off the Lyra sidebar: the workspace name at the top, **Credits** at the bottom. Otherwise: one workspace → its credits; several → name the one you assume ("balance in {workspace}") or ask once; never show a number from another workspace as "your balance".
@@ -194,7 +194,7 @@ Prices come from `credits` on the nodes (one run of the node; an Image Resize wi
 
 One message, in the user's language, in this order:
 
-1. **The workflow:** name, link `https://lyra.splitmetrics.com/workflows/{uuid}`, the variation, the Brand Kit (or "none").
+1. **The workflow:** name, link `https://app.lyra.splitmetrics.com/workflows/{uuid}`, the variation, the Brand Kit (or "none").
 2. **What it does** (Step 2).
 3. **Problems** (Step 3), heaviest first: Blocks → Wastes credits → Confusing. One line each with its fix. Nothing found → say so in one line ("No broken connections, no invalid or empty nodes"), and what wasn't checked ("results not checked: no browser").
 4. **Costs** (Step 4).

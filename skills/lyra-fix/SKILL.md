@@ -208,7 +208,7 @@ The old prompt is overwritten by an in-place new take: quote the changed words, 
 
 ## Step 7. Report
 
-> Scene 3 fixed: five fingers, the rest of the ad unchanged (compared with the old frame: same face, light and pose). Video: {video url} · Workflow: https://lyra.splitmetrics.com/workflows/{uuid}. The fix cost {x} credits · balance {X}. New node "Scene 3: kitchen · fix: hand" (take 2 went on). The old image and clip are still there; say "go back" to switch.
+> Scene 3 fixed: five fingers, the rest of the ad unchanged (compared with the old frame: same face, light and pose). Video: {video url} · Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid}. The fix cost {x} credits · balance {X}. New node "Scene 3: kitchen · fix: hand" (take 2 went on). The old image and clip are still there; say "go back" to switch.
 
 - **Links by the base rules:** one video → the new Video Editor result + the workflow · one image → the new image + the workflow · several → the workflow only. Name the variation if the fix went into one.
 - **Real spend:** balance before − after.
