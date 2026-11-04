@@ -121,7 +121,7 @@ After the build, tell the user once that the workflow is built and running and t
 3. Run a stage only after its inputs have results.
 
 **Links in every report.** Never only file links. Two kinds of link, nothing else:
-- **Workflow:** `https://lyra.splitmetrics.com/workflows/{workflow_uuid}` (opens for anyone signed in to Lyra with access to the workspace; results in a variation: name the variation to open).
+- **Workflow:** `https://app.lyra.splitmetrics.com/workflows/{workflow_uuid}` (opens for anyone signed in to Lyra with access to the workspace; results in a variation: name the variation to open).
 - **Result:** the `url` from `get_run_results`, exactly as returned.
 - one video → the video link + the workflow link
 - several videos → the workflow link only
@@ -129,7 +129,7 @@ After the build, tell the user once that the workflow is built and running and t
 - several images → the workflow link only
 
 Report:
-> Calmly · statics · 3 concepts: done. Workflow: https://lyra.splitmetrics.com/workflows/{uuid} (3 ads, 9:16 and 1:1 each). Spent {x} credits · balance {X}. Open it to edit any prompt and rerun.
+> Calmly · statics · 3 concepts: done. Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid} (3 ads, 9:16 and 1:1 each). Spent {x} credits · balance {X}. Open it to edit any prompt and rerun.
 
 - Name failed nodes: label, what it was asked to do, why if known, the fix you suggest.
 - When every node has a result, offer 2–3 next steps (variants of the winner, other sizes, other languages, an animated version).

@@ -180,7 +180,7 @@ Pick the route by what the session can do:
 | **2. Browser** | Claude can drive a browser where the user is signed in to Lyra | fill the Brand Kit page (below) |
 | **3. User pastes** | neither | give the user copy-ready blocks per field and short steps; the user fills and says "done"; then check |
 
-**Route 2, the Brand Kit page** (lyra.splitmetrics.com → sidebar **Brand Kits**):
+**Route 2, the Brand Kit page** (app.lyra.splitmetrics.com → sidebar **Brand Kits**):
 1. **Update, don't duplicate.** `list_brand_kits` with `search` = the brand name first. A kit exists → open it and edit, after the user's yes.
 2. **Create brand kit** (top right) creates the kit **at once**, named after the workspace, and opens it; the page **autosaves** ("Saved" top right), there is no Save button. Click it **once**; a second click makes a second empty kit.
 3. **Brand Name:** replace the default name first. **Website:** the site or store link.
