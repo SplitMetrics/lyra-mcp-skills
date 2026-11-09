@@ -1,6 +1,6 @@
 ---
 name: lyra-workflow-review
-description: Review any Lyra workflow and explain it in plain words - what it makes and in which order it runs, section by section - then find what is wrong (broken connections, invalid nodes, empty nodes, nodes with no result, dead ends, settings that don't match), price a full rerun and each part of it, and, if the user wants, fix the problems and tidy the canvas by lyra-workflow-layout. Read-only by default - in a workflow Claude did not build in this chat, nothing is deleted, moved or changed without the user's yes. Use for "review my workflow", "explain this workflow", "what does this workflow do", "why doesn't it run", "check my canvas", "is anything broken here", "how much to rerun it", "how much does this template cost", "audit this workflow", or a Lyra workflow link with a question about it.
+description: Use when the user asks about an existing Lyra workflow, e.g. "review my workflow", "explain this workflow", "what does this workflow do", "why doesn't it run", "is anything broken", "check my canvas", "how much to rerun it", "how much does this template cost", "audit this workflow", or a Lyra workflow link with a question. Explains it, finds problems, prices reruns and fixes on request. Read-only by default.
 ---
 
 # lyra-workflow-review

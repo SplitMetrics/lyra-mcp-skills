@@ -1,6 +1,6 @@
 ---
 name: lyra-video-ad-generation
-description: Base skill for video ads in Lyra. Builds a mobile app video ad end to end (brief, script, scenes, keyframes, clips, voiceover, music, Video Editor assembly) with scene consistency, de-slop and error handling. Use for "a 15-second video ad for my app", "a 30 s / 1 min ad", "a sequence of scenes", "stitch these clips", or a script or storyboard to produce. Holds the core video rules the smaller lyra video skills point to.
+description: Use when the user wants a video ad for a mobile app, e.g. "a 15-second video ad for my app", "a 30 s / 1 min ad", "a sequence of scenes", "stitch these clips", or a script or storyboard to produce. Builds it end to end in Lyra (brief, script, scenes, clips, voiceover, music, assembly). Core video skill the other Lyra video skills build on.
 ---
 
 # lyra-video-ad-generation

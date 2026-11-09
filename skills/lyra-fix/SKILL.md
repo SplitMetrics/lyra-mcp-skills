@@ -1,6 +1,6 @@
 ---
 name: lyra-fix
-description: Fix one part of a finished Lyra video or image ad without rebuilding it. Finds the node where the problem is born, changes only what was asked by editing the finished image on Nano Banana Pro instead of generating it again (for video: the fixed image, then the clip generated again from it), compares the new result with the old one so nothing else moved, reruns only what depends on it (image → clip → Video Editor), renders again and reports the new video or image, the workflow link and the credits the fix cost. Use for "regenerate scene 3", "change her sweater", "another ending", "she has six fingers", "the logo is warped", "the screen text is wrong", "redo banner C2", "fix the headline on card 4", "louder music", "go back to the old one", or a problem found by lyra-result-check. Not for another story, person, angle, audience, size or language (those are variations, handled by their own skills). Core rules come from lyra-video-ad-generation and lyra-static-image-generation.
+description: Use when the user wants to change one part of a finished Lyra ad, e.g. "regenerate scene 3", "change her sweater", "another ending", "she has six fingers", "the logo is warped", "fix the headline on card 4", "louder music", "go back to the old one". Fixes only that part, reruns what depends on it and reports the credits. Not for new variations.
 ---
 
 # lyra-fix

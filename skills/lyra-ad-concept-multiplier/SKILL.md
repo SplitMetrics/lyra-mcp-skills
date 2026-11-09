@@ -1,6 +1,6 @@
 ---
 name: lyra-ad-concept-multiplier
-description: Ad concept multiplier for mobile app video ads in Lyra. Takes a concept (a winning ad, a Lyra workflow, a finished video, or a concept name like "Authority figure") and makes new ads on it with new angles, in one of two ways the user picks - A. Perspectives (the team framework, concept → angles → hooks: who else tells it and how they argue it, e.g. doctor, teacher, trainer, mom) or B. Reasons (the proven wrapper kept, a new reason to care: another pain, desire, objection, moment or feature from the Brand Kit, in the situation where it happens). Each angle is built as a Lyra variation. Use for "more ads like this winner", "same concept, new angles", "multiply this concept", "1 concept, 4 angles, 20 hooks", "same format, different pain / story / setting", "the angle is tired, keep the format", "iterate on the winner". Not for new openings only (lyra-video-hooks) or the same script for another person or market (lyra-audience-variations). Core video rules come from lyra-video-ad-generation.
+description: Use when the user wants more ads from a winning concept, e.g. "more ads like this winner", "same concept, new angles", "multiply this concept", a concept name like "Authority figure", "1 concept, 4 angles, 20 hooks", "same format, different pain / story", "the angle is tired, keep the format", "iterate on the winner". Builds each angle as a Lyra variation. New openings only go to lyra-video-hooks, another person or market to lyra-audience-variations.
 ---
 
 # lyra-ad-concept-multiplier

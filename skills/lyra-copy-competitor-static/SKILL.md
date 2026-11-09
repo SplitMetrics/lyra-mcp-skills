@@ -1,6 +1,6 @@
 ---
 name: lyra-copy-competitor-static
-description: Copy a competitor's static ad (one image, a carousel, several statics, or a key frame of their video) for a mobile app in Lyra. Analyses the reference in the team's static creative analysis standard (Claude's own look at the image, or Lyra's Creative Analysis node), takes every fact from the user's Brand Kit, offers a close remake and a free adaptation with variations, writes the new layout, text and Nano Banana Pro prompt, then generates the new static and its variants. Use for "copy this competitor static", "make a banner like this one", "remake this image ad for my app", "do this carousel for us", "analyse this static and make ours", "a static from this competitor video", a Meta Ad Library screenshot, or several competitor statics to learn from. Core image rules come from lyra-static-image-generation.
+description: Use when the user wants to remake a competitor's or reference static ad, banner or carousel for their app, e.g. "copy this competitor static", "make a banner like this one", "remake this image ad", "do this carousel for us", "a static from this competitor video", or a Meta Ad Library screenshot. Analyses the reference and builds the new static and its variants in Lyra.
 ---
 
 # lyra-copy-competitor-static

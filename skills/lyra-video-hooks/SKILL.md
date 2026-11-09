@@ -1,6 +1,6 @@
 ---
 name: lyra-video-hooks
-description: Hooks for mobile app video ads in Lyra, built from the Brand Kit and the audience's real pains, then turned into finished videos for an A/B test. Use for "hooks for my app", "4 hook variants", "write hooks / a hook bank", "a visual hook", "a catchy / brainrot hook", "hook multiplier", "test new openings on this ad", "the hook is weak / hook rate dropped", "a stronger first 3 seconds", or a Lyra Hook template. Core video rules come from lyra-video-ad-generation.
+description: Use when the user wants hooks or new openings for an app video ad, e.g. "hooks for my app", "4 hook variants", "a hook bank", "hook multiplier", "a visual / brainrot hook", "the hook is weak", "hook rate dropped", "a stronger first 3 seconds", or a Lyra Hook template. Writes hooks from the audience's pains and turns them into videos in Lyra for an A/B test.
 ---
 
 # lyra-video-hooks
