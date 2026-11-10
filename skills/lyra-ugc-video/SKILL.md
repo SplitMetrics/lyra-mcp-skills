@@ -1,6 +1,6 @@
 ---
 name: lyra-ugc-video
-description: UGC style video ads for mobile apps in Lyra, a realistic person talking to the phone camera in a real place, with their own voice and a speech built from the audience's pain, usually opened with a hook from lyra-video-hooks. Use for "a UGC video", "UGC ad for my app", "a creator / influencer style ad", "talking head", "testimonial style", "storytime", "car vlog", "street interview", "a skit", "day in my life", "honest review", or a Lyra UGC or Talking Head template. Core video rules come from lyra-video-ad-generation.
+description: Use when the user wants a UGC-style video ad for an app, e.g. "a UGC video", "UGC ad for my app", "creator / influencer style", "talking head", "testimonial", "storytime", "car vlog", "a skit", "street interview", "day in my life", "honest review", or a Lyra UGC template. A realistic person talks to the phone camera about the audience's pain, built in Lyra.
 ---
 
 # lyra-ugc-video

@@ -1,6 +1,6 @@
 ---
 name: lyra-ui-motion-video
-description: App UI creatives in Lyra with every UI text kept exactly as in the user's screenshots - UI motion video ads (real app screens, buttons, cards, logo and icon in motion), store-style end cards with an install button, and App Store / Google Play screenshot sets with variants. Use for "animate my app screens", "UI animation / motion design ad", "floating phone video", "show the app in the video", "end card with install button", "packshot like the App Store", "store screenshots", "screenshot set for Google Play", or screenshots to bring to life. Core video rules come from lyra-video-ad-generation.
+description: Use when the user wants their app's real screens in a creative, e.g. "animate my app screens", "UI motion ad", "floating phone video", "show the app in the video", "end card with install button", "packshot like the App Store", "App Store / Google Play screenshots", "screenshot set". Builds UI motion videos, store-style end cards and store screenshot sets in Lyra with UI text kept exact.
 ---
 
 # lyra-ui-motion-video

@@ -1,6 +1,6 @@
 ---
 name: lyra-image-resize
-description: Adapt a finished app ad image in Lyra to other aspect ratios and ad placements (Meta Feed, Stories and Reels, TikTok, Google App campaigns, link ads, banners) without losing anything - every element, text, color and style kept, the layout recomposed for the new frame and its safe zones. Picks the build per image and ratio (Lyra's Image Resize node, a Nano Banana Pro recompose, a rebuild from the concept card, or a canvas extension or crop for the designer) and checks every element. Use for "make this in 9:16 and 1:1", "resize for Stories / Reels", "the same banner for Feed and Stories", "a 1.91:1 version", "all sizes for Meta", "a full size set", "Google App campaign sizes", "a 728x90 banner from this", or a winning static to roll out to every placement. Core image rules come from lyra-static-image-generation.
+description: Use when the user wants an approved ad image in other sizes or placements, e.g. "make this in 9:16 and 1:1", "resize for Stories / Reels", "all sizes for Meta", "a 1.91:1 version", "Google App campaign sizes", "a 728x90 banner". Recomposes the layout for each frame in Lyra and keeps every element, text and color.
 ---
 
 # lyra-image-resize

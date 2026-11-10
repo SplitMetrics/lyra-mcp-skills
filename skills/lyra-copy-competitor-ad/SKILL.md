@@ -1,6 +1,6 @@
 ---
 name: lyra-copy-competitor-ad
-description: Copy a competitor's video ad for a mobile app in Lyra. Analyses the reference video in the team's video creative classification standard (Lyra's Creative Analysis node or Claude's own frame by frame teardown), takes every fact from the user's Brand Kit, offers ways to retell the reference, rewrites the script for the brand and the request, then generates the new video. Two modes, close remake (same beats, timing and shots) or free adaptation (same idea and structure). Use for "copy this competitor ad", "make an ad like this one", "remake this video for my app", "do this TikTok / Reel for us", "analyse this ad and make ours", a Meta Ad Library or TikTok link to a video, or any video reference to adapt. Static ads, banners and carousels go to lyra-copy-competitor-static. Core video rules come from lyra-video-ad-generation.
+description: Use when the user wants to remake a competitor's or reference video ad for their app, e.g. "copy this competitor ad", "make an ad like this one", "remake this video for my app", "do this TikTok / Reel for us", or a Meta Ad Library / TikTok video link. Analyses the reference and builds the new video in Lyra. Static references go to lyra-copy-competitor-static.
 ---
 
 # lyra-copy-competitor-ad

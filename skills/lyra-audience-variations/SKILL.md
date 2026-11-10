@@ -1,6 +1,6 @@
 ---
 name: lyra-audience-variations
-description: Audience variations of a mobile app video ad in Lyra. The same ad, message and edit, with the visible world changed for another part of the app's audience from the Brand Kit, one layer or a coherent bundle at a time - the person (character swap), wardrobe and styling, setting and background, props and vehicles, time and season, market markers, voice and language, polish - each built as a Lyra variation of the original workflow. Use for "swap the character", "same video with another person / another outfit / another room / another car", "a version for moms / men / 40+ / nurses", "localize for Brazil", "new faces or a new look for this winner", "test personas or settings", "persona A/B test". Not for a new angle or message on the concept (lyra-ad-concept-multiplier). Core video rules come from lyra-video-ad-generation; person, voice and speech from lyra-ugc-video.
+description: Use when the user wants the same app video ad for another audience, e.g. "swap the character", "same video with another person / outfit / room", "a version for moms / men / 40+", "localize for Brazil", "new faces for this winner", "persona A/B test". Builds each change as a Lyra variation. New angles or messages go to lyra-ad-concept-multiplier.
 ---
 
 # lyra-audience-variations

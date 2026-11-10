@@ -1,6 +1,6 @@
 ---
 name: lyra-workflow-layout
-description: Canvas layout for every Lyra workflow Claude builds or changes, in the house style of Lyra's templates - nodes grouped into sections in run order (a Section is a frame node), a small STEP sticky note above every section that says what happens there and what the user can change, the creative team's color code (lime the idea and script, pink the user's own app assets, violet generation, rose the result), a clear reading path (the idea on the left, the steps stacked in columns, the Video Editor on the right), clear node labels, no stray or empty nodes, and a final check. Use whenever a Lyra skill creates or edits a workflow (video, UGC, hooks, short drama, UI motion, statics, carousels, competitor copies, variations, concept multiplier, resize, translation, brand kit starter), and for "make the workflow clear", "tidy up the canvas", "sign the sections", "add notes for the user", "the canvas is confusing", "lay it out like the templates".
+description: Use whenever a Lyra workflow is created or edited, and for "tidy up the canvas", "sign the sections", "make the workflow clear", "add notes for the user", "the canvas is confusing", "lay it out like the templates". Lays out nodes in sections in run order with STEP notes, the team's color code and clear labels.
 ---
 
 # lyra-workflow-layout

@@ -1,6 +1,6 @@
 ---
 name: lyra-short-drama
-description: Short drama video ads for mobile apps in Lyra - a 60 to 120 s mini-series story, animated (3D, 2D anime / storybook / kawaii, stop-motion and knitted worlds) or realistic (live-action sitcom, vertical mini-series, confession), where an underdog hero hits a chain of everyday disasters, meets the app at the turning point or through the plot, and ends happier or more successful, told with in-clip dialogue or a narrator. Offers several story concepts per app from the Brand Kit. Use for "a short drama ad", "a mini-series / story ad", "a cartoon story for my app", "a realistic story ad", "a 1-2 minute story video", "drama like ReelShort but for my app", "an animated story where the app saves the day", "episodes with a cliffhanger", or a story reference to adapt. Core video rules come from lyra-video-ad-generation.
+description: Use when the user wants a story ad for an app, e.g. "a short drama ad", "a mini-series / story ad", "a cartoon story for my app", "a realistic story ad", "a 1-2 minute story video", "drama like ReelShort but for my app", "an animated story where the app saves the day", "episodes with a cliffhanger". A 60-120 s animated or realistic story where the app is the turning point, built in Lyra.
 ---
 
 # lyra-short-drama
