@@ -204,7 +204,7 @@ The first workflow is a ready canvas for every next skill. It generates nothing 
    - **"App card"**: the one-paragraph card every skill keeps (format in Using a Brand Kit).
    - **"Pain map"**: per segment: pains in their words, desires, objections, the moment where the pain shows up, the feature that answers it; marked (hypothesis) where not confirmed.
    - **"Open questions"**: gaps and hypotheses still waiting for the user, if any.
-5. `create_frame_node` around the assets: "STEP 1 · Brand assets — your logo, icon and screenshots" (pink); around the notes: "NOTES · Brand Kit notes" (slate). STEP notes, colors and placement follow `lyra-workflow-layout`.
+5. `create_frame_node` around the assets: label "Brand assets", `background_color` pink; around the notes: label "Brand Kit notes", slate. Then `create_note_node` above each (`above_node_uuid` = the frame, same swatch): "STEP 1 · Brand assets · Your logo, icon and screenshots. Swap a file to change it in every ad." and "Notes · Brand Kit · The app card, pain map and open questions every ad is built from." Placement and the check follow `lyra-workflow-layout`.
 6. `get_workflow` to check: the kit assigned, every node present and labelled.
 7. If the user has the workflow open in a browser while it's being edited through the tools, the canvas may not refresh: ask them to reload it, or reopen it for them when you drive the browser.
 
