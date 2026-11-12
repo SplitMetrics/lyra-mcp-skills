@@ -367,7 +367,7 @@ In Lyra every version of a creative is a **variation** of its workflow: the **Cr
 | VO (if separate) | new text and a voice that fits the new person | new text, same voice and length | same | same |
 | Music | stays (new only if the perspective's emotion really differs; say why) | stays | stays | stays |
 | End card, logo | stay | stay | stay | stay |
-| Video Editor | one per hook inside the angle | reruns with the same timings; captions changed in the editor UI | same | same |
+| Video Editor | one per hook inside the angle | reruns with the same timings; captions made again with `generate_captions` → `set_captions` (`lyra-video-editor`) | same | same |
 
 **Mode B: never rerun the character node** to "refresh" it: a new run is a new face, and the series loses its person. Keep the copied result and pass it as a reference.
 
