@@ -23,7 +23,7 @@ Use for "edit / assemble the video", "stitch the clips", "add captions / subtitl
 
 - **Node:** `video_composer` (`create_video_composer_node`), label "Final: …". **0 credits.** Lyra renders it with Remotion; a render takes ~20 to 40 s.
 - **The edit lives in `video_rendering_composition`**, read with `get_workflow`, written with `update_node`. **The whole edit can be built by the tools, without opening the editor:** a composition sent with `update_node` renders as is, even with no node connected. Always read the whole composition first, change only what's needed, send it back whole, then `get_workflow` to check it held.
-- **Opening the editor in the UI** (Claude's browser or the user) is needed only for what the tools can't do: the **Captions** button (transcription). Everything else is a composition field.
+- **Captions are made by the tools too:** `generate_captions` → `get_captions` → `set_captions` (Step 3 and Captions below). The editor UI is never needed for an edit; open it only to import clips made in another chat (Step 1).
 
 ### Composition fields (as Lyra saves them)
 
@@ -47,7 +47,7 @@ tracks: [
         effects: [ { id, kind: "popIn" } ] } ] },
   { kind: "caption", name: "Captions", font: { family, sizePx }, styleId: "outline",
     animation: { kind: "activeWordColor" }, highlightColor: "#8FB8FF",
-    position: { x: 540, y: 1440 }, sourceCaptionUuid,
+    position: { x: 540, y: 1440 }, sourceCaptionUuid,   // the captions job (caption_uuid) it came from
     clips: [ { id, kind: "caption", startMs, durationMs,
                words: [ { text, startMs, endMs } ] } ] }
 ]
@@ -64,7 +64,7 @@ Field values seen so far: transition `whipLeft`; effect `popIn`; caption styles 
 - **Effects** (Effects tab, preview cards): Motion / Camera (shake, bounce, float…), Entrance (fade, slide, scale / zoom, pop, bounce, blur, spin, drop in), Exit (the same out), Reveal (typewriter, word by word, line by line, wipe, mask), Attention (pulse, flash, glow, RGB split, glitch, blur…). Each has a duration; some have start time, intensity, direction and colour.
 - **Transitions** (19): fade, fade to black, cross dissolve, dip to white, slide left / right / up / down, push, zoom in, zoom out, pull in, whip pan left / right, blur, flash, glitch, spin, swipe / wipe. Length 0.25, 0.5 or 1 s. A transition belongs to the right edge of the clip on its left and overlaps the two clips. It also works across tracks and gaps. Not on a locked layer. The old node field `transition_effect` is not used by the timeline: use `transitionOut`.
 - **Text**: the same styles as captions, plus outline, shadow, background, caps, italic, letter spacing; 12 extra fonts; default size 75.
-- **Captions**: Captions button, style presets (about 26), animations (style default, active word highlight, active word pop, karaoke highlight, word by word, phrase by phrase, active word bounce, active word colour), highlight colour, an Edit tab to fix the words.
+- **Captions**: Captions button (does what `generate_captions` + `set_captions` do), style presets (about 26), animations (style default, active word highlight, active word pop, karaoke highlight, word by word, phrase by phrase, active word bounce, active word colour), highlight colour, an Edit tab to fix the words.
 - **Canvas**: resolution 480p to 4K, framing Fit / Fill / Zoom.
 - **Safe zones**: TikTok, Instagram Reels, Instagram Stories, YouTube Shorts guides, saved per node, not rendered. The Reels guide in Lyra marks the clear area at about 14% to 65% of the height.
 - **Results** (left of Render): past renders; opens by itself when a render finishes.
@@ -80,7 +80,10 @@ Field values seen so far: transition `whipLeft`; effect `popIn`; caption styles 
 | **A node connected after the edit exists isn't added.** The editor adds new inputs only when it is opened | Add the clip (a new VO, music, insert) to the composition yourself with its `assetUrl`, `sourceNodeId`, `sourceResultUuid`. |
 | **A deleted clip comes back** while its node is still connected | To drop a source for good, also `disconnect_nodes` on the canvas. |
 | **Edit Video is disabled** when no video node is connected | Connect at least one video node, or build the edit by the tools. |
-| **Captions on a video without speech** stay "Parsing…" forever. **With speech** they take about a minute | Captions only on speech; wait up to ~90 s; no track after that → tell the user. |
+| **Captions take a few minutes**: `generate_captions` renders the timeline as saved, then transcribes it | Call `get_captions` again straight away until `completed`. `failed` → `generate_captions` once more; failed again → tell the user. |
+| **Captions are timed to the timeline as it was when `generate_captions` ran**, not to the source clips | Make them last, once cuts, trims, speed, transitions and the VO are final. Any timing change after that → captions made again. |
+| **A video without speech gives no captions** (completed with no segments; `set_captions` says there is no speech) | Captions only on speech; tell the user. |
+| **Captions made but not set appear on their own** the next time the editor is opened (it adds the newest completed captions) | Set the captions you made, or tell the user they will show when the editor opens. |
 | **Whispered or quiet speech is transcribed in part** (whole lines missing) | Word check against the script, always (Captions below). |
 | **The editor may cut clips to 5 s on opening** (reported, not reproduced) | After any opening of the editor, read the composition and restore clip lengths and trims. |
 | **An open canvas or editor tab writes its old state over tool edits** | Before `update_node`, the workflow tab (the user's and Claude's) is moved off the workflow; reopen it after to show the result. |
@@ -91,7 +94,7 @@ Field values seen so far: transition `whipLeft`; effect `popIn`; caption styles 
 ## Step 1. Read what's there
 
 1. `get_workflow`: the Video Editor node(s), their inputs and each input's selected result. No Video Editor yet → `create_video_composer_node`, label "Final: {length}", in the "Final" section on the right (`lyra-workflow-layout`), inputs connected in playback order. **Every new Video Editor gets its own rose section and STEP note right away**, by `lyra-workflow-layout`, also when Claude only came to edit. In the user's own workflow nothing else is moved or renamed without a yes: add the editor's section, then offer the full tidy-up in one line (sections, STEP notes, "(copy)" labels, stray nodes).
-2. Read the composition. Empty or stale (variation, rerun) → rebuild it (Known behaviour). **No composition yet and the clips were made in another chat** (so `get_run_results` can't give their file links): open the Video Editor once in the browser; it imports the connected clips with their `assetUrl`, `sourceResultUuid` and real lengths. Do the Captions step in the same opening if captions are wanted, then close it and work by the tools.
+2. Read the composition. Empty or stale (variation, rerun) → rebuild it (Known behaviour). **No composition yet and the clips were made in another chat** (so `get_run_results` can't give their file links): open the Video Editor once in the browser; it imports the connected clips with their `assetUrl`, `sourceResultUuid` and real lengths. Then close it and work by the tools.
 3. From the script, collect: playback order, each scene's start and end second inside each clip (cut points), the VO text and length, the music length, the end card, the on-screen text lines (marked for post), the keywords, the CTA.
 4. A missing result (a clip still running or failed) → finish or fix that node first (`lyra-fix`); never edit around a gap.
 
@@ -113,7 +116,12 @@ Plus one line each: captions (yes / no; no box, the highlight colour and where i
 ## Step 3. Build the edit
 
 1. **Composition by the tools** (`update_node`): order, trims, splits for punch-ins, speed, freeze, transitions, text and keyword clips, audio tracks (and SFX only if asked), volumes, mute, canvas length.
-2. **Captions** (only if the user said yes): the one UI step. Open the Video Editor in Claude's browser, press Captions, wait for the words (up to ~90 s), apply the house style (outline, active word colour) or the box the user asked for, set the highlight colour from the video or Brand Kit, set size 80, leave the editor (or set `styleId`, `animation`, `highlightColor` by the tools afterwards). **Captions are timed to the source clip.** When the edit cuts or moves the clips, shift every caption clip and word by the same offset as the clip it sits on (`startMs` and each word's `startMs` / `endMs`), and drop the words that fall in cut-out parts. Then read the composition again: set `position {540, 1440}` on the caption track (there is no height field in the UI), restore any clip lengths that changed, `update_node`, `get_workflow`. Without a browser, ask the user to press Captions and say when the track is there; then set the rest by the tools.
+2. **Captions** (only if the user said yes), last, once the timing of point 1 is saved and checked with `get_workflow`:
+   1. `generate_captions` on the Video Editor: Lyra renders the timeline as saved and transcribes it. Free; a few minutes.
+   2. `get_captions` with the returned `caption_uuid`, again straight away until `completed` (Known behaviour for `failed` and no speech).
+   3. Word check of the `segments` against the script (Captions below), before setting them.
+   4. `set_captions` with the house style, or the box the user asked for: `style` = `{ style_id: "outline", animation: { kind: "activeWordColor" }, highlight_color: "<from the Brand Kit or the video>", font: { family: "Inter", size_px: 80 }, position: { x: 540, y: 1440 } }`. `Inter` is the editor's own caption font; a preset with its own font (e.g. `hormozi`, Montserrat) takes that font. It adds the caption layer on top, timed to the timeline and cut at the end of the media; older caption layers are kept hidden. Calling it again for the same captions only changes their look.
+   5. Words the check found wrong or missing: fix them in the caption clips' `words` (`update_node` with the whole composition), then `get_workflow`.
 3. Pre-render check, render, edit check, then `lyra-result-check` (Steps 4 to 6).
 
 ### Video: order, trims, pace
@@ -157,12 +165,12 @@ Plus one line each: captions (yes / no; no box, the highlight colour and where i
 - **Ask first, never by default.** Captions yes or no is the user's choice, in the one approval message. Recommend yes for any ad with speech (most people watch muted).
 - **House style: no box.** White text with a thin outline (`styleId: "outline"`), the spoken word in colour (`animation: activeWordColor`). A box (`blackBox`, or `activeWordHighlight`, which puts a box behind the spoken word) only when the user asks for one, or when the text can't be read without it (a busy, bright background), said in the plan.
 - **The colour is never Lyra's default yellow.** Set `highlightColor` (and the box colour, if there is a box) to fit the video: the Brand Kit's accent colour or the logo's colour first; no Brand Kit → a colour taken from the video itself (its key object, UI, light) or a neutral (white, light grey, a soft tint of the video's palette). Yellow only when it is the brand's or the video's own colour. It must read clearly on the frames where captions sit; check it in the edit check. Say the colour and where it comes from in the plan ("captions white, spoken word light blue from the Windows title bar").
-- **Made only by the Captions button** (Step 3). Only on speech.
-- **Size 80** on 1080×1920 (Lyra creates 115). Max 2 lines.
-- **At 75% of the height** (the house default): caption track `position {x: 540, y: 1440}` (0.75 × height on other canvases). Lyra's own default is lower (~88%), so always set it. On close-ups this lands under the mouth, on wide shots at chest level. Never over a face or the mouth: if a face sits there, move the captions lower (y ≈ 1530, at most 1650). If the user wants them elsewhere, place them there. Don't pull them up into the red Reels frame.
-- **Word check against the script, every time**, in the Edit tab or in the composition's `words`: the app name, names, numbers, punctuation, ellipses, and missing lines (whispers and quiet speech drop whole phrases). Missing words are added with their timing from the script pace.
+- **Made only by `generate_captions` and `set_captions`** (Step 3), never written by hand from the script. Only on speech.
+- **Size 80** on 1080×1920 (`font.size_px` in `set_captions`; Lyra's own default is 115). Max 2 lines.
+- **At 75% of the height** (the house default): `position {x: 540, y: 1440}` in `set_captions` (0.75 × height on other canvases). Lyra's own default is lower (~88%), so always set it. On close-ups this lands under the mouth, on wide shots at chest level. Never over a face or the mouth: if a face sits there, move the captions lower (y ≈ 1530, at most 1650). If the user wants them elsewhere, place them there. Don't pull them up into the red Reels frame.
+- **Word check against the script, every time**, in the `segments` from `get_captions` (or the caption track's `words`): the app name, names, numbers, punctuation, ellipses, and missing lines (whispers and quiet speech drop whole phrases). Missing words are added with their timing from the script pace.
 - The first word visible from its first frame (an entrance animation can hide it).
-- After any change to the VO or the clips, captions are made again and checked again.
+- After any change to the VO or the clips' timing, captions are made again (`generate_captions` on the new timeline, `set_captions`; the new layer takes the old one's look) and checked again.
 
 ## Step 4. Pre-render check
 
@@ -216,7 +224,7 @@ One finished ad gives several lengths. Make only versions shorter than the maste
 - **Cut only at scene boundaries** or at the end of a spoken line, from the script's scene times (none → write them first and check with the user).
 - **Voiceover:** a VO across scenes doesn't survive cuts. Each version gets **its own short VO** on the same voice, ~1 s shorter than the version (≈ 2 credits). In-clip dialogue: cut between lines.
 - **Music:** the master's track trimmed with a 1 s fade, ending on a resolve; or a short music node (version + 5 s, 1.25 credits per second) when the cut lands badly.
-- **Pace, keywords and any SFX** re-placed for the version's timing; **end card** in every version; **captions** made again (Captions per Video Editor) and checked.
+- **Pace, keywords and any SFX** re-placed for the version's timing; **end card** in every version; **captions** made again on each version's own Video Editor (`generate_captions` → `set_captions`) and checked.
 - Each version gets the Pre-render check, the edit check and `lyra-result-check`.
 - **Plan in one message:** the versions, what each drops, the new VO / music nodes and their credits (editors are free), the captions answer. After the yes, build and render all versions.
 - **Names:** the master's code with the length (`…-59cut`, `…-30cut`, `…-15cut`); node labels "Cut: 59 s", "Cut: 30 s", "Cut: 15 s".
@@ -240,7 +248,9 @@ One finished ad gives several lengths. Make only versions shorter than the maste
 | Captions with a box by default, or left in Lyra's yellow | No box; highlight colour from the Brand Kit, the logo or the video |
 | Captions left at 115 or at Lyra's ~88% default | Size 80, `position {540, 1440}` |
 | Caption words not checked (whispers drop lines, app name, punctuation) | Word check against the script every time |
-| Presses Captions on a video without speech | Captions only on speech |
+| Runs `generate_captions` on a video without speech | Captions only on speech |
+| Makes captions before the edit's timing is final, or keeps them after a timing change | Captions last; `generate_captions` again after any change to cuts, speed or the VO |
+| Writes the caption track by hand from the script, or shifts caption words to follow cuts | `generate_captions` + `set_captions`; hand edits only to fix words |
 | A static talking head for 15 s | A change every 2 to 3 s; punch-ins; an interrupt at 7 to 10 s |
 | A punch-in that crops the hands, the phone screen or the text | Pick another moment or a smaller scale |
 | Keywords over a face or on the caption band | Upper half, inside the safe zone |
