@@ -1,6 +1,6 @@
 ---
 name: lyra-image-translation
-description: Use when the user wants the text on an ad image in other languages, e.g. "translate this ad into German and Japanese", "localize the banner for Brazil", "the same static in 5 languages", "translate the carousel", "Arabic version". Writes the copy per market and rebuilds the images in Lyra, keeping the design.
+description: Translate and localize the text on finished app ad images in Lyra (statics, carousel cards, end cards, store screenshot captions) into other languages, keeping the design. Writes the copy for each market first (transcreation, glossary, length check), then picks the build per image - Lyra's Image Translation node, a Nano Banana Pro text-replace edit, a rebuild with localized screenshots, or a clean plate for the designer - and checks every letter. Use for "translate this ad into German and Japanese", "localize the banner for Brazil", "the same static in 5 languages", "RU / ES / PT versions", "translate the carousel", "Arabic version", "translate the text on the creative", or a winning static to roll out to new markets. Core image rules come from lyra-static-image-generation.
 ---
 
 # lyra-image-translation

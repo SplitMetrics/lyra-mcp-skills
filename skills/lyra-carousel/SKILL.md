@@ -1,6 +1,6 @@
 ---
 name: lyra-carousel
-description: Use when the user wants a carousel ad for an app, e.g. "a carousel for my app", "5 cards that tell a story", "swipe ad", "feature carousel", "step by step carousel", "before / after carousel", "photo dump", "TikTok photo carousel", "split this text into cards". Builds 2-10 consistent cards in Lyra from one carousel script.
+description: Carousel ads for mobile apps in Lyra, 2 to 10 cards that tell one consistent story (same person, world, palette, type and layout grid on every card), written as one carousel script and cut into cards by Lyra's Text Split node. Use for "a carousel for my app", "5 cards that tell a story", "swipe ad", "step by step carousel", "feature carousel", "before / after carousel", "photo dump / slideshow", "TikTok photo carousel", "split this text into cards", or a story, article or script to turn into cards. Core image rules come from lyra-static-image-generation.
 ---
 
 # lyra-carousel
