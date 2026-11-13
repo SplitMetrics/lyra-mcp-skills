@@ -1,6 +1,6 @@
 ---
 name: lyra-brand-kit
-description: Use when the user shares or asks about their app's brand, e.g. "here's our brand kit", "set up my brand in Lyra", "create a brand kit from our website / store page / deck", "onboard this app", "update the brand kit", "what's in our brand kit", "find the pains in the brand kit", or before any ad when no Brand Kit exists. Builds and fills the Lyra Brand Kit and holds the rules other Lyra skills use to read it.
+description: Brand Kit skill for Lyra - builds a mobile app's Brand Kit from whatever the user sends (brand book, deck, PDF, notes, website, App Store / Google Play link, logo, screenshots, past ads, reviews), writes it in the team's Brand Kit standard, fills it into Lyra, creates the first workflow with the kit assigned and the brand assets on the canvas, and holds the rules every Lyra skill follows to read and use a Brand Kit (app card, pain map, field-by-field use, claims, conflicts, updates). Use for "here's our brand kit", "fill the brand kit", "set up my brand in Lyra", "create a brand kit from our website / store page / deck", "onboard this app", "update the brand kit", "what's in our brand kit", "find the pains in the brand kit", or before any ad when no kit exists yet. All other lyra skills read the Brand Kit by this file.
 ---
 
 # lyra-brand-kit
