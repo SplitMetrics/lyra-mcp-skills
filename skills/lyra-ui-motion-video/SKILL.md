@@ -13,6 +13,8 @@ Mini skill for everything where **the app's interface is on screen**: UI motion 
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice; use judgment and say why in one line when you choose differently. Fixed: **UI fidelity** (the rules in the next section), truth (no features, numbers, ratings or badges the app doesn't have), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file adds what is specific to UI. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills point here for UI.** A hook that shows the app (`lyra-video-hooks`), a UGC creator with a phone moment (`lyra-ugc-video`), any base-skill ad with a screen: their UI moments follow this file's fidelity rules, model choice and checks. This skill itself owns videos where **the interface and the brand are the main character**, the end card, and store screenshot sets.
