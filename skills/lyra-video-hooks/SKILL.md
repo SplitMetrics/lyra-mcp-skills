@@ -7,7 +7,7 @@ description: Hooks for mobile app video ads in Lyra, built from the Brand Kit an
 
 Mini skill. Finds the audience's pains in the Brand Kit, writes a bank of hook ideas, then turns the best 4 (3 to 6) into finished videos in Lyra.
 
-**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different hook, order or combination serves the idea better, do it and say why in one line. Only a few things are fixed: truth (no invented claims, reviews or numbers), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
 

@@ -9,7 +9,7 @@ The main video skill for Lyra. It holds the core rules for every video ad: scrip
 
 Part 1 is shared by every Lyra skill. Part 2 is what's specific to video ads. The Reference library at the end has the details (models, prompts, audio, UI, consistency, de-slop, errors, Meta app ads).
 
-**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The pre-run check (Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
 
 **Assembly and captions → `lyra-video-editor`.** Stage 3 of every video (the Video Editor: edit, mix, end card, text, captions, render, cutdowns) follows `lyra-video-editor`. This file only says which pieces go into the edit.
 
@@ -23,7 +23,7 @@ A full creative always follows these steps, in order:
 1. **Context.** Read the Brand Kit, then send the intake quiz (Step 1) so the user takes part in the key choices; make sure you have everything before proposing anything.
 2. **Concept and plan.** A very short concept plus a short plan of nodes, models and connections, based on "Best way to build it".
 3. **Approval.** One message: concept, plan, open questions and the cost in credits; the user approves or corrects. Nothing is created before this; the yes also starts the run.
-4. **Build.** Create the workflow and nodes with the chosen models, write every prompt into the node's prompt field. Nothing runs yet.
+4. **Build.** Create the workflow and nodes with the chosen models, write every prompt into the node's prompt field, connect them, and lay out the canvas by `lyra-workflow-layout` (sections and STEP notes). Nothing runs yet.
 5. **Pre-run check.** Right before every run, read the workflow back and restore anything lost (connections, settings); keep the user's own edits.
 6. **Credits and run.** The cost is part of the plan; after the one yes, build and run everything without asking again.
 7. **Run and report.** Run, report with the right links (workflow, video or image) and the real spend, offer the next step.
@@ -101,7 +101,7 @@ On corrections, show only what changed, with the new cost, and ask again. Don't 
 2. Write every prompt (Part 2 → Prompt rules): brief, script, image and video prompts, voiceover text, music prompt. The script can go into a user text node (`create_user_text_node`) as a note for the user, connected to nothing. A user text node feeds its text into any node it is connected to, so keep this one unconnected (a Note on the canvas can't be connected at all, but the tools can't create one). The text doesn't keep the character consistent: consistency comes only from the character image connected as a reference, plus the anchors written into every prompt.
 3. Create every node from the plan with its prompt, its model and settings from `list_node_configs`, and a label that says what it's for ("Scene 2: app demo", "VO: hook"), never "Image 1".
 4. **Connect the whole graph now** (`connect_nodes`), so the workflow can run on its own with "run all": character → every image and video node that shows the person (reference) · screenshot upload → the phone image · images → video · clips, voiceover, music → Video Editor **in playback order**. Never leave connections "for after the user approves an image". **References** connect before anything is generated (checked in Lyra). **First / last frame** from a generated image needs that image to have a result first (an uploaded image can be a frame right away): on frame models, say in the plan that the frame link is made right after the image runs, and make it automatically before running the clip.
-5. Lay out the canvas by `lyra-workflow-layout` (STEP notes, sections in reading order, colors, check), one section per stage: **Sources** (script note, character, screenshot uploads) → **Images** → **Clips** → **Audio** → **Video Editor**. Put an upload next to the node it feeds, never at the end of the canvas. Don't put the whole graph in one Section.
+5. **Lay out the canvas now, before anything runs** (`lyra-workflow-layout`: STEP notes, sections in reading order, colors, check). It is free and part of the build: the build isn't done until every node sits in a section with a STEP note above it. One section per stage: **Sources** (script note, character, screenshot uploads) → **Images** → **Clips** → **Audio** → **Video Editor**. Put an upload next to the node it feeds, never at the end of the canvas. Don't put the whole graph in one Section.
 6. Check `is_valid` and `validation_error` on every node; fix with `update_node` using listed values.
 
 ## Variations, not new workflows
@@ -120,6 +120,7 @@ Right before **every** `run_node` (the first run, each next stage, reruns, follo
 2. Compare it with the plan: every planned edge (source → target) is there · every node that takes images has them as planned (`image_inputs_usage`: references or frames; a frame points to an existing result) · every node `is_valid`, no `validation_error` · no empty prompt · settings as planned (model, ratio, duration, resolution, count).
 3. Lost or changed by accident → restore it (`connect_nodes`, `update_node`) and say it in one line ("the link Character → Clip 1 was gone, reconnected"). Changed by the user on purpose (their prompt, model, a node they added) → keep it and use the workflow as it is now; never overwrite their edits. Not sure which → ask before running.
 4. Inputs ready: a node runs only when every node it takes from has a result. Never run a node with a missing input.
+5. **Canvas laid out** (`lyra-workflow-layout`): every node is in a section and every section has its STEP note above it, no stray or empty nodes. If not, lay it out first (free), and only then run. Nodes added since the last run (a fix, a cutdown, a new Video Editor) go into a section too.
 
 After the build, tell the user once that the workflow is built and running and that they can edit any prompt on the canvas and rerun.
 
@@ -149,7 +150,7 @@ After the build, tell the user once that the workflow is built and running and t
 A video ad's final is the Video Editor result; clip links only when the user asks.
 
 Report:
-> Calmly · video ad · "2 am": done. Video: {video url} · Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid}. Spent {x} credits · balance {X}. Character: result 1 went into the clip; say "take the second" to switch. Open the workflow to edit any prompt and rerun.
+> Calmly · video ad · "2 am": done. Video: {video url} · Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid}. Spent {x} credits · balance {X}. Canvas: STEP 1 Sources → STEP 2 Images → STEP 3 Clips → STEP 4 Audio → STEP 5 Video Editor. Character: result 1 went into the clip; say "take the second" to switch. Open the workflow to edit any prompt and rerun.
 
 - Name failed nodes: label, what it was asked to do, why if known, the fix you suggest.
 - When every node has a result, offer 2–3 next steps (new angle on the same concept, other sizes, other languages).
@@ -183,6 +184,7 @@ You write every prompt, and each lives in its node's prompt field, where the use
 | run_node on a running node | Poll get_run_results |
 | Plan without a cost, or a run without reading the nodes' credits | Reference A → Credit prices in the plan; node `credits` before the run |
 | Runs with lost connections, or over the user's canvas edits | Step 5 pre-run check before every run |
+| Runs before the canvas is laid out (nodes outside sections, no STEP notes) | Step 4 lays it out by `lyra-workflow-layout`; the Step 5 pre-run check blocks the first run until it is |
 | Sends the user to tick a result in Lyra | Step 7: set the picked result yourself |
 | A new workflow for a new version of the same ad | Create variation of the same workflow, delete what this version doesn't need (Variations) |
 | Only file links, or no workflow link | Step 7 links |

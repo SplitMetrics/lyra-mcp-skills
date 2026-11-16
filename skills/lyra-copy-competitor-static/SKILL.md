@@ -7,7 +7,7 @@ description: Copy a competitor's static ad (one image, a carousel, several stati
 
 Image mini skill. Takes a static ad that works for someone else, finds out **why** it works, and rebuilds that mechanism as a new static for the user's app: their pain, their feature, their person, their words, their brand. Six jobs in order:
 
-**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
 
 1. **Analyse** the reference (Step 1a): the team's static standard (Reference L) plus a production breakdown with the layout map.
 2. **Go to the Brand Kit** (Step 1b) and take every fact from it.
