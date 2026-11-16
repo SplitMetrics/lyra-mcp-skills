@@ -1,6 +1,6 @@
 ---
 name: lyra-result-check
-description: Use after every final Lyra render or fix, and when the user asks "check the video", "look at the result", "any defects?", "is it ready to launch", "check the statics". Looks at frames and sound (faces, hands, screen text, logo, captions, levels) and reports each problem with a fix.
+description: Check a finished Lyra video or image ad by looking at it, automatically after every final render. Opens the result file in a browser, takes frames at every spoken line and every cut (every card, size and language for images) at full resolution, checks faces, hands and fingers, phone screen text and the logo, captions over faces and warped text, measures the sound (levels, clipping, silence, hard end, music under the voice), then reports "checked 14 frames, 2 problems" with the problem frames as pictures and a fix for each through lyra-fix. No browser → a check list with timecodes for the user. Use after a render or a fix, and for "check the video", "look at the result", "any defects?", "is it ready to launch", "check the statics".
 ---
 
 # lyra-result-check

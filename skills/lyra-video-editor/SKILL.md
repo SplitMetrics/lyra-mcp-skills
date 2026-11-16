@@ -1,6 +1,6 @@
 ---
 name: lyra-video-editor
-description: Use when assembling or editing a Lyra video, e.g. "add captions", "add an end card", "change the music mix", "faster pacing", "add sound effects", "make 30 s and 15 s cutdowns". The assembly stage of every Lyra video skill (mix, end card, text, captions, pacing, SFX, render check).
+description: Lyra Video Editor: assembly, mix, end card, text, captions (asked first, size 80, 75% height), pacing, keywords, SFX, render check, and 59/30/15 s cutdowns. The assembly stage of every Lyra video skill.
 ---
 
 # lyra-video-editor
