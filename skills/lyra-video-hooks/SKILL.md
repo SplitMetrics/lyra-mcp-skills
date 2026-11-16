@@ -11,6 +11,8 @@ Mini skill. Finds the audience's pains in the Brand Kit, writes a bank of hook i
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different hook, order or combination serves the idea better, do it and say why in one line. Only a few things are fixed: truth (no invented claims, reviews or numbers), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to hooks. If the two disagree, the user wins, then this file, then the base skill.
 
 **Method.** GBP (Gut, Brain, Pocket) and the More, Better, New iteration framework. This skill is **MORE**: new Guts on the same Brain and Pocket. Hook writing follows direct response practice: audience awareness, voice of customer, one idea per hook, every claim true.
