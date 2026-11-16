@@ -1,6 +1,6 @@
 ---
 name: lyra-static-image-generation
-description: Use when the user wants a static image ad, banner or creative for a mobile app, e.g. "a static ad for my app", "4 statics to test", "an image ad", "a realistic photo of...", "a persona image", "a phone shot". Builds it end to end in Lyra (concept, layout, on-image text, model, generation). Core image skill the other Lyra image skills build on.
+description: Base skill for images in Lyra. Builds static ads and images for mobile apps end to end (concept, layout, on-image text, realism, model choice, references, sizes, languages) with a clear concept and layout, photo-real realism on Nano Banana Pro, de-slop and error handling. Use for "a static ad for my app", "an image ad / banner / creative", "4 statics to test", "a carousel", "a realistic photo of…", "a character / persona image", "a product or phone shot", "an illustration in our style", or a layout or reference to produce. Holds the core image rules the smaller lyra image skills point to.
 ---
 
 # lyra-static-image-generation
