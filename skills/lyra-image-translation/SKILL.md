@@ -11,6 +11,8 @@ Image helper skill. Takes an image that is already approved (a static ad, carous
 
 **Translation is copywriting first, rendering second.** The hard part is not getting letters onto the image, it's having the right words: a headline that sounds native, fits the zone, keeps the hook and says nothing the Brand Kit doesn't allow. So the words are written and approved **before** any credits are spent, in a Localization sheet, and only then rendered. A node that translates on its own is a tool, never the author.
 
+**Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, on-image text rules, realism, models (Reference A), layout library (B), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to languages and markets. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills for their parts.**

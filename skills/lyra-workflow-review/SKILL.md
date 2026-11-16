@@ -9,6 +9,8 @@ Core skill for reading a Lyra workflow the way a creative producer would. The cr
 
 **The goal.** The user sends a link and gets back, in one message: what this workflow makes, its steps in order, a short list of problems with how to fix each one, and the price of running it all again or only a part. Nothing on their canvas has moved.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` for a video or `lyra-static-image-generation` for an image (both for a mix), with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Core rules come from the base skills.** Credits, pre-run check, picking a result, links and the open canvas rule live in Part 1 of `lyra-video-ad-generation` (video) and `lyra-static-image-generation` (images). Canvas rules (sections, STEP notes, colors, labels) live in `lyra-workflow-layout`. Fixing a scene or an image goes to `lyra-fix`. This file only adds what is specific to a review.
 
 **This is a way of thinking, not a script.** Fixed: read before saying anything, plain words, every problem with its fix, prices from the nodes, never guess a result you haven't seen, and the hands-off rule below.

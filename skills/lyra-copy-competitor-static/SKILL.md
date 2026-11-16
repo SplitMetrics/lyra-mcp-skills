@@ -35,6 +35,8 @@ Image mini skill. Takes a static ad that works for someone else, finds out **why
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different layout, subject or line serves the user's app better, do it and say why in one line. Fixed: the line between mechanism and identity (next section), truth (no invented claims, reviews or numbers; the competitor's claims are never ours), the Brand Kit's facts, UI fidelity (the user's screenshots, exactly), Lyra's technical limits, and the user's explicit choices.
 
+**Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text, realism, styles, models (Reference A), layout library (B), styles (C), realism toolkit (D), persona (E), edits and swaps (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file only adds what is specific to copying a static reference. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills for their parts.**

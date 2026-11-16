@@ -20,6 +20,8 @@ One new angle = one Lyra **variation** of the original workflow.
 
 **Method.** The team framework (concept → angle → hook, each level tested separately), GBP (Gut, Brain, Pocket) and More, Better, New. `lyra-video-hooks` is MORE on the Gut (new openings, same body). `lyra-audience-variations` keeps the Brain and changes the world it is shown in. This skill is **MORE on the Brain**: new angles on a concept. The Pocket (CTA, offer, end card) stays.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), brief and scenes (B), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to multiplying a concept. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills for their parts.**

@@ -11,6 +11,8 @@ Use for "edit / assemble the video", "stitch the clips", "add captions / subtitl
 
 **This file is the only source for the Video Editor and captions.** Every other Lyra skill points here for them.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Core rules come from the base skill.** Part 1 of `lyra-video-ad-generation` holds the shared steps: one approval message, pre-run check, credits, picking a result, links, variations, open canvas, runtime failures. Canvas changes (new Video Editor nodes for cutdowns, a "Final" section) follow `lyra-workflow-layout`.
 
 **When it runs.**

@@ -11,6 +11,8 @@ Image mini skill. Builds a carousel ad as **one story told in N cards**: a hook 
 
 The story is written once, as one **carousel script**, and Lyra's **Text Split** node cuts it into one part per card. Each part is a complete card prompt that feeds its card's image node. One script = one source of truth: the user edits the story in one place, reruns the split and the cards follow.
 
+**Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text, realism, styles, models (Reference A), layout library (B), styles (C), realism toolkit (D), persona and consistency (E), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file only adds what is specific to carousels and to the split pipeline. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills for their parts.**
