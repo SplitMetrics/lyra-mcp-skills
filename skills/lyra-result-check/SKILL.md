@@ -9,6 +9,8 @@ Quality check skill for every Lyra creative, video and image. The creative skill
 
 **The goal.** The user gets one short answer: "Checked 14 frames, 2 problems", each problem with its time, scene, a picture of the frame, what is wrong and how to fix it with its price. Nothing invented, nothing graded without being seen or measured.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` for a video or `lyra-static-image-generation` for an image (both for a mix), with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Core rules come from the base skills.** Part 1 of `lyra-video-ad-generation` (video) or `lyra-static-image-generation` (images) holds the shared steps: links, picking a result, open canvas, credits. The edit itself (composition, captions size and place) is described in `lyra-video-editor`. Fixes follow `lyra-fix`.
 
 **When it runs.**

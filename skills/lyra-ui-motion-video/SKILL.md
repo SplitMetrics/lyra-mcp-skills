@@ -13,6 +13,8 @@ Mini skill for everything where **the app's interface is on screen**: UI motion 
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice; use judgment and say why in one line when you choose differently. Fixed: **UI fidelity** (the rules in the next section), truth (no features, numbers, ratings or badges the app doesn't have), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file adds what is specific to UI. If the two disagree, the user wins, then this file, then the base skill.
 
 **Two different characters, every time** (base skill → Two different characters): every person this skill generates comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
