@@ -11,6 +11,8 @@ Helper skill for every Lyra skill. The other skills decide **what** to build; th
 
 **Who decides what.** The creative skill decides which sections its creative needs (its "Layout" lines). This file decides how they are placed, numbered, explained, colored, labelled and checked. The user's explicit wishes win over both.
 
+**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` for a video or `lyra-static-image-generation` for an image (both for a mix), with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
+
 **This is a way of thinking, not a script.** Use judgment when a canvas needs something different, and say why in one line. Fixed: every node in a section, one STEP note per section, steps in run order, the color code, labels a person understands, no empty or stray nodes, and Lyra's technical limits below.
 
 ---
