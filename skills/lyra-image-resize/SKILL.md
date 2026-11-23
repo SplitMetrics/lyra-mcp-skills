@@ -7,15 +7,15 @@ description: Adapt a finished app ad image in Lyra to other aspect ratios and ad
 
 Image helper skill. Takes an image that is already approved (a static ad, carousel cards, an end card, a phone shot) and makes it fit another frame: the same ad, the same elements, the same words, the same look, **recomposed** for the new ratio and the placement's safe zones. One output per ratio, labelled and named so the media buyer can upload them as one ad with an asset per placement.
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. **Load that skill (or `get_skill`) before building, also on the first build, and follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **Resize is recomposition, not cropping.** A crop throws away part of the ad; a stretch distorts it; a centered copy on a bigger canvas wastes the frame. A good resize decides again where each element lives in the new frame, so the hero stays the hero, the headline stays readable and the CTA stays clear of the platform's buttons. So the layout for every ratio is planned **before** any credits are spent, in a Resize sheet, and only then rendered.
 
 **Adaptation, not improvement.** The goal is the same image in a new frame, not a better one. Nothing is added, nothing is dropped, nothing is "fixed": no new text, no sharper skin, no higher contrast, no cleaner UI. That is the Image Resize node's own rule (below), and this skill holds every route to it.
 
-**Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
-
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text rules, realism, models (Reference A), layout library (B), edits and recompose (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to ratios and placements. If the two disagree, the user wins, then this file, then the base skill.
+
+**This skill takes over the resize part of `lyra-adapt-image`.** Skills that say "other sizes → `lyra-adapt-image`" mean this skill now.
 
 **Other skills for their parts.**
 - Other **languages** → `lyra-image-translation`. Order: **languages first, sizes second** (each approved language is resized; fewer runs, and a text that grew in translation is placed once per ratio).

@@ -9,7 +9,7 @@ The main image skill for Lyra. It holds the core rules for every image: concept 
 
 Part 1 is shared by every Lyra skill (the same 8 steps as `lyra-video-ad-generation`, written for images). Part 2 is what's specific to static images. The Reference library at the end has the details (models, layout library, text, realism, styles, consistency, UI, errors, de-slop, Meta statics).
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The pre-run check (Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. **Load that skill (or `get_skill`) before building, also on the first build, and follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **This is a way of thinking, not a script.** The rules are defaults and good practice; use judgment and say why in one line when you choose differently. Fixed: truth (no invented claims, reviews, numbers, UI or logos), the Brand Kit's facts, UI fidelity (the user's screenshots, exactly), Lyra's technical limits, and the user's explicit choices.
 
@@ -23,7 +23,7 @@ A full creative always follows these steps, in order:
 1. **Context.** Collect the app context and task inputs; make sure you have everything before proposing anything.
 2. **Concept and plan.** A very short concept with its layout, plus a short plan of nodes, models and connections, based on "Best way to build it".
 3. **Approval.** One message: concept, plan, open questions and the cost in credits; the user approves or corrects. Nothing is created before this; the yes also starts the run.
-4. **Build.** Create the workflow and nodes with the chosen models, write every prompt into the node's prompt field, upload and connect the assets, and lay out the canvas by `lyra-workflow-layout` (sections and STEP notes). Nothing runs yet.
+4. **Build.** Create the workflow and nodes with the chosen models, write every prompt into the node's prompt field, upload and connect the assets. Nothing runs yet.
 5. **Pre-run check.** Right before every run, read the workflow back and restore anything lost (connections, settings); keep the user's own edits.
 6. **Credits and run.** The cost is part of the plan; after the one yes, build and run everything without asking again.
 7. **Run and report.** Run, report with the right links (workflow, video or image) and the real spend, offer the next step.
@@ -36,6 +36,19 @@ A full creative always follows these steps, in order:
 
 Best practices are defaults, not rules for the user. When a user's choice will likely hurt the result, follow it and say once in the plan what you'd do instead and why; don't argue twice. When a choice breaks a hard limit (transparent background on Nano Banana Pro, a ratio the model doesn't list), explain and offer the closest build that works.
 
+## Two different personas, every time
+
+Any ad with a person gets **two different personas to choose from, Persona A and Persona B**: two image nodes with two different prompts, count 1 each. This is the default on every build, the first one too, even when nobody asked for a choice. Two takes of one description (count 2) come back as the same face in a slightly different pose, and the user has nothing to choose from.
+
+- **How different.** Write both cards side by side. They differ on **at least 4** of: age band (10+ years apart) · gender (when the audience allows) · skin tone and ethnicity · hair (colour, length, texture) · build · style and wardrobe, colours included · energy and archetype (a quiet student vs a confident professional). Test: could a stranger mix them up at thumbnail size? Then rewrite B.
+- **Both from the audience.** Both are believable people from the Brand Kit's audience. A persona type picked in the intake quiz ("a student 18–25") is not an exact description: A and B are two very different people of that type.
+- **One exact person** (the user described the look in detail, or said "this character"): the same person in both, with a clearly different outfit, colours, accessories and setting, and hair styling if the user didn't fix it.
+- **Only one persona** when: the user uploads the person (photo, character sheet) or reuses one from an earlier ad, says "one persona" or "no options", or the ad has no person. A mascot fixed by the Brand Kit: B is the same mascot in another pose or outfit, if the kit allows.
+- **Say it everywhere.** The plan table has two rows, "Persona A · …" and "Persona B · …"; the approval message says in one line how they differ; the report shows both, says A went on and how to switch ("say "take B"").
+- **Self-check before the run.** Count the persona nodes. One node, or two whose cards differ only in pose, expression or one detail → stop and rewrite B before spending credits.
+- **Any choice is a real choice.** The same for every set of options Claude offers (hooks, keyframes, concepts, ads, end cards): different ideas, compositions or people, as different prompts. Count 2 or 3 is only for extra takes of one exact image.
+- Connections and switching: Reference E.
+
 ## Step 1. Context
 
 **App.** Every concept starts from the app. Generic ads come from missing product context, so never fill gaps from imagination.
@@ -45,6 +58,11 @@ Best practices are defaults, not rules for the user. When a user's choice will l
    > App card: Calmly · 5-minute wind-down sessions for sleep · for students 18–25 · pain: can't switch off at night · may show: wind-down timer, sleep sounds · claims: none approved · offer: 7 days free · tone: calm, a bit ironic · colors: #1B1F3B navy, #8B7CF6 violet, #F4F1EA cream · assets: logo, icon, 3 screenshots · source: brand kit
 
 **Ask only what only the user knows.** Lyra's own nodes never ask and fill every gap with reasonable assumptions (System Preamble). This skill asks once, in Step 1, only for what can't be assumed (the app, the screenshots and logo, the idea if they have one); for everything else it assumes, states the default in the plan and proceeds.
+
+**Files and the logo go in by Claude, never by hand.**
+- **Logo from the Brand Kit:** `list_brand_kits` returns `brand_logo_url`. `create_upload` with `{url: brand_logo_url}` → `attach_upload` to the workflow, label "Logo" (tested: ready in seconds). Never ask the user to upload a logo the kit already has. The link is signed and expires: take it fresh from `list_brand_kits` on every build.
+- **Files the user sends in the chat** (screenshots, a logo, a reference video): `list_uploads` first (maybe already there). With a shell that has network: `create_upload` with `{file_name, content_type, size_bytes}`, send the file with the returned descriptor (curl), `complete_upload`, then `attach_upload`. Without a shell: `open_upload_widget` once for all the files. A public link: `{url}`. A client that passes an attached file (`file`): use it. Only when all of these fail, ask the user to upload in Lyra, and say why.
+- **Screenshots up front.** If the ad shows the app, ask for 2 to 4 real screenshots in the intake quiz; never draw app UI.
 
 **Task.** Ask for the inputs in Part 2 → Inputs and defaults; state the defaults instead of asking. Ask for everything missing in one message; never re-ask what the user said. Call `list_workspaces` (credits) and `list_node_configs` (models, ratios, resolutions) now.
 
@@ -61,7 +79,8 @@ Short: readable in under a minute.
 | 1 | Concept card (note for the user) | user text | — | — |
 | 2 | Logo | upload image | — | 1 |
 | 3 | Screenshot: timer | upload image | — | 1 |
-| 4 | Persona: Mia | image · google/nano-banana-pro · 4:5 · 2K · count 2 | — | 1 |
+| 4 | Persona A: Mia · 21, student, grey hoodie | image · google/nano-banana-pro · 4:5 · 2K | — | 1 |
+| 4b | Persona B: Dana · 32, platinum bob, leather jacket | image · google/nano-banana-pro · 4:5 · 2K | — | 1 |
 | 5 | Ad C1: 2 am POV · 4:5 | image · google/nano-banana-pro · 4:5 · 2K | 4 (person), 3 (screen), 2 (logo) as references | 2 |
 | 6 | Ad C2: proof shot · 4:5 | image · google/nano-banana-pro · 4:5 · 4K | 3, 2 as references | 2 |
 | 7 | C1 · 9:16 + 1:1 | image resize · google/nano-banana-2 | 5 | 3 |
@@ -83,7 +102,7 @@ On corrections, show only what changed, with the new cost, and ask again. Don't 
 3. Write every prompt (Part 2 → Prompt rules). The concept card goes into a user text node (`create_user_text_node`) as a note for the user, connected to nothing. A user text node feeds its text into any node it is connected to, so keep this one unconnected (a Note on the canvas can't be connected at all, but the tools can't create one). The text doesn't keep the style or the person consistent: consistency comes only from images connected as references, plus the anchors written into every prompt.
 4. Create every node from the plan with its prompt, its model, ratio and resolution from `list_node_configs`, and a label that says what it's for ("Ad C1: 2 am POV · 4:5", "Persona: Mia"), never "Image 1".
 5. **Connect the whole graph now** (`connect_nodes`): uploads and persona → every image that uses them (reference) · the approved ad → resize and translation nodes. References connect before anything is generated, so "run all" works.
-6. **Lay out the canvas now, before anything runs** (`lyra-workflow-layout`: STEP notes, sections in reading order, colors, check). It is free and part of the build: the build isn't done until every node sits in a section with a STEP note above it. One section per stage: **Sources** (concept card, uploads) → **Persona / product** → **Ads** → **Sizes and languages**. An upload sits next to the node it feeds.
+6. **Lay out the canvas now, as part of the build** (not later, not only when asked): load `lyra-workflow-layout` and follow its Build order, the same for one static as for twenty. Its sections for statics, in reading order: **Concept** (lime) → **Your app** (pink, when there are uploads) → **Persona / product** (violet) → **Ads** (rose, or violet when sizes follow) → **Sizes and languages** (rose); one STEP note above each (`create_note_node`); never `organize_nodes` after the notes. Inside them, by stage: **Sources** (concept card, uploads) → **Persona / product** → **Ads** → **Sizes and languages**. An upload sits next to the node it feeds.
 7. Check `is_valid` and `validation_error` on every node; fix with `update_node` using listed values.
 
 ## Variations, not new workflows
@@ -101,7 +120,6 @@ Right before **every** `run_node` (the first run, each next stage, reruns, follo
 2. Compare it with the plan: every planned edge (source → target) is there · every node that takes images has them as planned (`image_inputs_usage`: references or frames; a frame points to an existing result) · every node `is_valid`, no `validation_error` · no empty prompt · settings as planned (model, ratio, duration, resolution, count).
 3. Lost or changed by accident → restore it (`connect_nodes`, `update_node`) and say it in one line ("the link Character → Clip 1 was gone, reconnected"). Changed by the user on purpose (their prompt, model, a node they added) → keep it and use the workflow as it is now; never overwrite their edits. Not sure which → ask before running.
 4. Inputs ready: a node runs only when every node it takes from has a result. Never run a node with a missing input.
-5. **Canvas laid out** (`lyra-workflow-layout`): every node is in a section and every section has its STEP note above it, no stray or empty nodes. If not, lay it out first (free), and only then run. Nodes added since the last run (a fix, a cutdown, a new Video Editor) go into a section too.
 
 After the build, tell the user once that the workflow is built and running and that they can edit any prompt on the canvas and rerun.
 
@@ -112,7 +130,7 @@ After the build, tell the user once that the workflow is built and running and t
 2. **After the build, before running:** add up `credits` of every node that will run. Within ~15% of the approved estimate and within the balance → run everything, stage by stage (sources → ads → sizes and languages, Step 7), with no question. More than ~15% over, or over the balance → one short message: the new total, why, and a cheaper option (fewer concepts, lower count, 2K instead of 4K, Nano Banana 2); run after the answer.
 3. **Reruns and follow-ups:** give the rerun's credits in the same message as the change ("Changed the headline; rerunning Ad C1 and its 9:16, 46 credits") and run, unless the user asked to check first.
 4. **After the run:** the real spend (balance before − after) and the new balance.
-5. A source image with count 2 (a character, a persona) feeds the next stage with its selected result; say in the report which one went on and that the user can switch (Step 7).
+5. Every generated persona comes as two nodes, Persona A and Persona B (Reference E → Two different personas): A, the recommended one, is connected and goes into the next stage; say so in the report and that B is ready to switch to.
 6. The smaller skills' **Run options** sections give the run order and what each stage holds: run all of it in that order, without offering the options. A staged run (the look first, then the rest) only when the user asks for it, or when the plan is expensive and the look should be approved first: then say so in the approval message, with each stage's credits, and run the next stage on the user's yes to the look.
 7. No `credits` on the nodes at all (the field is gone): estimate with Reference A, say it's an estimate, and keep the same one-question flow.
 
@@ -121,16 +139,22 @@ After the build, tell the user once that the workflow is built and running and t
 2. **Picking a result.** A node with several results: when the user names one ("take the second", "the first one"), set it yourself on every node that uses it; don't send the user to tick it in Lyra. On a node with `image_inputs_usage` (video nodes): `update_node` with its whole `image_inputs_usage` from `get_workflow` and one field changed: references → `reference_result_image_uuids: [picked uuid]` (or the other results in `exclude_reference_result_image_uuids`); frames → `first_frame` / `last_frame` = `{"node_uuid": source node, "image_result_uuid": picked uuid}`. The results' uuids and their order (first, second…) come from `get_run_results` of the source node's run. Then `get_workflow` to check it held, and rerun what comes after it (pre-run check first). Only when the node has no such setting or the tool refuses: ask the user to tick it in Lyra and say why. Without a pick, the next stage uses Lyra's selected result; say which one went on.
 3. Run a stage only after its inputs have results.
 
+**Time and progress.** Before the run, say how long each stage takes (images about 1 min, a Seedance clip 3 to 8 min, a Video Editor render 1 to 3 min; use real times from this session when you have them). While waiting, one status line at each check ("2 of 4 clips ready, about 5 min left"); never go quiet through a long wait. On a failure, say what failed and what you do next in the same line.
+
+**Showing results.** After a run is completed or failed, call `show_run_results` once for it. Previews in the chat are small (300 px), so for a full-size look give the file's `browser_url`. Never paste signed file links.
+
+**The final is easy to find.** Label the final node "FINAL · …" (the Video Editor of a video, the last ad set of statics), in the last rose section; in the report the final's link comes first.
+
 **Links in every report.** Never only file links. Two kinds of link, nothing else:
 - **Workflow:** `https://app.lyra.splitmetrics.com/workflows/{workflow_uuid}` (opens for anyone signed in to Lyra with access to the workspace; results in a variation: name the variation to open).
-- **Result:** the `url` from `get_run_results`, exactly as returned.
+- **Result:** the file's `browser_url` from `get_run_results` (never the signed `url`).
 - one video → the video link + the workflow link
 - several videos → the workflow link only
 - one image → the image link + the workflow link
 - several images → the workflow link only
 
 Report:
-> Calmly · statics · 3 concepts: done. Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid} (3 ads, 9:16 and 1:1 each). Canvas: STEP 1 Sources → STEP 2 Persona → STEP 3 Ads → STEP 4 Sizes. Spent {x} credits · balance {X}. Open it to edit any prompt and rerun.
+> Calmly · statics · 3 concepts: done. Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid} (3 ads, 9:16 and 1:1 each). Spent {x} credits · balance {X}. Open it to edit any prompt and rerun.
 
 - Name failed nodes: label, what it was asked to do, why if known, the fix you suggest.
 - When every node has a result, offer 2–3 next steps (variants of the winner, other sizes, other languages, an animated version).
@@ -164,7 +188,6 @@ You write every prompt, and each lives in its node's prompt field, where the use
 | run_node on a running node | Poll get_run_results |
 | Plan without a cost, or a run without reading the nodes' credits | Reference A → Credit prices in the plan; node `credits` before the run |
 | Runs with lost connections, or over the user's canvas edits | Step 5 pre-run check before every run |
-| Runs before the canvas is laid out (nodes outside sections, no STEP notes) | Step 4 lays it out by `lyra-workflow-layout`; the Step 5 pre-run check blocks the first run until it is |
 | Sends the user to tick a result in Lyra | Step 7: set the picked result yourself |
 | A new workflow for a new version of the same ad | Create variation of the same workflow, delete what this version doesn't need (Variations) |
 | Only file links, or no workflow link | Step 7 links |
@@ -184,7 +207,7 @@ You write every prompt, and each lives in its node's prompt field, where the use
 Creates static ads and images for mobile app paid ads in Lyra, SplitMetrics' node-based creative canvas, leaving a generated, reusable workflow on the canvas.
 Use when the user asks for "a static ad", "an image ad / banner", "statics to test", "a carousel", "a realistic photo of…", "a persona / character image", "a product or phone shot", "an illustration in our style", or hands over a layout, a sketch or a reference image.
 Works from a Lyra brand kit or app details in chat, app screenshots, logo and icon, product photos, a reference static (through `lyra-copy-competitor-static`), or an existing workflow.
-Not for: other sizes or languages of a finished image (`lyra-image-resize` and `lyra-image-translation`, rules from Reference H here) · App Store / Google Play screenshot sets and store-style end cards (`lyra-ui-motion-video`) · copying a competitor's static (`lyra-copy-competitor-static`, which builds on this skill) · the same image for another audience (`lyra-audience-variations`) · video (`lyra-video-ad-generation`).
+Not for: other sizes or languages of a finished image (`lyra-adapt-image`, rules from Reference H here) · App Store / Google Play screenshot sets and store-style end cards (`lyra-ui-motion-video`) · copying a competitor's static (`lyra-copy-competitor-static`, which builds on this skill) · the same image for another audience (`lyra-audience-variations`) · video (`lyra-video-ad-generation`).
 
 ## Quality bar
 Reads in half a second at phone size (one focal point, one promise, a short headline), stops the scroll because it looks native and specific, shows only real app features and the user's real screens, every letter and number exactly right, one CTA, on brand, and no AI look: when the brief asks for a photo, it looks **taken by a camera, not generated**.
@@ -201,7 +224,7 @@ Reads in half a second at phone size (one focal point, one promise, a short head
 |---|---|---|
 | **Static ad** (the main job) | one finished ad: visual + headline + CTA (+ logo, UI) | one Pro node, the whole layout in the prompt, references connected |
 | **Carousel** | 2–10 cards that read as one story, card 1 carries the hook | one Pro node per card, the same anchors in every prompt; persona / style reference shared |
-| **Persona / character** | a person (or mascot) reused across ads, a carousel or a later video | Pro, front-facing or three-quarter, the pain place, count 2; Character Generation rules (Reference E) |
+| **Persona / character** | a person (or mascot) reused across ads, a carousel or a later video | Pro, front-facing or three-quarter, the pain place; two different personas A and B to choose from, never count 2 (Reference E) |
 | **Product or phone shot** | the user's screenshot on a phone in a hand or on a backdrop; the app icon; a physical product from the user's photos | Pro with the screenshot / photo connected, fidelity line (Reference G) |
 | **Scene / background plate** | a place or backdrop with a clean zone, no text, for the user's designer or for other images | Pro, "clean empty area for text in the upper third" |
 | **Keyframe for video** | the first (or last) frame of a clip | built here for realism, at the video's ratio; its role follows the video skill |
@@ -287,7 +310,7 @@ The user's explicit choices override any row. Model choice: Reference A.
 | If the request has | Best approach (graph) | Models | Why |
 |---|---|---|---|
 | **Nothing specific (default)**: 1–4 static ads | concept card → one Pro node per concept, 4:5, 2K, whole layout and every text in the prompt; logo / screenshot uploads as references | nano-banana-pro | fewest nodes; Pro renders people, text and UI best |
-| The same person in several images (carousel, series, video later) | persona node first (count 2, user picks) → connected as reference to every image with the person | nano-banana-pro | consistency comes from the reference, not from text |
+| The same person in several images (carousel, series, video later) | personas A and B first (two different people, Reference E; user picks) → the picked one connected as reference to every image with the person | nano-banana-pro | consistency comes from the reference, not from text |
 | The app's UI in the ad | screenshot uploads → in the ad prompt, the screen "exactly as supplied" + key texts in quotes; a separate phone-shot node when the screen is the hero or keeps failing | nano-banana-pro | the UI is never redrawn (Reference G) |
 | Carousel | one node per card, same anchors (palette, type, persona, background) word for word; card 1 = hook; last card = CTA | nano-banana-pro | one look across cards |
 | Many directions / tight budget | drafts on nano-banana-2 at 1K, count 2–3 → the user picks → winners rerun on Pro at 2K | nano-banana-2 → nano-banana-pro | spend on the winners |
@@ -295,7 +318,7 @@ The user's explicit choices override any row. Model choice: Reference A.
 | Transparent cutout, sticker, element for the designer | GPT Image 2, `background: transparent`, 1:1 / 3:2 / 2:3 | openai/gpt-image-2 | the only listed model with transparency |
 | Edit an existing image (swap person, change one element, relight) | the source image connected → Pro, "change only…" prompt | nano-banana-pro | keeps everything else |
 | A reference static to adapt (competitor's static, carousel, several statics, a key frame of their video) | `lyra-copy-competitor-static` → built on this skill's rules | nano-banana-pro | keeps the mechanism, not the identity |
-| Other ratios of an approved ad | `lyra-image-resize` (Image Resize, Nano Banana 2) for simple layouts; a Pro **recompose** node with the ad connected when the layout or text must move | nano-banana-2 · nano-banana-pro | recompose, don't crop |
+| Other ratios of an approved ad | `lyra-adapt-image` (Image Resize, Nano Banana 2) for simple layouts; a Pro **recompose** node with the ad connected when the layout or text must move | nano-banana-2 · nano-banana-pro | recompose, don't crop |
 | Other languages | Image Translation (Nano Banana 2) for ads without UI; ads with UI → localized screenshots + text written in that language, new Pro node | nano-banana-2 · nano-banana-pro | the UI is never machine-translated |
 | An animated version of the winner | the approved image as first frame → `lyra-ui-motion-video` (UI-led) or `lyra-video-ad-generation` | seedance-2.0 / 2.5 | the static becomes a keyframe |
 
@@ -418,7 +441,7 @@ Always call `list_node_configs` first: it is the live source of image models, ra
 | Edit / change element | as one generation on that model |
 | AI text node · Text Split · user text, uploads, notes | 1 · 0 · 0 |
 
-Count multiplies the price; the ratio doesn't change it. Example: persona (count 2) 46 + 3 ads on Pro 2K 69 + 9:16 and 1:1 of each by Image Resize 66 ≈ **181 credits**. Models or settings not in the table: build, read the node, then tell the user.
+Count multiplies the price; the ratio doesn't change it. Example: personas A and B 46 + 3 ads on Pro 2K 69 + 9:16 and 1:1 of each by Image Resize 66 ≈ **181 credits**. Models or settings not in the table: build, read the node, then tell the user.
 
 **Reference policy.** A technical maximum is not a target: every extra reference makes the result less predictable. Default references = the user's uploads (logo, screenshots, product photos) and the images you generated (persona, product shot). A style sample only when the user brings one or the series needs one look; then say its job ("[Image3] is a style reference only: copy its palette, light and grain; not its people, objects or text").
 
@@ -536,6 +559,12 @@ Short daily version: **SCENE + ACTION + STYLING + LOCATION + COMPOSITION + CAMER
 - No text in the persona image. No stereotypes, no real people or lookalikes; adults only as the speaking or main persona.
 - Character card written once, repeated word for word: "Mia · 21 · student · light brown skin, freckles, dark curly hair in a loose bun · no makeup, slight dark circles · oversized grey hoodie, thin silver hoops".
 
+- **Two different personas to choose from, never count 2.** Count 2 on one node runs the same prompt twice and returns the same person from a slightly different angle, so there is nothing to choose. Every time the ads have a generated person (a persona, a mascot), build **two nodes with two different prompts**, "Character A · …" and "Character B · …", count 1 each:
+  - **The user didn't describe the person exactly:** two clearly different people from the Brand Kit's audience, as far apart as the brief allows: another age band, face, hair, skin tone, build, style and vibe (a quiet 19-year-old student in an oversized grey hoodie vs a confident 32-year-old with a sharp platinum bob and a leather jacket). Never two takes of one description.
+  - **The user described the person exactly:** the same person in both, with clearly different clothes and styling: other outfit, colours, accessories (and hair styling, if the user didn't fix it).
+  - **Connections:** A (the recommended one) is connected at build time to every node that shows the person; B is built and run, connected to nothing. The user picks B → on every node that uses the character, `disconnect_nodes` A and `connect_nodes` B with the same role, pre-run check (Step 5), rerun what depends on it, its credits in the same message.
+  - Count 2 stays only for more takes of one exact image the user wants to compare (a keyframe, an ad), never for choosing a character.
+
 **Across a series:** the persona image connected as reference to every image with the person ("[Image1] is Mia: use her face, hair and hoodie"); the place, light and style anchors repeated word for word; the same model and ratio. **When it drifts:** move the identity line to the start, shorten the prompt, simplify the pose; a reference leaking light or framing → state its job or drop it; after two fails, regenerate the persona with a clearer front view and reconnect.
 
 ## F. Edits and swaps
@@ -560,7 +589,7 @@ Full rules: `lyra-ui-motion-video` (UI fidelity, screens, store sets, end card).
 - **Logo and app icon:** only the uploaded files, connected as references, "place the logo from [Image3] exactly as supplied, small, bottom-right"; check it; if it warps, leave the corner clean for the designer. Store badges, ratings, awards: official files and real numbers only; badges are best added by the designer.
 - **Image Translation never on images with UI** (it would translate the interface). Other markets = the localized app's screenshots.
 
-## H. Sizes and languages (for `lyra-image-resize` and `lyra-image-translation`)
+## H. Sizes and languages (for `lyra-adapt-image`)
 
 - Other ratios: **recompose, don't crop.** Simple layouts with text far from the edges → Image Resize node (Nano Banana 2, one output per ratio). Layouts where text or the hero must move, or Pro-level realism must hold → a Pro recompose node (Reference F). Check headline, CTA and hero inside the new safe zones.
 - Other languages: ads without UI → Image Translation node (Nano Banana 2, one output per language); check every word with a speaker of that language if possible and check length (translations run longer; the layout may need a shorter line). Ads with UI → localized screenshots + the text written in that language, new Pro node.

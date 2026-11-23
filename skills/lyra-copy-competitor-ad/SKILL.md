@@ -7,7 +7,7 @@ description: Copy a competitor's video ad for a mobile app in Lyra. Analyses the
 
 Mini skill. Takes a video ad that works for someone else, finds out **why** it works, and rebuilds that mechanism for the user's app: their pain, their feature, their person, their words, their brand. Four jobs in order: **analyse** the reference (Step 1a) → **go to the Brand Kit** and take every fact from it (Step 1b) → **ask the user** how to retell the reference, with variations (Step 1c) → **rewrite** the script for the brand (Step 2) → **generate** the new video in Lyra.
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. **Load that skill (or `get_skill`) before building, also on the first build, and follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **Statics have their own skill.** A static reference (one image, a carousel, several statics) or a static made from a competitor video's key frame → `lyra-copy-competitor-static` (static teardown by Reference L, layout map, new prompt, Nano Banana Pro build, variants). This file is for video.
 
@@ -15,9 +15,9 @@ Mini skill. Takes a video ad that works for someone else, finds out **why** it w
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different structure, shot or line serves the user's app better, do it and say why in one line. Only a few things are fixed: the line between mechanism and identity (next section), truth (no invented claims, reviews or numbers; the competitor's claims are never ours), the Brand Kit's facts, Lyra's technical limits, and the user's explicit choices.
 
-**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
-
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), brief and scenes (B), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to copying a reference. If the two disagree, the user wins, then this file, then the base skill.
+
+**Two different characters, every time** (base skill → Two different characters): every person this skill generates comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
 
 **Other skills for their parts.** Once the reference is understood, the new video is built by the rules of the format it belongs to:
 - a person talking to the phone (UGC, talking head, vlog, skit, interview) → `lyra-ugc-video` for the person, place, camera setup, voice and speech;
@@ -324,7 +324,7 @@ The format of the reference decides the build. The user's explicit choices overr
 
 | If the reference is | Build by | Graph | Models |
 |---|---|---|---|
-| UGC, talking head, storytime, vlog, skit, interview | `lyra-ugc-video` | character image (our persona, count 2) → one Seedance 2.5 clip, speech in quotes, the reference's cuts written as "cut to" → B-roll and UI insert if the reference had them → Video Editor | nano-banana-pro · seedance-2.5 |
+| UGC, talking head, storytime, vlog, skit, interview | `lyra-ugc-video` | character images (our persona as A and B, base Reference E) → one Seedance 2.5 clip, speech in quotes, the reference's cuts written as "cut to" → B-roll and UI insert if the reference had them → Video Editor | nano-banana-pro · seedance-2.5 |
 | A hook-led ad, or the user wants several openings on the copied body | `lyra-video-hooks` (mode B, or mode A on the new body) | as the hook skill | as the hook skill |
 | UI motion, floating phone, demo of screens | `lyra-ui-motion-video` | our screenshots → design frames → one Seedance 2.0 frame clip per shot → end card → Video Editor | nano-banana-pro · seedance-2.0 |
 | Lifestyle, POV, cinematic, real people without speech | base skill | character image → one multi-shot clip with "cut to" in the reference's order → VO + music → Video Editor | nano-banana-pro · seedance-2.5 |

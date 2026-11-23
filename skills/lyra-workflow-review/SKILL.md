@@ -9,8 +9,6 @@ Core skill for reading a Lyra workflow the way a creative producer would. The cr
 
 **The goal.** The user sends a link and gets back, in one message: what this workflow makes, its steps in order, a short list of problems with how to fix each one, and the price of running it all again or only a part. Nothing on their canvas has moved.
 
-**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` for a video or `lyra-static-image-generation` for an image (both for a mix), with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
-
 **Core rules come from the base skills.** Credits, pre-run check, picking a result, links and the open canvas rule live in Part 1 of `lyra-video-ad-generation` (video) and `lyra-static-image-generation` (images). Canvas rules (sections, STEP notes, colors, labels) live in `lyra-workflow-layout`. Fixing a scene or an image goes to `lyra-fix`. This file only adds what is specific to a review.
 
 **This is a way of thinking, not a script.** Fixed: read before saying anything, plain words, every problem with its fix, prices from the nodes, never guess a result you haven't seen, and the hands-off rule below.
@@ -36,7 +34,7 @@ A review **reads**. It does not change the workflow.
 
 ## Step 1. Find and read the workflow
 
-1. **Which workflow.** A link `app.lyra.splitmetrics.com/workflows/{uuid}` (or the older `lyra.splitmetrics.com/workflows/{uuid}`) → the uuid. A name → `list_workflows` with `search`; several matches → list them (title, last updated) and ask which. Nothing given → the most recently updated one, named in the first line so the user can correct it.
+1. **Which workflow.** A link `lyra.splitmetrics.com/workflows/{uuid}` → the uuid. A name → `list_workflows` with `search`; several matches → list them (title, last updated) and ask which. Nothing given → the most recently updated one, named in the first line so the user can correct it.
 2. **Which variation.** `get_workflow` reads the main variation. If the user is asking about another one (`list_variations`), `switch_variation` only with their yes, because it changes which version Lyra shows and runs and renames the workflow after it; otherwise review the main one and name it.
 3. **Read it now, not from memory:** `get_workflow` (nodes, `data`, `is_valid`, `validation_error`, `credits`, `estimated_generation_time`, edges, the Video Editor's `video_rendering_composition`), `list_workspaces` (credits), `list_node_configs` (models and allowed settings), and the Brand Kit if one is assigned (`brand_kit_uuid`; `null` = no kit, say so). There is no tool to read one kit by its uuid: find it in `list_brand_kits` (page through) by `uuid`.
    - **Which balance.** Lyra works in the workspace the user last selected, and `list_workspaces` doesn't mark which one that is (and can fail: "Could not load workspaces"). With a browser, read it off the Lyra sidebar: the workspace name at the top, **Credits** at the bottom. Otherwise: one workspace → its credits; several → name the one you assume ("balance in {workspace}") or ask once; never show a number from another workspace as "your balance".

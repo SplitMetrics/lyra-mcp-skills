@@ -7,16 +7,14 @@ description: Translate and localize the text on finished app ad images in Lyra (
 
 Image helper skill. Takes an image that is already approved (a static ad, carousel cards, an end card, a store screenshot set) and makes it speak another language: the same ad, the same design, the same promise, with every word written for the new market and checked letter by letter. One output per language, labelled and named so the media buyer can upload them as one multi-language ad.
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. **Load that skill (or `get_skill`) before building, also on the first build, and follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **Translation is copywriting first, rendering second.** The hard part is not getting letters onto the image, it's having the right words: a headline that sounds native, fits the zone, keeps the hook and says nothing the Brand Kit doesn't allow. So the words are written and approved **before** any credits are spent, in a Localization sheet, and only then rendered. A node that translates on its own is a tool, never the author.
-
-**Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, on-image text rules, realism, models (Reference A), layout library (B), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to languages and markets. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills for their parts.**
-- Other **sizes** of the translated images → `lyra-image-resize` (Image Resize) or a Pro recompose (base Reference F, H). Order: languages first, sizes second (below).
+- Other **sizes** of the translated images → `lyra-adapt-image` (Image Resize) or a Pro recompose (base Reference F, H). Order: languages first, sizes second (below).
 - An image with **app UI** → UI fidelity from `lyra-ui-motion-video`: the interface is never machine-translated; other markets use the localized app's screenshots.
 - A **market version** where the person, the room, the props or the voice should change too (a local face for Brazil, a Japanese apartment) → `lyra-audience-variations` (mode B, market markers). This skill changes only words; the moment the picture must change, it is an audience version.
 - **Carousels** → `lyra-carousel` (Story Bible, script, Text Split); this file says how a carousel is localized.
@@ -171,7 +169,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 | **End card or text card for a video** | the end card image through Route B or C; the localized store badge file as a layer in the Video Editor; VO and captions by the video skills | nano-banana-pro · video_composer |
 | **Store screenshot set** (App Store / Google Play) | the localized app's screenshots + the caption written in that language, one Pro node per slot (`lyra-ui-motion-video`, Store screenshot sets); never Image Translation | nano-banana-pro |
 | **Legal line, disclaimer, price table, long copy** | Pro clean-plate edit ("Remove all text, keep everything else exactly") → the user's designer sets the localized text in Figma | nano-banana-pro |
-| **Languages × sizes** | languages first at the master ratio, approved, then each language resized or recomposed (`lyra-image-resize`, base Reference H); count languages × ratios and say the total before running | nano-banana-2 · nano-banana-pro |
+| **Languages × sizes** | languages first at the master ratio, approved, then each language resized or recomposed (`lyra-adapt-image`, base Reference H); count languages × ratios and say the total before running | nano-banana-2 · nano-banana-pro |
 | **The picture should change for the market too** | `lyra-audience-variations` (mode B, a Lyra variation per market); this skill writes its texts | as that skill |
 | **Many languages, tight budget** | Route A for all in one node → only the misses get a Pro node; Pro rebuild only for UI images | nano-banana-2 → nano-banana-pro |
 

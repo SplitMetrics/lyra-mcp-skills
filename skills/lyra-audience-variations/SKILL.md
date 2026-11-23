@@ -7,15 +7,15 @@ description: Audience variations of a mobile app video ad in Lyra. The same ad, 
 
 Mini skill. Takes a video ad that works (a Lyra workflow, a finished video, or a concept about to be built) and makes versions of it for other parts of the app's audience by changing **what the viewer sees and hears**: the person, their clothes, the room, the car, the time of day, the market, the voice. The message, the angle, the script, the beats, the camera and the edit stay. One version = one Lyra **variation** of the original workflow.
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`.** Every workflow this skill builds or changes is laid out by `lyra-workflow-layout`: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. **Load that skill (or `get_skill`) before building, also on the first build, and follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **Why it works.** In app ads, the visible world is targeting. In the first second the viewer reads who this is about from the face, the clothes, the room and the things around the person, and decides "that's me" or scrolls. The same proven message in a world that looks like another segment's life can reach people the original never stopped. And because the message stays identical, each version is a clean test of one visible thing.
 
 **This is a way of thinking, not a script.** The rules below are defaults and good practice. Use judgment: when a different layer, bundle or build serves the audience better, do it and say why in one line. Only a few things are fixed: truth (no invented claims, reviews or numbers; an AI person is never a real customer), the Brand Kit's facts, casting ethics (no real people or lookalikes, no stereotypes, adults only as speakers), the product and its real UI, Lyra's technical limits, and the user's explicit choices.
 
-**Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
-
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to audience variations. If the two disagree, the user wins, then this file, then the base skill.
+
+**Two different characters, every time** (base skill → Two different characters): every new person this skill generates for a variation comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
 
 **Other skills for their parts.**
 - Person, place, voice, speech, camera setups, character card and realism → `lyra-ugc-video`.
@@ -229,7 +229,7 @@ When the person or the wardrobe changes, the new character follows the rules of 
 
 Rerunning from the changed node down usually gives the same scene with the new element, because every other word of the prompts is unchanged. When the rest must stay exactly as in the original (strict mode A, or a finished video as the source), swap inside the frame itself:
 
-- **Person swap** (keep the world, change the person): portrait first (by the rules above, count 2, the user picks), then one Image Generation node per key frame with the original frame (in a variation: the copied frame, before it is rerun) and the new portrait connected.
+- **Person swap** (keep the world, change the person): portrait first (by the rules above, as two nodes A and B, base Reference E; the user picks), then one Image Generation node per key frame with the original frame (in a variation: the copied frame, before it is rerun) and the new portrait connected.
 - **World swap** (keep the person, change the outfit, room, car, prop or light): one Image Generation node per key frame with the original frame connected, plus a reference image of the new element if there is one; the prompt keeps the person, pose, framing and phone exactly and changes only the named layer.
 
 Check every swapped frame for **bleed** (traces of the old face, outfit, room or car), hands, the phone and the screen. Bleed → rerun with the "change only…" line moved to the start; still there after two tries → describe the scene in words and generate it fresh with the new element as the only reference for that layer.
@@ -274,7 +274,7 @@ Check every swapped frame for **bleed** (traces of the old face, outfit, room or
 
 **Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
-As in the base skill, credits read from the nodes, per option, multiplied by the number of versions. **A. Changed images (recommended):** portraits (count 2 per person), wardrobe or world frames · **B. Frame swaps and phone shots** for the picked images · **C. Clips and Video Editors** · or **D. Everything** at once (count 1; no pause to pick). Voice-only versions on a separate VO cost only the VO. When an image has several results, the user selects one in Lyra before the next stage (references pin to the selected result).
+As in the base skill, credits read from the nodes, per option, multiplied by the number of versions. **A. Changed images (recommended):** portraits (A and B per person), wardrobe or world frames · **B. Frame swaps and phone shots** for the picked images · **C. Clips and Video Editors** · or **D. Everything** at once (count 1; no pause to pick). Voice-only versions on a separate VO cost only the VO. When an image has several results, the user selects one in Lyra before the next stage (references pin to the selected result).
 
 ---
 
