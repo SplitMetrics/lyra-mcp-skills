@@ -7,7 +7,7 @@ description: UGC style video ads for mobile apps in Lyra, a realistic person tal
 
 This skill makes UGC style video ads for mobile apps; their goal is installs, trials and subscriptions. It casts a believable person from the Brand Kit's audience, puts them where the pain actually happens, gives them a voice that fits, and writes what they say from the audience's real problem. Then builds and runs the video in Lyra.
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**, also on the first build: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. **Follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **App ads first.** Every decision in this skill serves one goal: the right person installs the app and keeps using it. UGC here is not brand content, a creator portfolio or product UGC for a physical item; it is a performance ad for an app, judged by installs, trials and payers. When a general UGC habit (unboxing, "shop now", a product held up to the camera, an aesthetic mood film) doesn't move an app install, drop it or translate it into its app version (see "UGC for app ads").
 
@@ -16,6 +16,8 @@ This skill makes UGC style video ads for mobile apps; their goal is installs, tr
 **Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
 
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to UGC. If the two disagree, the user wins, then this file, then the base skill.
+
+**Two different characters, every time** (base skill → Two different characters): every person this skill generates comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
 
 **Hooks come from `lyra-video-hooks`, and often.** UGC lives or dies in the first 1 to 3 s, so most UGC ads open with a hook built by the hook skill (its pain map, hook kinds, hook base, writing rules). Use it by default, skip it only for the cases in "Hooks in UGC" below. This skill owns the person, the place, the voice, the speech and the body of the video; the hook skill owns the opening.
 
@@ -151,7 +153,7 @@ An app is invisible software on a phone. Product UGC sells something you can hol
    - Is AI-generated content allowed for this brand, and does the client have a disclosure rule.
    - How many videos (default 1 concept; 2 personas if they want a test).
 
-**Defaults (state, don't ask):** cold traffic · Reels / TikTok · 9:16 · **15 s** (10 to 30) · English · one persona · native speech in the clip (no separate voiceover) · no music for talking head formats, light instrumental music for vlog and POV (always its own node in the Video Editor, never inside the clip) · captions: ask the user in the approval message (if yes: all speech, added in the Video Editor; size 80, at 75% of the height, under the face: `lyra-video-editor` → Captions) · phone screen hidden unless there are screenshots · Seedance 2.5, 720p (1080p on the user's choice), sound on, duration adaptive · Nano Banana Pro for every image, 9:16, 2K (4K for close-up selfies), character count 2 · CTA spoken + caption, logo end card optional.
+**Defaults (state, don't ask):** cold traffic · Reels / TikTok · 9:16 · **15 s** (10 to 30) · English · one persona · native speech in the clip (no separate voiceover) · no music for talking head formats, light instrumental music for vlog and POV (always its own node in the Video Editor, never inside the clip) · captions: ask the user in the approval message (if yes: all speech, added in the Video Editor; size 80, at 75% of the height, under the face: `lyra-video-editor` → Captions) · phone screen hidden unless there are screenshots · Seedance 2.5, 720p (1080p on the user's choice), sound on, duration adaptive · Nano Banana Pro for every image, 9:16, 2K (4K for close-up selfies), characters A and B (two different people, base Reference E) · CTA spoken + caption, logo end card optional.
 
 **Recommended first run:** A. Character images (the person decides the whole video; images are cheap).
 
@@ -193,7 +195,7 @@ The concept the user approves (base Step 2) has, per video: **pain moment** (one
 
 **Images: Nano Banana Pro, high quality, phone-real.** Every UGC person, keyframe and moment image is made with **Nano Banana Pro** (`google/nano-banana-pro`), the finals model of the base skill (Reference A): it holds faces, skin, hands and real rooms best. Nano Banana 2 only for quick drafts, then the winner is rerun on Pro.
 
-- **Settings:** aspect ratio **9:16** (the video's ratio, base Reference E) · resolution **2K** by default, **4K** for close-up selfies where skin and eyes fill the frame · count **2** for the character image (the user picks one), 1 for the rest. Read the values from `list_node_configs`.
+- **Settings:** aspect ratio **9:16** (the video's ratio, base Reference E) · resolution **2K** by default, **4K** for close-up selfies where skin and eyes fill the frame · count 1 everywhere; the character comes as two nodes, A and B, two clearly different people (or, when the user fixed the person, two different outfits), base Reference E → Two different characters. Read the values from `list_node_configs`.
 - **High quality is not polish.** High resolution is there so the details survive into the video: visible pores, fine hair, fabric texture, the small objects of the room. The look stays phone-real (natural light, deep focus, no beauty filter, no editorial styling). Seedance 2.5 copies what the reference shows, so a plastic or blurry image becomes a plastic or blurry video.
 - **Skin:** "natural skin texture, visible pores, fine lines, subtle redness, slight unevenness, a few blemishes, no makeup airbrushing, no beauty filter", sized to the persona (a tired student, a busy mom). Never "flawless", "perfect", "porcelain", "glowing".
 - **Setting:** the real place of the pain moment with 2 to 3 lived-in details, motivated light, sharp readable background (see Place). Never an empty, minimalist or showroom room.
@@ -369,7 +371,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 
 | If the video is | Best approach (graph) | Models |
 |---|---|---|
-| **One person, one place, ≤15 s** (default) | UGC script (text) → character image in the setting (count 2, user picks) → **one clip**, adaptive duration, the speech in quotes, 1 to 2 jump cuts written as "cut to" inside the clip → Video Editor (captions, optional end card) | nano-banana-pro · seedance-2.5 |
+| **One person, one place, ≤15 s** (default) | UGC script (text) → character images A and B in the setting (two different people, user picks) → **one clip**, adaptive duration, the speech in quotes, 1 to 2 jump cuts written as "cut to" inside the clip → Video Editor (captions, optional end card) | nano-banana-pro · seedance-2.5 |
 | One person, 15 to 30 s | as default, one clip up to 30 s adaptive; or 2 clips cut on a natural pause, same references, same voice anchor | seedance-2.5 |
 | Two places or several moments (problem → result, day in my life) | character image → one image per moment made **from the character image** ("Change the setup and her pose: she is now… Keep the same woman, face, hair") with the character as input, so identity carries over → one clip per moment, or one multi-shot clip with all moment images as references ([Image1] scene 1, [Image2] scene 2…) → Video Editor | nano-banana-pro · seedance-2.5 |
 | Hidden cam, interview, friend filming | character image (the person on screen; the filmer stays off-camera) → clip with the off-camera question and the on-screen answer, each tied to its voice | nano-banana-pro · seedance-2.5 |
@@ -396,7 +398,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 
 **Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
-As in the base skill, credits read from the nodes, per option. **A. Character images (recommended):** every persona image (count 2) and keyframes · **B. Clips** for the persona the user picked · **C. Everything** → the Video Editor. When a character image has several results, the user selects one in Lyra before the clips (references pin to the selected result).
+As in the base skill, credits read from the nodes, per option. **A. Character images (recommended):** both persona images (A and B) and keyframes · **B. Clips** for the persona the user picked · **C. Everything** → the Video Editor. The clips take the persona the user picked: A is connected by default; picking B moves the connections (base Reference E).
 
 ---
 
@@ -456,6 +458,9 @@ Name every final with a code the media buyer can paste into Ads Manager: `B{batc
 
 | Mistake | Prevention |
 |---|---|
+| A second, stray phone in the frame ("phone propped against a mug" while the phone is also the camera) | When the phone is the camera, the prompt never mentions another phone; describe where the camera stands, not a phone in the scene |
+| "No visible screen" ignored by the model | Say what is there instead: "the phone's screen faces away from the camera", or hands and framing that hide it |
+| One 30 s clip for the whole ad, so any defect means regenerating everything | 2 to 3 clips of 5 to 10 s for 15 to 30 s ads, unless one long take is needed for the same voice and face |
 | Persona invented without reading the Brand Kit's audience | Pain map and pain moment first; casting from the audience |
 | UGC opens on someone just starting to talk, no hook | Hook from `lyra-video-hooks` by default (Hooks in UGC) |
 | Hook played by a different person or voice than the body | Same character card and voice anchor in the hook |

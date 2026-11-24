@@ -7,7 +7,7 @@ description: Ad concept multiplier for mobile app video ads in Lyra. Takes a con
 
 Mini skill. Takes a concept that works (or one the team wants to explore) and makes **new ads on it with new angles**. There are two ways to do it, and they mean different things by "angle", so the user picks one (or both, as two separate rounds):
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**, also on the first build: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. **Follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 - **A. Perspectives** (the team framework: concept → angles → hooks). The concept is a creative mechanism in 3 to 4 words ("Authority figure"). Each angle is a new perspective inside it, often a new voice with its own argument (the doctor, the teacher, the trainer, the mom), and each angle gets its own hooks. One concept → 3 to 4 angles → about 5 hooks each.
 - **B. Reasons** (the proven wrapper). A winning ad keeps everything that made it work (format, beats, timing, hook mechanism, camera, person, look, music, CTA), and only the reason to care changes: another pain, desire, objection, moment or feature from the Brand Kit, in the situation where it happens. One winner → 3 new angles + the original as control.
@@ -23,6 +23,8 @@ One new angle = one Lyra **variation** of the original workflow.
 **Load the base skill now.** Before anything else, load `lyra-video-ad-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
 
 **Base skill first.** Everything not written here follows `lyra-video-ad-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, prompt rules, models (Reference A), brief and scenes (B), audio (C), app UI (D), consistency (E), prompt craft (F), errors (G), de-slop (H), Brand Kit (I), Meta app ads (J). This file only adds what is specific to multiplying a concept. If the two disagree, the user wins, then this file, then the base skill.
+
+**Two different characters, every time** (base skill → Two different characters): every person this skill generates comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
 
 **Other skills for their parts.**
 - Person, place, voice, speech, camera setups, formats, realism, casting → `lyra-ugc-video`.
@@ -331,7 +333,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 |---|---|---|
 | **Mode B, a Lyra workflow with a finished creative** (default for B) | **one variation per angle** (below): `create_variation` → `switch_variation` → the character node keeps its copied result (the identity) → the scene image(s) rewritten for the new situation, with the character connected as reference → the clip prompt: content lines replaced, locked lines word for word → new VO text if the VO is separate → rerun only the changed nodes → Video Editor with the same timings | as the original |
 | Mode B, **distance 1** (re-angle, same place) | variation → `update_node` on the clip's speech and app moment, and the VO; the images stay | as the original |
-| **Mode A, a built ad as angle 1** (default for A) | one variation per angle: a new character node or prompt (the angle's person, count 2) → the angle's scene image(s) with that character as reference → the body clip on the concept's spine with the angle's script → the angle's hooks by `lyra-video-hooks` mode A (one Section per hook inside the variation, each with its own Video Editor) | nano-banana-pro · seedance-2.5 |
+| **Mode A, a built ad as angle 1** (default for A) | one variation per angle: a new character node or prompt (the angle's person as A and B, base Reference E) → the angle's scene image(s) with that character as reference → the body clip on the concept's spine with the angle's script → the angle's hooks by `lyra-video-hooks` mode A (one Section per hook inside the variation, each with its own Video Editor) | nano-banana-pro · seedance-2.5 |
 | Mode A, **a concept name only** | `create_workflow` → angle 1 built with the matching skill (UGC, base, UI) → then one variation per further angle, as the row above | as the matching skill |
 | The angle shows **another feature** | + `create_upload` of the new screenshot → phone shot by `lyra-ui-motion-video` (screenshot + character) → reference for the clip, or a short UI insert in the Video Editor | nano-banana-pro · seedance-2.5 / 2.0 |
 | A workflow on **frame models** (Seedance 2.0, Kling) | a new keyframe per shot (character as reference; mode B: the old keyframe's framing written in words) → the frame linked right after the image has a result and the user selected one | nano-banana-pro · seedance-2.0 / kling-v3-video |
@@ -361,7 +363,7 @@ In Lyra every version of a creative is a **variation** of its workflow: the **Cr
 
 | Node | Mode A (new perspective) | Mode B distance 1 (re-angle) | Mode B distance 2 (re-situate) | Mode B distance 3 (re-story) |
 |---|---|---|---|---|
-| Character (identity) | new person for the angle: rewrite and rerun (count 2) | stays, result copied | stays as the identity reference; the new outfit and state go into the scene image prompt | stays; a second character added if the plot needs one |
+| Character (identity) | new person for the angle: rewrite and rerun (A and B) | stays, result copied | stays as the identity reference; the new outfit and state go into the scene image prompt | stays; a second character added if the plot needs one |
 | Scene images, keyframes | the angle's place, with the new character as reference → rerun | stay | new situation: `update_node` (or a new node with the character as reference) → rerun | as distance 2 |
 | Screenshot, phone shot | new if the feature changes; a phone shot with a new person reruns | stay, unless the feature changes | same | same |
 | Clip(s) | the angle's body: identity, place, action, speech, voice anchor rewritten; camera and length from the concept's spine | content lines: speech, app moment | content lines: environment, props, light, the action's content, speech, app moment | + plot lines, who says what |
@@ -369,7 +371,7 @@ In Lyra every version of a creative is a **variation** of its workflow: the **Cr
 | VO (if separate) | new text and a voice that fits the new person | new text, same voice and length | same | same |
 | Music | stays (new only if the perspective's emotion really differs; say why) | stays | stays | stays |
 | End card, logo | stay | stay | stay | stay |
-| Video Editor | one per hook inside the angle | reruns with the same timings; captions made again with `generate_captions` → `set_captions` (`lyra-video-editor`) | same | same |
+| Video Editor | one per hook inside the angle | reruns with the same timings; captions changed in the editor UI | same | same |
 
 **Mode B: never rerun the character node** to "refresh" it: a new run is a new face, and the series loses its person. Keep the copied result and pass it as a reference.
 
@@ -416,7 +418,7 @@ In Lyra every version of a creative is a **variation** of its workflow: the **Cr
 
 **Run order, not a menu** (base Step 6): after the user's yes, run all of it in this order without offering options. Stop between stages (the look first, then the rest) only when the user asked for it, or when the plan is expensive and that was said in the approval message.
 
-As in the base skill, credits read from the nodes, per option. **Mode A:** **A. Angle images (recommended):** each angle's person (count 2) and scene · **B. Angle bodies** for the picked people · **C. Hook clips and Video Editors** (about 5 per angle, or the 3 the user picks) · or **D. Everything** at once (count 1; no pause to pick). **Mode B:** **A. New scene images (recommended):** every angle's situation · **B. Clips, VO and Video Editors** for the picked images · or **C. Everything** (count 1). Mode B distance 1 angles skip A and cost only the clip and the VO. When an image has several results, the user selects one in Lyra before the next stage (references pin to the selected result).
+As in the base skill, credits read from the nodes, per option. **Mode A:** **A. Angle images (recommended):** each angle's person (A and B) and scene · **B. Angle bodies** for the picked people · **C. Hook clips and Video Editors** (about 5 per angle, or the 3 the user picks) · or **D. Everything** at once (count 1; no pause to pick). **Mode B:** **A. New scene images (recommended):** every angle's situation · **B. Clips, VO and Video Editors** for the picked images · or **C. Everything** (count 1). Mode B distance 1 angles skip A and cost only the clip and the VO. When an image has several results, the user selects one in Lyra before the next stage (references pin to the selected result).
 
 ---
 

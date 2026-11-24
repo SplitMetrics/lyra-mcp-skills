@@ -7,7 +7,7 @@ description: Copy a competitor's static ad (one image, a carousel, several stati
 
 Image mini skill. Takes a static ad that works for someone else, finds out **why** it works, and rebuilds that mechanism as a new static for the user's app: their pain, their feature, their person, their words, their brand. Six jobs in order:
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**, also on the first build: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. **Follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 1. **Analyse** the reference (Step 1a): the team's static standard (Reference L) plus a production breakdown with the layout map.
 2. **Go to the Brand Kit** (Step 1b) and take every fact from it.
@@ -38,6 +38,8 @@ Image mini skill. Takes a static ad that works for someone else, finds out **why
 **Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text, realism, styles, models (Reference A), layout library (B), styles (C), realism toolkit (D), persona (E), edits and swaps (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file only adds what is specific to copying a static reference. If the two disagree, the user wins, then this file, then the base skill.
+
+**Two different characters, every time** (base skill → Two different characters): every person this skill generates comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
 
 **Other skills for their parts.**
 - The reference is a **video** and the user wants a video → `lyra-copy-competitor-ad`. A static from a competitor video is built here (Step 1a, static from a video).
@@ -319,7 +321,7 @@ The format of the reference decides the build. The user's explicit choices overr
 | If the reference is | Graph | Models |
 |---|---|---|
 | **Single static (default)** | Brand Kit assigned → uploads the static needs (logo, icon, screenshots) → one Image Generation node per concept (remake, adaptation), the reference's ratio, 2K (4K for small text, UI or a close face), count 2 → the user checks every letter | nano-banana-pro |
-| A person in the pain moment (`person_*`) | persona node first when the person appears in several statics (count 2, the user picks), connected as reference; otherwise the person described in the ad prompt | nano-banana-pro |
+| A person in the pain moment (`person_*`) | persona node first when the person appears in several statics (A and B, two different people, base Reference E; the user picks), the picked one connected as reference; otherwise the person described in the ad prompt | nano-banana-pro |
 | The app's UI (`app_screen_demo`, `screenshot_UI`) | our screenshots uploaded → the screen "exactly as supplied" in the prompt + key texts; a separate phone-shot node when the screen is the hero (base Reference G, `lyra-ui-motion-video`) | nano-banana-pro |
 | A chat, a comment, a social post (`text_message_chat`, `social_post_embed`) | stylised generic bubbles or post frame, our texts in quotes; never a copy of iOS, WhatsApp, Instagram or system UI; a fictional chat never presented as real | nano-banana-pro |
 | A review card, a rating, a user count (`review_quote_card`, social proof) | only a real review, rating or number from the Brand Kit, attributed; none → the slot becomes a demo or a result from a real screen | nano-banana-pro |

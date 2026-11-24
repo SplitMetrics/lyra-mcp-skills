@@ -7,13 +7,15 @@ description: Carousel ads for mobile apps in Lyra, 2 to 10 cards that tell one c
 
 Image mini skill. Builds a carousel ad as **one story told in N cards**: a hook card that stops the scroll and makes people swipe, middle cards that each carry one idea, and a last card that closes with the CTA. Every card looks like it belongs to the same set (same person, same world, same palette, same type, same layout grid), and the text reads as one voice from card 1 to card N.
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**, also on the first build: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The base skill's pre-run check (Part 1 → Step 5) stops any run on a canvas that isn't laid out yet. **Follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 The story is written once, as one **carousel script**, and Lyra's **Text Split** node cuts it into one part per card. Each part is a complete card prompt that feeds its card's image node. One script = one source of truth: the user edits the story in one place, reruns the split and the cards follow.
 
 **Load the base skill now.** Before anything else, load `lyra-static-image-generation` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation.
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text, realism, styles, models (Reference A), layout library (B), styles (C), realism toolkit (D), persona and consistency (E), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file only adds what is specific to carousels and to the split pipeline. If the two disagree, the user wins, then this file, then the base skill.
+
+**Two different characters, every time** (base skill → Two different characters): every person this skill generates comes as Character A and Character B, two clearly different people (or one exactly described person in clearly different outfits), two nodes with two prompts, count 1 each; A goes on, B is ready to switch. Never one character, never count 2 for a choice.
 
 **Other skills for their parts.**
 - Card 1 is the hook of the carousel: the line checks, awareness levels, hook base and "Final test" of `lyra-video-hooks` apply to its picture and its line.
@@ -236,7 +238,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 
 | If the carousel has | Graph | Models |
 |---|---|---|
-| **A person across the cards (default story)** | Story Bible (note) · Carousel script → Text Split → Card 1 … N · persona node first (count 2, the user picks) connected as reference to every card with the person · card 1 run and approved first, then connected to cards 2 to N as a style reference | nano-banana-pro |
+| **A person across the cards (default story)** | Story Bible (note) · Carousel script → Text Split → Card 1 … N · personas A and B first (two different people, base Reference E; the user picks) connected as reference to every card with the person · card 1 run and approved first, then connected to cards 2 to N as a style reference | nano-banana-pro |
 | No person (typographic, product, illustrated) | the same, without the persona; card 1 is the style anchor for the others | nano-banana-pro (Ideogram 3.0 Quality as a test for type-only cards that keep failing) |
 | The client's own style references (their ads, photos, design system) | upload them (`list_uploads` first) → connect as a style reference to every card, job stated first; palette and type from them written into the anchors | nano-banana-pro |
 | Real app screens (steps, features, proof) | one screenshot upload per screen card, connected only to its card; the screen "exactly as supplied" + key texts in the card; a separate phone-shot node when a screen keeps failing (base Reference G) | nano-banana-pro, 4K for screen cards |
@@ -256,7 +258,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 | 2 | Story Bible | user text (note) | — | — |
 | 3 | Carousel script (5 cards) | user text | — | — |
 | 4 | Text Split · 5 parts | text · text_split · openai/gpt-5-structured | 3 | 1 |
-| 5 | Persona: Mia | image · nano-banana-pro · 4:5 · 2K · count 2 | — | 1 |
+| 5 | Personas A and B: Mia / Dana | image · nano-banana-pro · 4:5 · 2K · two nodes, count 1 each | — | 1 |
 | 6 | Screenshot: timer | upload image | — | 1 |
 | 7 | Card 1: hook · 2 am · 4:5 | image · nano-banana-pro · 4:5 · 2K · count 2 | 4 (part 1), 5 (person) | 2 |
 | 8 | Card 2: pain · scrolling · 4:5 | image · nano-banana-pro · 4:5 · 2K | 4 (part 2), 5, 7 (style) | 3 |
@@ -276,7 +278,7 @@ As in the base skill, credits read from the nodes, per option:
 
 | Option | Runs | Results | Credits | Time |
 |---|---|---|---|---|
-| **A. Anchor first (recommended)** | Text Split + persona + card 1 (count 2) | the parts, 2 personas, 2 hook cards: the user picks the person and the look | {x} | ~1 to 2 min |
+| **A. Anchor first (recommended)** | Text Split + personas A and B + card 1 (count 2) | the parts, 2 personas, 2 hook cards: the user picks the person and the look | {x} | ~1 to 2 min |
 | B. Whole set | split → persona → all cards (count 1) | N cards | {x} | ~3 to 5 min |
 | C. Drafts of card 1 | card 1 on nano-banana-2, 1K, count 3 | 3 directions for the hook card | {x} | ~30 s |
 

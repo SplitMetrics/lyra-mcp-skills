@@ -40,7 +40,7 @@ Quality check skill for every Lyra creative, video and image. The creative skill
 ## Step 1. Find the result and read the workflow
 
 1. `get_workflow` now, not from memory.
-2. **The final video.** The final file is a link `https://lyra.splitmetrics.com/media/static/…mp4`. Where to get it:
+2. **The final video.** The final file is a link `https://app.lyra.splitmetrics.com/media/static/…mp4`. Where to get it:
    - **rendered in this chat:** the `url` from `get_run_results` of the Video Editor run;
    - **rendered earlier:** the tools return a result only for a run made in this chat. Open the workflow in the browser, press play on the node's preview and read the file link from the page (`document.querySelector('video').currentSrc`), or take the latest render from the Video Editor's **Results** drawer, or ask the user for the video link (one line: "Send me the link to the final video, from the Video Editor's Results"). Then move the tab off the workflow before any edit;
    - **no Video Editor yet** (the workflow ends on a clip): check the clip itself the same way, say that there is no edit yet (no captions, music or end card), and offer the edit by `lyra-video-editor`;

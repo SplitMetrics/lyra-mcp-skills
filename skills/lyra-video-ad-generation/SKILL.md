@@ -9,7 +9,9 @@ The main video skill for Lyra. It holds the core rules for every video ad: scrip
 
 Part 1 is shared by every Lyra skill. Part 2 is what's specific to video ads. The Reference library at the end has the details (models, prompts, audio, UI, consistency, de-slop, errors, Meta app ads).
 
-**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The pre-run check (Step 5) stops any run on a canvas that isn't laid out yet. The layout lines in this file only say which sections this creative needs.
+**Load the base skills now.** Before anything else, load `lyra-workflow-layout` and `lyra-video-editor` with the Skill tool, `get_skill` on the Lyra MCP server, or by reading their SKILL.md files, unless they are already loaded in this conversation.
+
+**Canvas layout → `lyra-workflow-layout`. Load it now**, with the Skill tool, `get_skill` on the Lyra MCP server, or by reading its SKILL.md file, unless it is already loaded in this conversation. It is a required step of every build, not a reference: every workflow this skill builds or changes is laid out by it **before the first `run_node`**, also on the first build: sections in reading order with a STEP note above each one, the team's color code, clear node labels and the final check. The pre-run check (Step 5) stops any run on a canvas that isn't laid out yet. **Follow its Build order**: frames and STEP notes are made with the MCP tools (`create_frame_node`, `create_note_node`), no browser needed. Never call `organize_nodes` on a canvas with STEP notes. The layout lines in this file only say which sections this creative needs.
 
 **Assembly and captions → `lyra-video-editor`.** Stage 3 of every video (the Video Editor: edit, mix, end card, text, captions, render, cutdowns) follows `lyra-video-editor`. This file only says which pieces go into the edit.
 
@@ -36,6 +38,19 @@ A full creative always follows these steps, in order:
 
 Best practices are defaults, not rules for the user. When a user's choice will likely hurt the result, follow it and say once in the plan what you'd do instead and why; don't argue twice. When a choice breaks a hard limit (a 60 s clip from a model capped at 30 s), explain and offer the closest build that works.
 
+## Two different characters, every time
+
+Any ad with a person gets **two different characters to choose from, Character A and Character B**: two image nodes with two different prompts, count 1 each. This is the default on every build, the first one too, even when nobody asked for a choice. Two takes of one description (count 2) come back as the same face in a slightly different pose, and the user has nothing to choose from.
+
+- **How different.** Write both cards side by side. They differ on **at least 4** of: age band (10+ years apart) · gender (when the audience allows) · skin tone and ethnicity · hair (colour, length, texture) · build · style and wardrobe, colours included · energy and archetype (a quiet student vs a confident professional). Test: could a stranger mix them up at thumbnail size? Then rewrite B.
+- **Both from the audience.** Both are believable people from the Brand Kit's audience. A persona type picked in the intake quiz ("a student 18–25") is not an exact description: A and B are two very different people of that type.
+- **One exact person** (the user described the look in detail, or said "this character"): the same person in both, with a clearly different outfit, colours, accessories and setting, and hair styling if the user didn't fix it.
+- **Only one character** when: the user uploads the person (photo, character sheet) or reuses one from an earlier ad, says "one character" or "no options", or the ad has no person. A mascot fixed by the Brand Kit: B is the same mascot in another pose or outfit, if the kit allows.
+- **Say it everywhere.** The plan table has two rows, "Character A · …" and "Character B · …"; the approval message says in one line how they differ; the report shows both, says A went on and how to switch ("say "take B"").
+- **Self-check before the run.** Count the character nodes. One node, or two whose cards differ only in pose, expression or one detail → stop and rewrite B before spending credits.
+- **Any choice is a real choice.** The same for every set of options Claude offers (hooks, keyframes, concepts, ads, end cards): different ideas, compositions or people, as different prompts. Count 2 or 3 is only for extra takes of one exact image.
+- Connections and switching: Reference E.
+
 ## Step 1. Context
 
 **App.** Every concept starts from the app. Generic ads come from missing product context, so never fill gaps from imagination.
@@ -51,7 +66,7 @@ Best practices are defaults, not rules for the user. When a user's choice will l
 - **Question bank** (pick the relevant ones, in this order):
   1. **Idea:** 2–3 short concept options built on different pains or angles (one line each, the hook in quotes) + "my own idea".
   2. **Format:** person talking to camera (UGC) · a short story with scenes · animated / 3D · app screens in motion · POV.
-  3. **Who is on screen:** 2–3 personas from the audience (age, vibe, place) · no person.
+  3. **Who is on screen:** 2–3 personas from the audience (age, vibe, place) · no person. Whatever is picked, two different characters A and B are made from it (Two different characters).
   4. **Length and placement:** 10 s · 15 s (recommended for Reels / TikTok) · 30 s · 60 s.
   5. **Voice:** the person speaks on camera · voiceover · music and text only; language.
   6. **Music:** 2–3 moods that fit the idea · no music.
@@ -61,6 +76,11 @@ Best practices are defaults, not rules for the user. When a user's choice will l
   10. **Model and quality:** Seedance 2.5, 720p (recommended, ≈ X credits) · 1080p (sharper faces and details, ≈ 2.4× the price) · a cheaper model.
 - **Skip the quiz** only when the user says "just do it", "surprise me", or the task already answers everything: then state the choices in the plan in one line each.
 - After the answers, Step 2 explains the plan in plain words (below).
+
+**Files and the logo go in by Claude, never by hand.**
+- **Logo from the Brand Kit:** `list_brand_kits` returns `brand_logo_url`. `create_upload` with `{url: brand_logo_url}` → `attach_upload` to the workflow, label "Logo" (tested: ready in seconds). Never ask the user to upload a logo the kit already has. The link is signed and expires: take it fresh from `list_brand_kits` on every build.
+- **Files the user sends in the chat** (screenshots, a logo, a reference video): `list_uploads` first (maybe already there). With a shell that has network: `create_upload` with `{file_name, content_type, size_bytes}`, send the file with the returned descriptor (curl), `complete_upload`, then `attach_upload`. Without a shell: `open_upload_widget` once for all the files. A public link: `{url}`. A client that passes an attached file (`file`): use it. Only when all of these fail, ask the user to upload in Lyra, and say why.
+- **Screenshots up front.** If the ad shows the app, ask for 2 to 4 real screenshots in the intake quiz; never draw app UI.
 
 **Task.** The intake quiz covers the inputs in Part 2 → Inputs and defaults; the defaults are its recommended options. Everything in one message; never re-ask what the user said. Call `list_workspaces` (credits) and `list_node_configs` (models) now.
 
@@ -77,7 +97,8 @@ Short: readable in under a minute.
 | # | Node label | Node · model · key settings | Inputs (role) | Stage |
 |---|---|---|---|---|
 | 1 | Script (note for the user) | user text | — | — |
-| 2 | Character: Mia | image · google/nano-banana-pro · 9:16 · count 1 | — | 1 |
+| 2 | Character A: Mia · 21, student, grey hoodie | image · google/nano-banana-pro · 9:16 · count 1 | — | 1 |
+| 2b | Character B: Dana · 34, nurse, platinum bob, navy scrubs | image · google/nano-banana-pro · 9:16 · count 1 | — (switch in for A if picked) | 1 |
 | 3 | Screenshot: timer | upload image | — | 1 |
 | 4 | Phone shot: timer | image · google/nano-banana-pro · 9:16 | 2, 3 (references) | 1 |
 | 5 | VO: full | audio · elevenlabs/v3 · voice | — | 1 |
@@ -101,7 +122,7 @@ On corrections, show only what changed, with the new cost, and ask again. Don't 
 2. Write every prompt (Part 2 → Prompt rules): brief, script, image and video prompts, voiceover text, music prompt. The script can go into a user text node (`create_user_text_node`) as a note for the user, connected to nothing. A user text node feeds its text into any node it is connected to, so keep this one unconnected (a Note on the canvas can't be connected at all, but the tools can't create one). The text doesn't keep the character consistent: consistency comes only from the character image connected as a reference, plus the anchors written into every prompt.
 3. Create every node from the plan with its prompt, its model and settings from `list_node_configs`, and a label that says what it's for ("Scene 2: app demo", "VO: hook"), never "Image 1".
 4. **Connect the whole graph now** (`connect_nodes`), so the workflow can run on its own with "run all": character → every image and video node that shows the person (reference) · screenshot upload → the phone image · images → video · clips, voiceover, music → Video Editor **in playback order**. Never leave connections "for after the user approves an image". **References** connect before anything is generated (checked in Lyra). **First / last frame** from a generated image needs that image to have a result first (an uploaded image can be a frame right away): on frame models, say in the plan that the frame link is made right after the image runs, and make it automatically before running the clip.
-5. **Lay out the canvas now, before anything runs** (`lyra-workflow-layout`: STEP notes, sections in reading order, colors, check). It is free and part of the build: the build isn't done until every node sits in a section with a STEP note above it. One section per stage: **Sources** (script note, character, screenshot uploads) → **Images** → **Clips** → **Audio** → **Video Editor**. Put an upload next to the node it feeds, never at the end of the canvas. Don't put the whole graph in one Section.
+5. **Lay out the canvas now, as part of the build** (not later, not only when asked): load `lyra-workflow-layout` and follow its Build order. Its sections for a video ad, in reading order: **Script** (lime) → **Your app** (pink, when there are uploads) → **Cast** (violet) → **Keyframes / phone shots** → **Clips** → **Voiceover and music** (violet) → **Video Editor** (rose); one STEP note above each (`create_note_node`). Create the nodes and the frames in this order. Never `organize_nodes` after the notes. Don't put the whole graph in one Section.
 6. Check `is_valid` and `validation_error` on every node; fix with `update_node` using listed values.
 
 ## Variations, not new workflows
@@ -131,7 +152,7 @@ After the build, tell the user once that the workflow is built and running and t
 2. **After the build, before running:** add up `credits` of every node that will run. Within ~15% of the approved estimate and within the balance → run everything, stage by stage (sources → images → clips → Video Editor, Step 7), with no question. More than ~15% over, or over the balance → one short message: the new total, why, and a cheaper option (fewer ideas, lower count, 720p, a cheaper model per Reference A); run after the answer.
 3. **Reruns and follow-ups:** give the rerun's credits in the same message as the change ("Changed the prompt; rerunning Clip 1 and the Video Editor, 428 credits") and run, unless the user asked to check first.
 4. **After the run:** the real spend (balance before − after) and the new balance.
-5. A source image with count 2 (a character, a persona) feeds the next stage with its selected result; say in the report which one went on and that the user can switch (Step 7).
+5. Every generated character comes as two nodes, Character A and Character B (Reference E → Two different characters): A, the recommended one, is connected and goes into the next stage; say so in the report and that B is ready to switch to.
 6. The smaller skills' **Run options** sections give the run order and what each stage holds: run all of it in that order, without offering the options. A staged run (the look first, then the rest) only when the user asks for it, or when the plan is expensive and the look should be approved first: then say so in the approval message, with each stage's credits, and run the next stage on the user's yes to the look.
 7. No `credits` on the nodes at all (the field is gone): estimate with Reference A, say it's an estimate, and keep the same one-question flow.
 
@@ -140,9 +161,15 @@ After the build, tell the user once that the workflow is built and running and t
 2. **Picking a result.** A node with several results: when the user names one ("take the second", "the first one"), set it yourself on every node that uses it; don't send the user to tick it in Lyra. On a node with `image_inputs_usage` (video nodes): `update_node` with its whole `image_inputs_usage` from `get_workflow` and one field changed: references → `reference_result_image_uuids: [picked uuid]` (or the other results in `exclude_reference_result_image_uuids`); frames → `first_frame` / `last_frame` = `{"node_uuid": source node, "image_result_uuid": picked uuid}`. The results' uuids and their order (first, second…) come from `get_run_results` of the source node's run. Then `get_workflow` to check it held, and rerun what comes after it (pre-run check first). Only when the node has no such setting or the tool refuses: ask the user to tick it in Lyra and say why. Without a pick, the next stage uses Lyra's selected result; say which one went on.
 3. Run a stage only after its inputs have results; the Video Editor runs last.
 
+**Time and progress.** Before the run, say how long each stage takes (images about 1 min, a Seedance clip 3 to 8 min, a Video Editor render 1 to 3 min; use real times from this session when you have them). While waiting, one status line at each check ("2 of 4 clips ready, about 5 min left"); never go quiet through a long wait. On a failure, say what failed and what you do next in the same line.
+
+**Showing results.** After a run is completed or failed, call `show_run_results` once for it. Previews in the chat are small (300 px), so for a full-size look give the file's `browser_url`. Never paste signed file links.
+
+**The final is easy to find.** Label the final node "FINAL · …" (the Video Editor of a video, the last ad set of statics), in the last rose section; in the report the final's link comes first.
+
 **Links in every report.** Never only file links. Two kinds of link, nothing else:
 - **Workflow:** `https://app.lyra.splitmetrics.com/workflows/{workflow_uuid}` (opens for anyone signed in to Lyra with access to the workspace; results in a variation: name the variation to open).
-- **Result:** the `url` from `get_run_results`, exactly as returned.
+- **Result:** the file's `browser_url` from `get_run_results` (never the signed `url`).
 - one video → the video link + the workflow link
 - several videos → the workflow link only
 - one image → the image link + the workflow link
@@ -150,7 +177,7 @@ After the build, tell the user once that the workflow is built and running and t
 A video ad's final is the Video Editor result; clip links only when the user asks.
 
 Report:
-> Calmly · video ad · "2 am": done. Video: {video url} · Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid}. Spent {x} credits · balance {X}. Canvas: STEP 1 Sources → STEP 2 Images → STEP 3 Clips → STEP 4 Audio → STEP 5 Video Editor. Character: result 1 went into the clip; say "take the second" to switch. Open the workflow to edit any prompt and rerun.
+> Calmly · video ad · "2 am": done. Video: {video url} · Workflow: https://app.lyra.splitmetrics.com/workflows/{uuid}. Spent {x} credits · balance {X}. Canvas: STEP 1 Script → STEP 2 Cast → STEP 3 Keyframes → STEP 4 Clips → STEP 5 Voiceover and music → STEP 6 Video Editor. Character A went into the clip; say "take B" to switch. Open the workflow to edit any prompt and rerun.
 
 - Name failed nodes: label, what it was asked to do, why if known, the fix you suggest.
 - When every node has a result, offer 2–3 next steps (new angle on the same concept, other sizes, other languages).
@@ -276,6 +303,8 @@ Full prompt craft (nine blocks, video formula, camera, light, materials, physics
 | Claims a text brief/script node keeps the character consistent | A text doesn't make the character consistent; consistency = character image as reference + anchors |
 | Clips where someone speaks come with their own background music under the voice, a different track in each | The no-music sound line in every clip with speech + "background music" in Avoid; our music only as its own node in the Video Editor; a clip with speech that still has music is rerun |
 | Whole graph in one Section, uploads at the end | One Section per stage, left to right, uploads next to the node they feed (`lyra-workflow-layout`) |
+| First build with no STEP notes or colors, or `organize_nodes` run over the notes | Step 4 item 5: load `lyra-workflow-layout`, frames with colors and STEP notes by the MCP tools, no `organize_nodes` |
+| Two near-identical characters to choose from (count 2) | Two nodes, A and B, two clearly different people, or the same described person in different outfits (Reference E) |
 | Clips out of order in the Video Editor | Connect in playback order; after results check and set `startMs` |
 | Price guessed | Reference A rates in the plan, node `credits` before the run |
 | Too many references "because the model allows it" | Small, purposeful set; video/audio refs only on request |
@@ -285,7 +314,7 @@ Full prompt craft (nine blocks, video formula, camera, light, materials, physics
 
 ## Quality gates
 After each intermediate stage Claude sends the stage checklist (the final result is checked by `lyra-result-check`) and asks the user what they like and what they don't (Reference H has the full slop list):
-- **Stage 1 (images):** same person in every keyframe · hands and phone natural · screen exactly like the screenshot · style right (phone-real for UGC) · nothing plastic or over-glossy.
+- **Stage 1 (images):** Character A and B clearly different people (or one exact person in clearly different outfits) · same person in every keyframe · hands and phone natural · screen exactly like the screenshot · style right (phone-real for UGC) · nothing plastic or over-glossy.
 - **Stage 2 (clips):** no music inside any clip where someone speaks (ask the user to listen, Claude can't hear) · face and outfit stable within and across clips · no morphing, flicker, warped hands · natural motion · UI correct while tapping · ends on the planned frame.
 - **Stage 3 (final):** hook in 1.5–3 s · scenes in order, CTA at the end · voiceover not rushed, ends before the video, app name pronounced right · under speech only our music from the Video Editor, instrumental, trimmed with a fade · 9:16, planned resolution (720p by default), planned length · captions (only if the user said yes) size 80, at 75% of the height, never over a face (`lyra-video-editor` → Captions) · other text inside the safe zone.
 Pass = the user is happy with every point that applies. Fix only what fails, within the agreed budget, with its credits.
@@ -403,7 +432,12 @@ Count multiplies the price; ratio, sound on or off and frames vs references don'
 - **Anchors** defined once and repeated word for word in every prompt: character (age, face, hair, skin, outfit, accessories), environment (place, time of day, light direction and color), style (palette from the Brand Kit, grading, look, lens), product/phone (device, case, screen from the screenshot).
 - Per scene: **source scene** (earliest that set the element) · **must match** · **allowed to change**.
 - One image model for all keyframes, **one video model for the whole ad**, one ratio and resolution.
-- **Character first, connected everywhere:** the character image is generated in stage 1 and **connected at build time as a reference to every image and video node that shows the person**, so the graph stays consistent even with "run all". If the user wants to choose between several characters, run stage 1 first; they name one and Claude pins it on every node that uses it (Step 7); the connections are already there. A text brief alone never makes images consistent. Two characters for A/B: one script, two character images, two videos.
+- **Character first, connected everywhere:** the character image is generated in stage 1 and **connected at build time as a reference to every image and video node that shows the person**, so the graph stays consistent even with "run all". A choice of character is two different characters, A and B (next point). A text brief alone never makes images consistent. Two characters for an A/B test: one script, two character images, two videos.
+- **Two different characters to choose from, never count 2.** Count 2 on one node runs the same prompt twice and returns the same person from a slightly different angle, so there is nothing to choose. Every time the ad has a generated person (a persona, a hero, a character sheet), build **two nodes with two different prompts**, "Character A · …" and "Character B · …", count 1 each:
+  - **The user didn't describe the person exactly:** two clearly different people from the Brand Kit's audience, as far apart as the brief allows: another age band, face, hair, skin tone, build, style and vibe (a quiet 19-year-old student in an oversized grey hoodie vs a confident 32-year-old with a sharp platinum bob and a leather jacket). Never two takes of one description.
+  - **The user described the person exactly:** the same person in both, with clearly different clothes and styling: other outfit, colours, accessories (and hair styling, if the user didn't fix it).
+  - **Connections:** A (the recommended one) is connected at build time to every node that shows the person; B is built and run, connected to nothing. The user picks B → on every node that uses the character, `disconnect_nodes` A and `connect_nodes` B with the same role, pre-run check (Step 5), rerun what depends on it, its credits in the same message.
+  - Count 2 stays only for more takes of one exact image the user wants to compare (a keyframe, an ad), never for choosing a character.
 - **By model:** Seedance 2.5 references (roles per [ImageN]); Seedance 2.0 frame for exactness / UI, reference for looser; Kling first/last frame; Omni references + video ref.
 - Frames pin to the **selected** result; reconnect after regenerating a keyframe.
 - **Hand-off:** write each clip's end state; the next scene starts from it; keep motion direction across cuts; match cuts, whip pans and cuts on action hide small differences.
