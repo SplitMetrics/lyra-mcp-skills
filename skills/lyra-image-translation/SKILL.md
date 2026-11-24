@@ -16,7 +16,7 @@ Image helper skill. Takes an image that is already approved (a static ad, carous
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, on-image text rules, realism, models (Reference A), layout library (B), edits (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to languages and markets. If the two disagree, the user wins, then this file, then the base skill.
 
 **Other skills for their parts.**
-- Other **sizes** of the translated images → `lyra-adapt-image` (Image Resize) or a Pro recompose (base Reference F, H). Order: languages first, sizes second (below).
+- Other **sizes** of the translated images → `lyra-image-resize` (Image Resize) or a Pro recompose (base Reference F, H). Order: languages first, sizes second (below).
 - An image with **app UI** → UI fidelity from `lyra-ui-motion-video`: the interface is never machine-translated; other markets use the localized app's screenshots.
 - A **market version** where the person, the room, the props or the voice should change too (a local face for Brazil, a Japanese apartment) → `lyra-audience-variations` (mode B, market markers). This skill changes only words; the moment the picture must change, it is an audience version.
 - **Carousels** → `lyra-carousel` (Story Bible, script, Text Split); this file says how a carousel is localized.
@@ -171,7 +171,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 | **End card or text card for a video** | the end card image through Route B or C; the localized store badge file as a layer in the Video Editor; VO and captions by the video skills | nano-banana-pro · video_composer |
 | **Store screenshot set** (App Store / Google Play) | the localized app's screenshots + the caption written in that language, one Pro node per slot (`lyra-ui-motion-video`, Store screenshot sets); never Image Translation | nano-banana-pro |
 | **Legal line, disclaimer, price table, long copy** | Pro clean-plate edit ("Remove all text, keep everything else exactly") → the user's designer sets the localized text in Figma | nano-banana-pro |
-| **Languages × sizes** | languages first at the master ratio, approved, then each language resized or recomposed (`lyra-adapt-image`, base Reference H); count languages × ratios and say the total before running | nano-banana-2 · nano-banana-pro |
+| **Languages × sizes** | languages first at the master ratio, approved, then each language resized or recomposed (`lyra-image-resize`, base Reference H); count languages × ratios and say the total before running | nano-banana-2 · nano-banana-pro |
 | **The picture should change for the market too** | `lyra-audience-variations` (mode B, a Lyra variation per market); this skill writes its texts | as that skill |
 | **Many languages, tight budget** | Route A for all in one node → only the misses get a Pro node; Pro rebuild only for UI images | nano-banana-2 → nano-banana-pro |
 

@@ -17,8 +17,6 @@ Image helper skill. Takes an image that is already approved (a static ad, carous
 
 **Base skill first.** Everything not written here follows `lyra-static-image-generation`: the 8 steps, instruction order, app card, plan table and stages, run options with credits, run and report, concept card and layout map, on-image text rules, realism, models (Reference A), layout library (B), edits and recompose (F), UI and logo (G), sizes and languages (H), errors (I), de-slop (J), Meta statics (K), Brand Kit (L). This file adds what is specific to ratios and placements. If the two disagree, the user wins, then this file, then the base skill.
 
-**This skill takes over the resize part of `lyra-adapt-image`.** Skills that say "other sizes → `lyra-adapt-image`" mean this skill now.
-
 **Other skills for their parts.**
 - Other **languages** → `lyra-image-translation`. Order: **languages first, sizes second** (each approved language is resized; fewer runs, and a text that grew in translation is placed once per ratio).
 - An image with **app UI** → UI fidelity from `lyra-ui-motion-video`: the screen in every ratio is the user's screenshot, identical word for word. App Store / Google Play **screenshot sets** have exact pixel sizes and their own rules: `lyra-ui-motion-video` (Store screenshot sets).

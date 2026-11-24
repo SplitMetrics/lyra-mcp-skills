@@ -211,7 +211,7 @@ You write every prompt, and each lives in its node's prompt field, where the use
 Creates static ads and images for mobile app paid ads in Lyra, SplitMetrics' node-based creative canvas, leaving a generated, reusable workflow on the canvas.
 Use when the user asks for "a static ad", "an image ad / banner", "statics to test", "a carousel", "a realistic photo of…", "a persona / character image", "a product or phone shot", "an illustration in our style", or hands over a layout, a sketch or a reference image.
 Works from a Lyra brand kit or app details in chat, app screenshots, logo and icon, product photos, a reference static (through `lyra-copy-competitor-static`), or an existing workflow.
-Not for: other sizes or languages of a finished image (`lyra-adapt-image`, rules from Reference H here) · App Store / Google Play screenshot sets and store-style end cards (`lyra-ui-motion-video`) · copying a competitor's static (`lyra-copy-competitor-static`, which builds on this skill) · the same image for another audience (`lyra-audience-variations`) · video (`lyra-video-ad-generation`).
+Not for: other sizes or languages of a finished image (`lyra-image-resize` and `lyra-image-translation`, rules from Reference H here) · App Store / Google Play screenshot sets and store-style end cards (`lyra-ui-motion-video`) · copying a competitor's static (`lyra-copy-competitor-static`, which builds on this skill) · the same image for another audience (`lyra-audience-variations`) · video (`lyra-video-ad-generation`).
 
 ## Quality bar
 Reads in half a second at phone size (one focal point, one promise, a short headline), stops the scroll because it looks native and specific, shows only real app features and the user's real screens, every letter and number exactly right, one CTA, on brand, and no AI look: when the brief asks for a photo, it looks **taken by a camera, not generated**.
@@ -322,7 +322,7 @@ The user's explicit choices override any row. Model choice: Reference A.
 | Transparent cutout, sticker, element for the designer | GPT Image 2, `background: transparent`, 1:1 / 3:2 / 2:3 | openai/gpt-image-2 | the only listed model with transparency |
 | Edit an existing image (swap person, change one element, relight) | the source image connected → Pro, "change only…" prompt | nano-banana-pro | keeps everything else |
 | A reference static to adapt (competitor's static, carousel, several statics, a key frame of their video) | `lyra-copy-competitor-static` → built on this skill's rules | nano-banana-pro | keeps the mechanism, not the identity |
-| Other ratios of an approved ad | `lyra-adapt-image` (Image Resize, Nano Banana 2) for simple layouts; a Pro **recompose** node with the ad connected when the layout or text must move | nano-banana-2 · nano-banana-pro | recompose, don't crop |
+| Other ratios of an approved ad | `lyra-image-resize` (Image Resize, Nano Banana 2) for simple layouts; a Pro **recompose** node with the ad connected when the layout or text must move | nano-banana-2 · nano-banana-pro | recompose, don't crop |
 | Other languages | Image Translation (Nano Banana 2) for ads without UI; ads with UI → localized screenshots + text written in that language, new Pro node | nano-banana-2 · nano-banana-pro | the UI is never machine-translated |
 | An animated version of the winner | the approved image as first frame → `lyra-ui-motion-video` (UI-led) or `lyra-video-ad-generation` | seedance-2.0 / 2.5 | the static becomes a keyframe |
 
@@ -593,7 +593,7 @@ Full rules: `lyra-ui-motion-video` (UI fidelity, screens, store sets, end card).
 - **Logo and app icon:** only the uploaded files, connected as references, "place the logo from [Image3] exactly as supplied, small, bottom-right"; check it; if it warps, leave the corner clean for the designer. Store badges, ratings, awards: official files and real numbers only; badges are best added by the designer.
 - **Image Translation never on images with UI** (it would translate the interface). Other markets = the localized app's screenshots.
 
-## H. Sizes and languages (for `lyra-adapt-image`)
+## H. Sizes and languages (for `lyra-image-resize` and `lyra-image-translation`)
 
 - Other ratios: **recompose, don't crop.** Simple layouts with text far from the edges → Image Resize node (Nano Banana 2, one output per ratio). Layouts where text or the hero must move, or Pro-level realism must hold → a Pro recompose node (Reference F). Check headline, CTA and hero inside the new safe zones.
 - Other languages: ads without UI → Image Translation node (Nano Banana 2, one output per language); check every word with a speaker of that language if possible and check length (translations run longer; the layout may need a shorter line). Ads with UI → localized screenshots + the text written in that language, new Pro node.

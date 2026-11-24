@@ -46,7 +46,7 @@ Image mini skill. Takes a static ad that works for someone else, finds out **why
 - The app's UI in the static, store screenshot sets → `lyra-ui-motion-video` (UI fidelity, phone shot, store rules).
 - A persona or a world built for the audience → realism and casting from `lyra-ugc-video`; versions for other segments → `lyra-audience-variations` (its layers and one-story test apply to statics, built with the edit patterns of the base skill).
 - Headline lines: the line checks, awareness levels and hook base of `lyra-video-hooks` apply to a static headline (it is the hook of a static).
-- New angles on the copied concept → `lyra-ad-concept-multiplier`. Other sizes and languages → `lyra-adapt-image`. An animated version → `lyra-ui-motion-video` (UI-led) or `lyra-video-ad-generation`.
+- New angles on the copied concept → `lyra-ad-concept-multiplier`. Other sizes → `lyra-image-resize`, other languages → `lyra-image-translation`. An animated version → `lyra-ui-motion-video` (UI-led) or `lyra-video-ad-generation`.
 
 ---
 
@@ -371,8 +371,8 @@ The user asked for variants right away, so when the first results are approved, 
 | **Persona or world** | the person, their wardrobe, the room, a prop, the time of day, for another segment from the kit | the edit patterns of the base skill (Reference F: person swap, world swap), the layers and the one-story test of `lyra-audience-variations` |
 | **Subject or production level** | mascot ↔ persona ↔ real screen; vector ↔ phone-real photo | a new node (a new concept), same layout map |
 | **Remake ↔ adaptation** | the other mode on the same teardown | a new node |
-| **Sizes** | 9:16, 1:1, 4:5 | `lyra-adapt-image`: Image Resize for simple layouts, a Pro recompose node when text or the hero must move (recompose, don't crop) |
-| **Languages** | the texts in another language | `lyra-adapt-image`: Image Translation for statics without UI; with UI → the localized app's screenshots + texts written in that language, a new Pro node |
+| **Sizes** | 9:16, 1:1, 4:5 | `lyra-image-resize`: Image Resize for simple layouts, a Pro recompose node when text or the hero must move (recompose, don't crop) |
+| **Languages** | the texts in another language | `lyra-image-translation`: Image Translation for statics without UI; with UI → the localized app's screenshots + texts written in that language, a new Pro node |
 | **New angle** | the argument of the ad, same concept | `lyra-ad-concept-multiplier` |
 | **Animated version** | the static becomes the first frame of a short video | `lyra-ui-motion-video` (UI-led) or `lyra-video-ad-generation` |
 

@@ -22,7 +22,7 @@ The story is written once, as one **carousel script**, and Lyra's **Text Split**
 - A person across the cards: casting, place and the one-story test from `lyra-ugc-video`; the persona image rules from the base skill (Reference E).
 - Real app screens on cards (steps, features, proof): UI fidelity from `lyra-ui-motion-video` (screenshots only, exactly as supplied, word by word check).
 - A competitor's carousel as the reference: `lyra-copy-competitor-static` analyses it (one JSON per card + card list); this skill builds the new set.
-- The same carousel for another segment or market: `lyra-audience-variations` (layers, one-story test); new angles on a winning carousel: `lyra-ad-concept-multiplier`; other sizes and languages: `lyra-adapt-image`; the carousel as a video: `lyra-video-ad-generation` or `lyra-ui-motion-video` (the cards become keyframes, the same script split into scenes).
+- The same carousel for another segment or market: `lyra-audience-variations` (layers, one-story test); new angles on a winning carousel: `lyra-ad-concept-multiplier`; other sizes: `lyra-image-resize`; other languages: `lyra-image-translation`; the carousel as a video: `lyra-video-ad-generation` or `lyra-ui-motion-video` (the cards become keyframes, the same script split into scenes).
 
 **This is a way of thinking, not a script.** The rules are defaults and good practice; use judgment and say why in one line when you choose differently. Fixed: truth (no invented claims, reviews, numbers, UI or logos), the Brand Kit's facts, UI fidelity, Lyra's technical limits, the Text Split node's rules, and the user's explicit choices.
 
@@ -246,7 +246,7 @@ The user's explicit choices override any row. Models and prices: base Reference 
 | A continuous scene across cards (panorama) | **option 1 (safer):** a repeating band or object at the same height on every card, so the cards line up when swiped · **option 2:** one wide image (21:9) of the whole scene, cut into cards by the user's designer in Figma (Claude can't open Lyra results to cut them) · **option 3 (risky):** each next card with the previous card connected as reference, "continue the scene from the right edge of [Image2]"; check the seams | nano-banana-pro |
 | The user's own text (article, script, reviews) | Claude restructures it into a carousel script → Text Split → cards | nano-banana-pro |
 | A competitor's carousel as the reference | `lyra-copy-competitor-static` teardown (one JSON per card, card list) → the arc and roles kept, our story and look → this skill's build | nano-banana-pro |
-| 9:16 for Stories / TikTok | a separate set at 9:16, **recomposed** card by card (keep top ~14% and bottom ~20% free), never cropped from 4:5 | nano-banana-pro (or `lyra-adapt-image` for simple layouts) |
+| 9:16 for Stories / TikTok | a separate set at 9:16, **recomposed** card by card (keep top ~14% and bottom ~20% free), never cropped from 4:5 | nano-banana-pro (or `lyra-image-resize` for simple layouts) |
 | Many directions / tight budget | drafts of card 1 only on nano-banana-2 at 1K, count 2 to 3 → the user picks the direction → the full set on Pro | nano-banana-2 → nano-banana-pro |
 | A video version of the carousel | the approved cards as keyframes, the same script split into scenes → `lyra-video-ad-generation` (people) or `lyra-ui-motion-video` (UI-led) | seedance-2.5 / 2.0 |
 
@@ -372,7 +372,7 @@ Read the carousel by the goal's cost per result (trial, payer), not CTR alone, a
 - **Hook card test:** 2 to 3 new card 1s, cards 2 to N held constant (only the first part of the script changes; rerun split and card 1).
 - **Audience version:** the same story for another segment from the kit (`lyra-audience-variations`: persona, wardrobe, world; the one-story test).
 - **New angle:** the same arc with another reason to care (`lyra-ad-concept-multiplier`).
-- **Languages and sizes:** `lyra-adapt-image` per card (Image Translation only on cards without UI; cards with UI get the localized screenshots and texts written in that language).
+- **Languages and sizes:** `lyra-image-translation` and `lyra-image-resize` per card (Image Translation only on cards without UI; cards with UI get the localized screenshots and texts written in that language).
 - **Video version:** the cards as keyframes, the script split into scenes (`lyra-video-ad-generation`, `lyra-ui-motion-video`).
 
 Variants live next to the original in the same workflow (one row per version) or in a Lyra variation (`create_variation`, the original stays Main as the control). Save the arc, the card list and the result to the project, so the next carousel starts from what the team learned.
